@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.suneee.scn:vr-authentication-model:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-authentication-model/1.0.0-SNAPSHOT/vr-authentication-model-1.0.0-20170630.030643-7.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-authentication-model/1.0.0-SNAPSHOT/vr-authentication-model-1.0.0-20170630.030643-7-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-authentication-model/1.0.0-SNAPSHOT/vr-authentication-model-1.0.0-20170630.030643-7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

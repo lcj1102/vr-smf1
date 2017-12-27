@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.suneee.scn:system-common:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/system-common/1.0.0-SNAPSHOT/system-common-1.0.0-20171213.073438-28.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/system-common/1.0.0-SNAPSHOT/system-common-1.0.0-20171213.073438-28-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/system-common/1.0.0-SNAPSHOT/system-common-1.0.0-20171213.073438-28-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

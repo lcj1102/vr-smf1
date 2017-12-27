@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.suneee.scn:vr-common-redis:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-common-redis/1.0.0-SNAPSHOT/vr-common-redis-1.0.0-20171226.101308-9.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-common-redis/1.0.0-SNAPSHOT/vr-common-redis-1.0.0-20171226.101308-9-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-common-redis/1.0.0-SNAPSHOT/vr-common-redis-1.0.0-20171226.101308-9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
