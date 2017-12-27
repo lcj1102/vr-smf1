@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suneee.smf.smf.dao.EnterpriseSettlementDao">
+	<sql id="insertColumns">
+		code,name,pk_enterprise,enterprise_code,enterprise_name,busi_date,amount,logistics_cost,supervision_cost,pk_currency,currency_name,
+		address,credit_code,contact,contact_number,state,inputmanid,inputmanname,bookindate,modiferid,modifername,modefydate,
+		cancelid,cancelname,canceldate,enterpriseid,time_stamp
+	</sql>
+
+	<insert id="insert" parameterType="com.suneee.smf.smf.model.EnterpriseSettlementDO" useGeneratedKeys="true" keyProperty="pk_enterprise_settlement">
+		INSERT INTO smf_enterprise_settlement (<include refid="insertColumns" />)
+		VALUES(
+				#{code},#{name},#{pk_enterprise},#{enterprise_code},#{enterprise_name},#{busi_date},
+				#{amount},#{logistics_cost},#{supervision_cost},#{pk_currency},
+				#{currency_name},#{address},#{credit_code},#{contact},#{contact_number},#{state},
+				#{inputmanid},#{inputmanname},#{bookindate},
+				#{modiferid},#{modifername},#{modefydate},
+				#{cancelid},#{cancelname},#{canceldate},
+				#{enterpriseid},current_timestamp(3))
+	</insert>
+	
+	<!-- 根据企业ID判断是否已经存在某一企业分账结算记录 -->
+	<select id="isExistsGivenEnterprise" resultType="java.lang.String">
+		SELECT 'X' 
+		  FROM smf_enterprise_settlement
+		WHERE pk_enterprise = #{pk_enterprise}
+		  AND enterpriseid = #{enterpriseid}
+	</select>
+	
+	<!-- 校验企业结算单号是否重复 -->
+    <select id="isCodeExists" resultType="java.lang.String">
+		SELECT 'X'
+			FROM smf_enterprise_settlement
+		WHERE trim(code) = #{code}
+			AND enterpriseid = #{enterpriseid}
+	</select>
+
+	<select id="getByEnterprise" parameterType="com.suneee.smf.smf.model.EnterpriseSettlementDO" resultType="com.suneee.smf.smf.model.EnterpriseSettlementVO">
+		SELECT * 
+		  FROM smf_enterprise_settlement
+		WHERE pk_enterprise = #{pk_enterprise}
+		  AND enterpriseid = #{enterpriseid}
+	</select>
+
+	<update id="updateMoney" parameterType="com.suneee.smf.smf.model.EnterpriseSettlementVO">
+		UPDATE smf_enterprise_settlement
+		SET amount = #{amount},
+			logistics_cost = #{logistics_cost},
+			supervision_cost = #{supervision_cost},
+			modefydate = #{modefydate},
+			time_stamp = current_timestamp(3)
+		WHERE pk_enterprise = #{pk_enterprise} AND enterpriseid = #{enterpriseid} AND time_stamp = #{time_stamp}
+	</update>
+	
+	<update id="updateAmount" parameterType="com.suneee.smf.smf.model.EnterpriseSettlementVO">
+		UPDATE smf_enterprise_settlement
+		SET amount = #{amount},
+			time_stamp = current_timestamp(3)
+		WHERE pk_enterprise = #{pk_enterprise} AND enterpriseid = #{enterpriseid} AND time_stamp = #{time_stamp}
+	</update>
+	
+	<select id="selectByPage" parameterType="java.util.Map" resultType="com.suneee.smf.smf.model.EnterpriseSettlementVO">
+	   select   enterprise_name, NAME, busi_date, amount, logistics_cost, supervision_cost, address, STATE, pk_enterprise_settlement
+	   from    smf_enterprise_settlement
+	   where   1 = 1
+	   
+	   <if test="name != null and name != ''">
+	       and  name like concat('%',#{name},'%')
+	   </if>
+	   <if test="enterprise_name != null and enterprise_name != ''">
+	       and  enterprise_name like concat('%',#{enterprise_name},'%')
+	   </if>
+	   <if test="beginDate != null">
+	       and  busi_date &gt;= #{beginDate}
+	   </if>
+	   <if test="endDate != null">
+	       and  busi_date &lt;= #{endDate}
+	   </if>
+	    <if test="enterpriseid !=null and enterpriseid!=''">
+           and  enterpriseid = #{enterpriseid}
+       </if>
+       <if test="minAmount != null and minAmount != ''">
+            and amount  &gt;= #{minAmount}
+       </if>
+       <if test="maxAmount != null and maxAmount != ''">
+            and amount  &lt;= #{maxAmount}
+       </if>
+	   
+	     <if test="searchValue != null and searchValue != ''">
+	       and  (
+	           name                like concat ('%',#{searchValue} , '%')  or
+	           enterprise_name     like concat ('%',#{searchValue} , '%')  or
+	           to_char(busi_date,'yyyy-mm-dd')             like concat ('%',#{searchValue} , '%')  or
+	           rtrim(CAST(amount as VARCHAR),'0')          like concat ('%',#{searchValue} , '%')  or
+	           rtrim(CAST(logistics_cost as VARCHAR),'0')  like concat ('%',#{searchValue} , '%')  or
+	           rtrim(CAST(supervision_cost as VARCHAR),'0') like concat ('%',#{searchValue} , '%')  or
+	           address             like concat ('%',#{searchValue} , '%')  or
+	           credit_code         like concat ('%',#{searchValue} , '%')  or
+	           contact             like concat ('%',#{searchValue} , '%')  or
+	           contact_number      like concat ('%',#{searchValue} , '%')  or
+	           state               like concat ('%',#{searchValue} , '%')
+	       )
+	   </if>
+        order by busi_date desc, pk_enterprise_settlement asc
+        limit #{pageSize} offset #{startNum}
+	   
+	</select>
+	
+	<select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Long">
+	   select  count(*)
+	   from    smf_enterprise_settlement
+	   where   1 = 1
+       
+       <if test="name != null and name != ''">
+           and  name like concat('%',#{name},'%')
+       </if>
+       <if test="enterprise_name != null and enterprise_name != ''">
+           and  enterprise_name like concat('%',#{enterprise_name},'%')
+       </if>
+       <if test="beginDate != null">
+           and  busi_date &gt;= #{beginDate}
+       </if>
+       <if test="endDate != null">
+           and  busi_date &lt;= #{endDate}
+       </if>
+       <if test="enterpriseid !=null and enterpriseid!=''">
+           and  enterpriseid = #{enterpriseid}
+       </if>
+        <if test="minAmount != null and minAmount != ''">
+            and amount  &gt;= #{minAmount}
+       </if>
+       <if test="maxAmount != null and maxAmount != ''">
+            and amount  &lt;= #{maxAmount}
+       </if>
+       
+       <if test="searchValue != null and searchValue != ''">
+           and  (
+               name                like concat ('%',#{searchValue} , '%')  or
+               enterprise_name     like concat ('%',#{searchValue} , '%')  or
+               to_char(busi_date,'yyyy-mm-dd')             like concat ('%',#{searchValue} , '%')  or
+               rtrim(CAST(amount as VARCHAR),'0')          like concat ('%',#{searchValue} , '%')  or
+               rtrim(CAST(logistics_cost as VARCHAR),'0')  like concat ('%',#{searchValue} , '%')  or
+               rtrim(CAST(supervision_cost as VARCHAR),'0') like concat ('%',#{searchValue} , '%')  or
+               address             like concat ('%',#{searchValue} , '%')  or
+               credit_code         like concat ('%',#{searchValue} , '%')  or
+               contact             like concat ('%',#{searchValue} , '%')  or
+               contact_number      like concat ('%',#{searchValue} , '%')  or
+               state               like concat ('%',#{searchValue} , '%')
+           )
+       </if>
+	</select>
+	<select id="selectByName" parameterType="java.util.Map" resultType="com.suneee.smf.smf.model.EnterpriseSettlementVO">
+		SELECT * 
+		  FROM smf_enterprise_settlement
+		WHERE enterprise_name like concat ('%',#{enterprise_name}, '%')
+		  AND enterpriseid = #{enterpriseId} order by enterprise_code
+	</select>
+	<select id="selectByCode" parameterType="java.util.Map" resultType="com.suneee.smf.smf.model.EnterpriseSettlementVO">
+		SELECT * 
+		  FROM smf_enterprise_settlement
+		WHERE enterprise_code = #{code}
+		  AND enterpriseid = #{enterpriseId}
+	</select>
+	
+
+	<select id="getById" resultType="com.suneee.smf.smf.model.EnterpriseSettlementVO">
+	   SELECT   *
+         FROM   smf_enterprise_settlement
+        WHERE   pk_enterprise_settlement = #{id}
+        <if test="enterpriseid !=null and enterpriseid!=''">
+           and  enterpriseid = #{enterpriseid}
+       </if>
+	</select>
+
+</mapper>

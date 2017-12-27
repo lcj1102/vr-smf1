@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="ERROR" monitorInterval="3" shutdownHook="disable">
+    <properties>
+        <property name="LOG_FILE">/logs/pub/smf/provider.log</property>
+        <property name="FILE_LOG_PATTERN">%d [%c:%L][%p] - %m%n</property>
+        <property name="CONSOLE_LOG_PATTERN">%d [%c:%L][%p] - %m%n</property>
+    </properties>
+
+    <appenders>
+        <!-- 定义控制台输出 -->
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="${CONSOLE_LOG_PATTERN}"/>
+        </Console>
+
+        <!-- 程序员调试日志 -->
+        <RollingRandomAccessFile name="FILE" fileName="${LOG_FILE}" filePattern="${LOG_FILE}.%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${FILE_LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </appenders>
+
+    <loggers>
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE" />
+        </root>
+        <logger name="com.suneee.www" level="DEBUG"/>
+        <logger name="org.springframework" level="DEBUG"/>
+        <logger name="com.suneee.www.service" level="DEBUG"/>
+    </loggers>
+</configuration>

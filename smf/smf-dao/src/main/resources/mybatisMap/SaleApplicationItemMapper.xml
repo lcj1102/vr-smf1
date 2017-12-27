@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.SaleApplicationItemDao" >
+  <resultMap id="BaseVOResultMap" type="com.suneee.smf.smf.model.SaleApplicationItemVO" >
+    <id column="pk_saleapplication_item" property="pk_saleapplication_item"/>
+    <result column="pk_sale_application" property="pk_sale_application"/>
+    <result column="rownumber" property="rownumber"/>
+    <result column="goods_name" property="goods_name"/>
+    <result column="spec" property="spec"/>
+    <result column="producing_area" property="producing_area"/>
+    <result column="quality" property="quality"/>
+    <result column="packing" property="packing"/>
+    <result column="pk_measurement" property="pk_measurement"/>
+    <result column="measurement_name" property="measurement_name"/>
+    <result column="number" property="number"/>
+    <result column="price" property="price"/>
+    <result column="money" property="money"/>
+    <result column="batch_number" property="batch_number"/>
+    <result column="storage_location" property="storage_location"/>
+    <result column="sourcebilltype" property="sourcebilltype"/>
+    <result column="sourcebillid" property="sourcebillid"/>
+    <result column="sourcebillitemid" property="sourcebillitemid"/>
+    <result column="enterpriseid" property="enterpriseid"/>
+    <result column="cancelid" property="cancelid"/>
+    <result column="cancelname" property="cancelname"/>
+    <result column="canceldate" property="canceldate"/>
+  </resultMap>
+  
+  <sql id="BaseItemDO_Column_List" >
+    pk_saleapplication_item, pk_sale_application, rownumber, goods_name, spec, producing_area,quality,packing,
+    pk_measurement, measurement_name, number, price, money, batch_number, storage_location, sourcebilltype,
+    sourcebillid, sourcebillitemid, enterpriseid, cancelid, cancelname, canceldate
+  </sql>
+  
+  <insert id="insertItemDO" parameterType="com.suneee.smf.smf.model.SaleApplicationItemDO" >
+    insert into smf_saleapplication_item(
+    	pk_sale_application, rownumber, goods_name, spec, producing_area,quality,packing,
+    	pk_measurement, measurement_name, number, price, money, batch_number, storage_location, sourcebilltype,
+    	sourcebillid, sourcebillitemid, enterpriseid
+    ) values (
+    	#{pk_sale_application},#{rownumber},#{goods_name},#{spec},#{producing_area},
+    	#{quality},#{packing},#{pk_measurement},#{measurement_name},
+    	#{number},#{price},#{money},#{batch_number},#{storage_location},#{sourcebilltype},
+    	#{sourcebillid},#{sourcebillitemid},#{enterpriseid}
+    )
+  </insert>
+  
+  <select id="queryListBySaleApplicationId" resultMap="BaseVOResultMap" parameterType="com.suneee.smf.smf.model.SaleApplicationItemDO">
+  	select * 
+  	from smf_saleapplication_item 
+  	where 
+  	pk_sale_application = #{pk_sale_application} 
+  	<if test="enterpriseid != null">
+         and enterpriseid = #{enterpriseid}
+    </if>
+  </select>
+  
+  <delete id="deleteItemBySaleApplicationId" parameterType="com.suneee.smf.smf.model.SaleApplicationItemDO">
+    DELETE FROM smf_saleapplication_item
+    WHERE pk_sale_application = #{pk_sale_application} and enterpriseid = #{enterpriseid}
+  </delete>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.AttachmentsDao" >
+	<resultMap id="BaseResultMap" type="com.suneee.smf.smf.model.AttachmentsVO" >
+ 		<id column="pk_attachments" property="pk_attachments" />
+		<result column="sourcebillid" property="sourcebillid" />
+		<result column="sourcebilltype" property="sourcebilltype" />
+		<result column="code" property="code" />
+		<result column="name" property="name" />
+		<result column="url" property="url" />
+		<result column="type" property="type" />
+		<result column="size" property="size" />
+		<result column="state" property="state" />
+		<result column="inputmanid" property="inputmanid" />
+		<result column="inputmanname" property="inputmanname" />
+		<result column="bookindate" property="bookindate" />
+		<result column="modiferid" property="modiferid" />
+		<result column="modifername" property="modifername" />
+		<result column="modefydate" property="modefydate" />
+		<result column="cancelid" property="cancelid" />
+		<result column="cancelname" property="cancelname" />
+		<result column="canceldate" property="canceldate" />
+		<result column="enterpriseid" property="enterpriseid" />
+		<result column="time_stamp" property="time_stamp" />
+	</resultMap>
+	
+	<select id="getFileList" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from smf_attachments where sourcebillid = #{sourcebillid} and sourcebilltype = #{sourcebilltype} and enterpriseid = #{enterpriseid} and state = #{state}
+	</select>
+
+	<insert id="addFile" parameterType="com.suneee.smf.smf.model.AttachmentsDO" useGeneratedKeys="true" keyProperty="pk_attachments">
+		INSERT INTO smf_attachments (
+			sourcebillid,sourcebilltype,code,name,url,type,size,state,
+			inputmanid,inputmanname,bookindate,enterpriseid,time_stamp
+    	) VALUES (
+    		#{sourcebillid},#{sourcebilltype},#{code},#{name},#{url},#{type},#{size},#{state},
+    		#{inputmanid},#{inputmanname},#{bookindate},#{enterpriseid},CURRENT_TIMESTAMP(3)
+    	)
+				
+	</insert>
+	<update id="deleteFile" parameterType="com.suneee.smf.smf.model.AttachmentsDO">
+		UPDATE smf_attachments SET 
+			state = #{state},
+			cancelid = #{cancelid},
+			cancelname = #{cancelname},
+			canceldate = #{canceldate},
+	    	time_stamp = CURRENT_TIMESTAMP(3)
+    	 WHERE pk_attachments = #{pk_attachments} AND time_stamp = #{time_stamp} AND enterpriseid = #{enterpriseid}
+	</update>
+	<update id="updateFile" parameterType="com.suneee.smf.smf.model.AttachmentsDO">
+		UPDATE smf_attachments SET 
+			name = #{name},
+			url = #{url},
+			type = #{type},
+			size = #{size},
+			modiferid = #{modiferid},
+			modifername = #{modifername},
+			modefydate = #{modefydate},
+	    	time_stamp = CURRENT_TIMESTAMP(3)
+    	 WHERE pk_attachments = #{pk_attachments} AND time_stamp = #{time_stamp} AND enterpriseid = #{enterpriseid}
+	</update>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/smf.iml" filepath="$PROJECT_DIR$/smf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-api/smf-api.iml" filepath="$PROJECT_DIR$/smf-api/smf-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-app/smf-app.iml" filepath="$PROJECT_DIR$/smf-app/smf-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-common/smf-common.iml" filepath="$PROJECT_DIR$/smf-common/smf-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-config/smf-config.iml" filepath="$PROJECT_DIR$/smf-config/smf-config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-consumer/smf-consumer.iml" filepath="$PROJECT_DIR$/smf-consumer/smf-consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-dao/smf-dao.iml" filepath="$PROJECT_DIR$/smf-dao/smf-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-deps/smf-deps.iml" filepath="$PROJECT_DIR$/smf-deps/smf-deps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-model/smf-model.iml" filepath="$PROJECT_DIR$/smf-model/smf-model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-provider/smf-provider.iml" filepath="$PROJECT_DIR$/smf-provider/smf-provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-rest-enterprise/smf-rest-enterprise.iml" filepath="$PROJECT_DIR$/smf-rest-enterprise/smf-rest-enterprise.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smf-service/smf-service.iml" filepath="$PROJECT_DIR$/smf-service/smf-service.iml" />
+    </modules>
+  </component>
+</project>

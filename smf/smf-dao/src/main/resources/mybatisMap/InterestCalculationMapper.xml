@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.InterestCalculationDao">
+	<resultMap id="BaseResultMap"
+		type="com.suneee.smf.smf.model.InterestCalculationVO">
+		<id column="pk_interest_calculation" property="pk_interest_calculation" />
+		<result column="pk_enterprise_application" property="pk_enterprise_application" />
+		<result column="enterprise_application_name" property="enterprise_application_name" />
+		<result column="interest_date" property="interest_date" />
+		<result column="days_principal" property="days_principal" />
+		<result column="days_interest" property="days_interest" />
+		<result column="accumulated_interest" property="accumulated_interest" />
+		<result column="pk_currency" property="pk_currency" />
+		<result column="currency_name" property="currency_name" />
+		<result column="interest_rate" property="interest_rate" />
+		<result column="state" property="state" />
+		<result column="enterpriseid" property="enterpriseid" />
+		<result column="time_stamp" property="time_stamp" />
+	</resultMap>
+
+	<select id="selectByPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select 	* 
+		from 	smf_interest_calculation
+		where	1=1
+		<if test="enterprise_application_name != null">
+			and	enterprise_application_name like concat('%',#{enterprise_application_name},'%')
+		</if>
+		
+		<if test="state != null and state !=''">
+		  and state = #{state}
+		</if>
+		
+		<if test="beginDate != null">
+			and	interest_date &gt;= #{beginDate}
+		</if>
+		
+		<if test="endDate != null">
+			and interest_date &lt;= #{endDate}
+		</if>
+		
+		<if test="enterpriseid != null and enterpriseid != ''">
+		    and enterpriseid = #{enterpriseid}
+		</if>
+		
+		<if test="searchValue != null and searchValue !=''">
+		 	and (
+		 		enterprise_application_name like concat ('%',#{searchValue} , '%')
+				or to_char(interest_date,'yyyy-mm-dd') like concat ('%' ,#{searchValue} , '%')
+				or rtrim(CAST(days_interest as VARCHAR),'0') like concat ('%' ,#{searchValue} , '%')
+				or rtrim(CAST(accumulated_interest as VARCHAR),'0') like concat ('%' ,#{searchValue} , '%')
+				or rtrim(CAST(interest_rate as VARCHAR),'0') like concat ('%' ,#{searchValue} , '%')
+				or state like concat ('%' ,#{searchValue} , '%')   
+		 	)
+		 </if>
+		order by interest_date desc, pk_interest_calculation asc 
+        limit #{pageSize} offset #{startNum}
+	</select>
+
+	<select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select 	count(*) 
+		from 	smf_interest_calculation
+		where	1=1
+		<if test="enterprise_application_name != null">
+			and	enterprise_application_name like concat('%',#{enterprise_application_name},'%')
+		</if>
+		
+		<if test="state != null and state !=''">
+		  and state = #{state}
+		</if>
+		
+		<if test="enterpriseid != null and enterpriseid != ''">
+            and enterpriseid = #{enterpriseid}
+        </if>
+		
+		<if test="beginDate != null">
+			and	interest_date &gt;= #{beginDate}
+		</if>
+		
+		<if test="endDate != null">
+			and interest_date &lt;= #{endDate}
+		</if>
+		
+		<if test="searchValue != null and searchValue !=''">
+		 	and (
+		 		enterprise_application_name like concat ('%',#{searchValue} , '%')
+				or to_char(interest_date,'yyyy-mm-dd') like concat ('%' ,#{searchValue} , '%')
+				or rtrim(CAST(days_interest as VARCHAR),'0') like concat ('%' ,#{searchValue} , '%')
+				or rtrim(CAST(accumulated_interest as VARCHAR),'0') like concat ('%' ,#{searchValue} , '%')
+				or rtrim(CAST(interest_rate as VARCHAR),'0') like concat ('%' ,#{searchValue} , '%')
+				or state like concat ('%' ,#{searchValue} , '%')   
+		 	)
+		 </if>
+	</select>
+
+	<insert id="add"  >
+	    INSERT INTO smf_interest_calculation (
+           select nextval('smf_collection_confirm_pk_collection_confirm_seq') AS "pk_interest_calculation",
+                 es.pk_enterprise AS "pk_enterprise_application",
+                 es.enterprise_name AS "enterprise_application_name",
+                 #{date} AS "interest_date",
+                 es.amount AS "days_principal",
+                 es.amount*coalesce(lc.interest_rate,0)/36000 AS "days_interest",
+                 (select coalesce(sum(days_interest),0) from smf_interest_calculation ic where ic.pk_enterprise_application = es.pk_enterprise)
+                 +(es.amount*coalesce(lc.interest_rate,0)/36000) AS "accumulated_interest",
+                 es.pk_currency  AS "pk_currency",
+                 es.currency_name AS "currency_name",
+                 lc.interest_rate/360*100 AS "interest_rate",
+                 '未结息' AS "state",
+                 es.enterpriseid AS "enterpriseid",
+				 current_timestamp(3) AS time_stamp
+          from smf_enterprise_settlement es
+          inner JOIN smf_loan_contract lc
+          on es.pk_enterprise=lc.pk_enterprise
+          where lc.state='已审核'
+          and es.amount>0
+          and not exists (select c.* from smf_interest_calculation c
+                    where c.pk_enterprise_application = es.pk_enterprise and CAST(c.interest_date AS DATE) = #{date}))
+	</insert>
+
+	<select id="selectNotSettlement" parameterType="com.suneee.smf.smf.model.InterestCalculationVO" resultType="com.suneee.smf.smf.model.InterestCalculationVO">
+		SELECT * FROM smf_interest_calculation
+		WHERE enterpriseid = #{enterpriseid} AND pk_enterprise_application = #{pk_enterprise_application} AND state = #{state}
+		ORDER BY interest_date ASC
+	</select>
+
+	<update id="updateState" parameterType="java.util.Map">
+		UPDATE smf_interest_calculation
+		SET state = #{state}
+		WHERE
+			pk_interest_calculation IN
+	           <foreach item="item" collection="interestIdList" open="(" separator="," close=")">
+	               #{item}
+	           </foreach>
+			AND enterpriseid = #{enterpriseid}
+	</update>
+
+	<update id="createTempTable">
+		CREATE TEMPORARY TABLE smf_interest_calculation_t 
+		(
+			pk_interest_calculation_t numeric(32) PRIMARY KEY,
+			state varchar(5) COLLATE "default" NOT NULL ,
+			enterpriseid int4 NOT NULL,
+			time_stamp timestamp(6)
+		) ON COMMIT DROP
+	</update>
+
+	<update id="updateStateWithTempTable">
+		UPDATE smf_interest_calculation
+		SET state = smf_interest_calculation_t.state, time_stamp = current_timestamp(3)
+		FROM smf_interest_calculation_t
+		WHERE smf_interest_calculation_t.pk_interest_calculation_t = smf_interest_calculation.pk_interest_calculation
+		AND smf_interest_calculation_t.time_stamp = smf_interest_calculation.time_stamp
+		AND smf_interest_calculation_t.enterpriseid = smf_interest_calculation.enterpriseid
+	</update>
+
+	<insert id="insertTempTable" parameterType="java.util.List">
+		INSERT INTO smf_interest_calculation_t
+		(
+			pk_interest_calculation_t,
+			state,
+			enterpriseid,
+			time_stamp
+		)VALUES
+		<foreach collection="list" item="item" separator="," >
+		(#{item.pk_interest_calculation},#{item.state},#{item.enterpriseid},#{item.time_stamp})
+		</foreach>
+
+	</insert>
+
+</mapper>

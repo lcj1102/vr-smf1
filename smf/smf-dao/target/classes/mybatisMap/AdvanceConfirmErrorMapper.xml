@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.AdvanceConfirmErrorDao">
+	<resultMap id="BaseResultMap"
+		type="com.suneee.smf.smf.model.AdvanceConfirmErrorVO">
+		<id column="pk_advanceconfirm_error" property="pk_advanceconfirm_error" />
+		<result column="pk_advance_confirm" property="pk_advance_confirm" />
+		<result column="code" property="code" />
+		<result column="pk_enterprise_application" property="pk_enterprise_application" />
+		<result column="enterprise_application_name" property="enterprise_application_name" />
+		<result column="contact" property="contact" />
+		<result column="contact_number" property="contact_number" />
+		<result column="application_amount" property="application_amount" />
+		<result column="advances_amount" property="advances_amount" />
+		<result column="pk_currency" property="pk_currency" />
+		<result column="currency_name" property="currency_name" />
+		<result column="error_msg" property="error_msg" />
+		<result column="application_date" property="application_date" />
+		<result column="busi_date" property="busi_date" />
+		<result column="payment_method" property="payment_method" />
+		<result column="payment_billno" property="payment_billno" />
+		<result column="bank_account" property="bank_account" />
+		<result column="bank_deposit" property="bank_deposit" />
+		<result column="sourcebilltype" property="sourcebilltype" />
+		<result column="sourcebillid" property="sourcebillid" />
+		<result column="state" property="state" />
+		<result column="inputmanid" property="inputmanid" />
+		<result column="inputmanname" property="inputmanname" />
+		<result column="bookindate" property="bookindate" />
+		<result column="modiferid" property="modiferid" />
+		<result column="modifername" property="modifername" />
+		<result column="modefydate" property="modefydate" />
+		<result column="cancelid" property="cancelid" />
+		<result column="cancelname" property="cancelname" />
+		<result column="canceldate" property="canceldate" />
+		<result column="enterpriseid" property="enterpriseid" />
+		<result column="time_stamp" property="time_stamp" />
+	</resultMap>
+
+
+	
+	<select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		*
+		from smf_advanceconfirm_error
+		where 1 = 1
+		<if test="code != null">
+			and code like concat('%',#{code},'%')
+		</if>
+		<if test="enterprise_application_name != null">
+			and enterprise_application_name like concat('%',#{enterprise_application_name},'%')
+		</if>
+		<if test="beginDateTS != null">
+			and time_stamp &gt;= #{beginDateTS}
+		</if>
+		<if test="endDateTS !=null">
+			and time_stamp &lt; #{endDateTS}
+		</if>
+		<if test="beginDateBD != null">
+			and busi_date &gt;= #{beginDateBD}
+		</if>
+		<if test="endDateBD !=null">
+			and busi_date &lt; #{endDateBD}
+		</if>
+		<if test="searchValue != null and searchValue !=''">
+			and (code like concat('%',#{searchValue},'%')
+			or enterprise_application_name like concat('%',#{searchValue},'%')
+			or to_char(time_stamp,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+			or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+			or state like concat('%',#{searchValue},'%')
+			or rtrim(CAST(advances_amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+			or error_msg like concat('%',#{searchValue},'%'))
+		</if>
+		<if test="state_new != null and state_end == null">
+			and state = #{state_new}
+		</if>
+		<if test="state_end != null and state_new == null">
+			and state = #{state_end}
+		</if>
+		<if test="enterpriseid != null">
+			and enterpriseid = #{enterpriseid}
+		</if>
+		order by time_stamp desc
+		limit #{pageSize} offset #{startNum}
+	</select>
+
+	<select id="countByPage" resultType="java.lang.Long" parameterType="java.util.Map">
+		select count(pk_advanceconfirm_error) from smf_advanceconfirm_error
+		where 1 = 1										
+		<if test="code != null">
+			and code like concat('%',#{code},'%')
+		</if>
+		<if test="enterprise_application_name != null">
+			and enterprise_application_name like concat('%',#{enterprise_application_name},'%')
+		</if>
+		<if test="beginDateTS != null">
+			and time_stamp &gt;= #{beginDateTS}
+		</if>
+		<if test="endDateTS !=null">
+			and time_stamp &lt; #{endDateTS}
+		</if>
+		<if test="beginDateBD != null">
+			and busi_date &gt;= #{beginDateBD}
+		</if>
+		<if test="endDateBD !=null">
+			and busi_date &lt; #{endDateBD}
+		</if>
+		<if test="searchValue != null and searchValue !=''">
+			and (code like concat('%',#{searchValue},'%')
+			or enterprise_application_name like concat('%',#{searchValue},'%')
+			or to_char(time_stamp,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+			or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+			or state like concat('%',#{searchValue},'%')
+			or rtrim(CAST(advances_amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+			or error_msg like concat('%',#{searchValue},'%'))
+		</if>
+		<if test="state_new != null and state_end == null">
+			and state = #{state_new}
+		</if>
+		<if test="state_end != null and state_new == null">
+			and state = #{state_end}
+		</if>
+		<if test="enterpriseid != null">
+			and enterpriseid = #{enterpriseid}
+		</if>
+	</select>
+
+  <select id="getByPrimaryKey" parameterType="com.suneee.smf.smf.model.AdvanceConfirmErrorDO" resultType="com.suneee.smf.smf.model.AdvanceConfirmErrorVO">
+   	select *
+   	from smf_advanceconfirm_error
+	where code=#{code} and enterpriseid = #{enterpriseid}
+  </select>
+  
+  <!-- 查出所有的放款确认异常数据 -->
+  <select id = "getAllPriamryKey"  resultMap = "BaseResultMap">
+		select * from 
+		smf_advanceconfirm_error
+		where state = '未处理'
+		order by time_stamp
+	</select>
+	
+	<!-- 修改相关的放款异常记录为已处理 -->
+	<update id="updateErrorDOState" parameterType="com.suneee.smf.smf.model.AdvanceConfirmVO">
+  	update smf_advanceconfirm_error 
+  	 SET state=#{state},
+  	 time_stamp=CURRENT_TIMESTAMP(3)
+  	 where pk_advance_confirm=#{pk_advance_confirm} 
+  	 	   and enterpriseid = #{enterpriseid}
+  </update>
+  
+  <!-- 更新放款异常记录信息 -->
+  <update id="update" parameterType="com.suneee.smf.smf.model.AdvanceConfirmErrorVO">
+  	update smf_advanceconfirm_error 
+  	SET 
+  	error_msg=#{error_msg},time_stamp=CURRENT_TIMESTAMP(3) 
+  	where pk_advance_confirm=#{pk_advance_confirm} and enterpriseid = #{enterpriseid}
+  </update>
+
+	<insert id="insert" parameterType="com.suneee.smf.smf.model.AdvanceConfirmErrorDO" useGeneratedKeys="true" keyProperty="pk_advanceconfirm_error">
+		INSERT INTO smf_advanceconfirm_error (
+		pk_advance_confirm,code,pk_enterprise_application,enterprise_application_name,
+		contact,contact_number,application_amount,advances_amount,pk_currency,currency_name,
+		error_msg,application_date,busi_date,payment_method,payment_billno,bank_account,
+		bank_deposit,sourcebilltype,sourcebillid,state,inputmanid,inputmanname,bookindate,
+		enterpriseid,time_stamp
+		) VALUES (
+		#{pk_advance_confirm},#{code},#{pk_enterprise_application},#{enterprise_application_name},
+		#{contact},#{contact_number},#{application_amount},#{advances_amount},#{pk_currency},#{currency_name},
+		#{error_msg},#{application_date},#{busi_date},#{payment_method},#{payment_billno},#{bank_account},
+		#{bank_deposit},#{sourcebilltype},#{sourcebillid},#{state},#{inputmanid},#{inputmanname},#{bookindate},
+		#{enterpriseid},#{time_stamp}
+		)
+	</insert>
+
+	<delete id="deleteErrorDO">
+		delete
+		from smf_advanceconfirm_error
+		where pk_advance_confirm=#{pk_advance_confirm} and enterpriseid = #{enterpriseid}
+	</delete>
+
+	<select id = "getAllAdvanceByPk"  resultType = "com.suneee.smf.smf.model.AdvanceConfirmDO">
+		select * from
+		smf_advance_confirm
+		where pk_advance_confirm = #{pk_advance_confirm}
+	</select>
+
+	
+</mapper>

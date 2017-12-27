@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>收款确认</title>
+</head>
+<body>
+<div class="col-xs-12">
+    <div id="confirm-payment-table"></div>
+</div>
+
+<!-- 新增、编辑页面 -->
+<script id="addConfirmPayTemp" type="text/html">
+    <div id="addConfirmPayDlg" class="from_table_con">
+        <form id="confirmPayForm" method="post" role="form">
+            <table cellpadding="0" cellspacing="0" class="from_table">
+                <tr>
+                    <td>收款确认单号<label class="required">*</label></td>
+                    <td>
+                        <input type="hidden" class="form-control"
+                               id="pk_collection_confirm" name="pk_collection_confirm"
+                               value="{{if pk_collection_confirm != undefined}}{{pk_collection_confirm}}{{/if}}" />
+                        <input type="text" class="form-control" id="code" name="code"
+                               value="{{if code != undefined}}{{code}}{{/if}}" />
+                    </td>
+                    <td>付款企业名称<label class="required">*</label></td>
+                    <td>
+                        <input type="hidden" name="pk_enterprise_payment" id="pk_enterprise_payment"
+                               value="{{if pk_enterprise_payment!=undefined}}{{pk_enterprise_payment}}{{/if}}"/>
+                        <input type="text" class="form-control"
+                               id="enterprise_payment_name" name="enterprise_payment_name"
+                               value="{{if enterprise_payment_name != undefined}}{{enterprise_payment_name}}{{/if}}"
+                               class="form-control confirmPay_application_entry"/>
+                    </td>
+                    <td>付款企业联系人</td>
+                    <td>
+                        <input type="text" class="form-control" id="contact" name="contact"
+                               value="{{if contact != undefined}}{{contact}}{{/if}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>付款企业联系电话</td>
+                    <td>
+                        <input type="text" class="form-control" id="contact_number" name="contact_number"
+                               value="{{if contact_number != undefined}}{{contact_number}}{{/if}}"/>
+                    </td>
+                    <td>付款方式<label class="required">*</label></td>
+                    <td>
+                        <input type="text" class="form-control" id="payment_method" name="payment_method"
+                               value="{{if payment_method != undefined}}{{payment_method}}{{/if}}"/>
+                    </td>
+                    <td>付款凭证号<label class="required">*</label></td>
+                    <td>
+                        <input type="text" class="form-control" id="payment_billno" name="payment_billno"
+                               value="{{if payment_billno != undefined}}{{payment_billno}}{{/if}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>付款银行账号</td>
+                    <td>
+                        <input type="text" class="form-control" id="payment_account" name="payment_account"
+                               value="{{if payment_account != undefined}}{{payment_account}}{{/if}}"/>
+                    </td>
+                    <td>付款银行</td>
+                    <td>
+                        <input type="text" class="form-control" id="payment_bank" name="payment_bank"
+                               value="{{if payment_bank != undefined}}{{payment_bank}}{{/if}}"/>
+                    </td>
+                    <td>实际收款金额<label class="required">*</label></td>
+                    <td>
+                        <input type="text" class="form-control" id="collection_amount" name="collection_amount"
+                               value="{{if collection_amount != undefined}}{{collection_amount}}{{/if}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>币种<label class="required">*</label></td>
+                    <td>
+                        <input type="hidden" name="pk_currency" id="pk_currency"
+                               value="{{if pk_currency!=undefined}}{{pk_currency}}{{/if}}"/>
+                        <input type="text" class="form-control" id="currency_name" name="currency_name"
+                               value="{{if currency_name != undefined}}{{currency_name}}{{/if}}"/>
+                    </td>
+                    <td>确认收款日期</td>
+                    <td>
+                        <div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" id="busi_date" name="busi_date"
+                                   value="{{if busi_date != undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+                        </div>
+                    </td>
+                    <td>状态</td>
+                    <td>
+                        <input type="text" class="form-control" id="state" name="state" readonly="readonly"
+                               value="{{if state != undefined}}{{state}}{{/if}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>来源单据类型</td>
+                    <td>
+                        <input type="text" class="form-control" id="sourcebilltype" name="sourcebilltype"
+                               value="{{if sourcebilltype != undefined}}{{sourcebilltype}}{{/if}}"/>
+                        <input type="hidden" name="sourcebillid" id="sourcebillid"
+                               value="{{if sourcebillid!=undefined}}{{sourcebillid}}{{/if}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>登记人姓名</td>
+                    <td>
+                        <input type="text" class="form-control" id="inputmanname" name="inputmanname" readonly="readonly"
+                               value="{{if inputmanname != undefined}}{{inputmanname}}{{/if}}"/>
+                        <input type="hidden" name="inputmanid" id="inputmanid"
+                               value="{{if inputmanid!=undefined}}{{inputmanid}}{{/if}}"/>
+                    </td>
+                    <td>修改人姓名</td>
+                    <td>
+                        <input type="hidden" name="modiferid" id="modiferid"
+                               value="{{if modiferid!=undefined}}{{modiferid}}{{/if}}"/>
+                        <input type="text" class="form-control" id="modifername" name="modifername" readonly="readonly"
+                               value="{{if modifername != undefined}}{{modifername}}{{/if}}"/>
+                    </td>
+                    <td>作废人姓名</td>
+                    <td>
+                        <input type="hidden" name="cancelid" id="cancelid"
+                               value="{{if cancelid!=undefined}}{{cancelid}}{{/if}}"/>
+                        <input type="text" class="form-control" id="cancelname" name="cancelname" readonly="readonly"
+                               value="{{if cancelname != undefined}}{{cancelname}}{{/if}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>登记日期</td>
+                    <td>
+                        <div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" id="bookindate" name="bookindate"
+                                   value="{{if bookindate != undefined}}{{bookindate | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+                        </div>
+                    </td>
+                    <td>最后修改日期</td>
+                    <td>
+                        <div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" id="modefydate" name="modefydate" readonly="readonly"
+                                   value="{{if modefydate != undefined}}{{modefydate | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+                        </div>
+                    </td>
+                    <td>作废日期</td>
+                    <td>
+                        <div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" id="canceldate" name="canceldate" readonly="readonly"
+                                   value="{{if canceldate != undefined}}{{canceldate | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+                            <input type="hidden" class="form-control" id="time_stamp" name="time_stamp" readonly="readonly"
+                                   value="{{if time_stamp!=undefined}}{{time_stamp}}{{/if}}"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <hr style=" height:2px;border:none;border-top:2px ridge #185598;"/>
+
+            <div class="form-group" align="center">
+                <input type="button" id="savebtn" value="保存" class="btn btn-primary"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" id="submitbtn" value="保存并提交" class="btn btn-primary"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" id="printbtn" value="打印" class="btn btn-primary"/>
+            </div>
+
+        </form>
+    </div>
+</script>
+
+<!-- 状态查询条件 -->
+<script id="reqSearchTemp" type="text/html">
+    <div class="form-group">
+        <label class="col-xs-1 control-label"></label>
+        <div class="col-xs-10">
+            <div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+                <input type="text" id="starttime" name="starttime" class="form-control text-center" placeholder="开始日期">
+                <span class="input-group-addon">&lt;=确认收款日期&lt;=</span>
+                <input type="text" id="endtime" name="endtime" class="form-control text-center" placeholder="结束日期">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-3 control-label" style="margin-top: -5px;">
+            状态：
+        </label>
+        <div class="col-xs-9">
+            <input style="width:30px;position:relative;top:2px;" type="checkbox" name="state" />包含已作废
+        </div>
+    </div>
+</script>
+
+<script id="confirmPayTemp" type="text/html">
+    <div>
+        <div class="form-group" align="center">
+            <label class="col-xs-3 control-label">
+                审批意见：
+            </label>
+            <div class="col-xs-9">
+                <textarea id="confirmPayOption" rows='5' style="width: 100%;"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group" align="center">
+            <div class="col-xs-12">
+                <input type="button" id="confPayAgreebtn" value="审核通过" class="btn btn-primary"/>
+                <input type="button" id="confPayDisagreebtn" value="退回" class="btn btn-primary"/>
+                <input type="button" id="confPayRejectbtn" value="审核驳回" class="btn btn-primary"/>
+                <input type="button" id="confPayEndbtn" value="流程终止" class="btn btn-primary"/>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+
+    $(function(){
+        var checkConfPayFlag = true;
+
+        var option = {
+            plusBtn : [{
+                id: "level_item", // 按钮的id
+                text: "查询详情", // 显示的文字
+                clazz: "btn btn-primary btn-sm", // 按钮的class
+            }, {
+                id: "level_edit", // 按钮的id
+                text: "编辑", // 显示的文字
+                clazz: "btn btn-primary btn-sm", // 按钮的class
+            }, {
+                id: "level_delete", // 按钮的id
+                text: "删除", // 显示的文字
+                clazz: "btn btn-primary btn-sm", // 按钮的class
+            }, {
+                id: "level_audit", // 按钮的id
+                text: "审核", // 显示的文字
+                clazz: "btn btn-primary btn-sm", // 按钮的class
+            }],
+
+            onInit : function(){
+                $("#level_item").on("click", function() {
+                    if(checkConfPayFlag) {
+                        checkConfPayFlag = false;
+                        itemtable(table);
+                    }
+                });
+
+                $("#level_edit").on("click", function() {
+                    if(checkConfPayFlag) {
+                        checkConfPayFlag = false;
+                        editstable(null, table, "", "");
+                    }
+                });
+
+                $("#level_delete").on("click", function() {
+                    if(checkConfPayFlag) {
+                        checkConfPayFlag = false;
+                        deletetable(null, table, "");
+                    }
+                });
+
+                $("#level_audit").on("click", function() {
+                    if(checkConfPayFlag) {
+                        checkConfPayFlag = false;
+                        audittable(table);
+                    }
+                });
+
+                $('#starttime,.input-datepicker, .input-daterange').datepicker({
+                    weekStart: 1,
+                    language: "zh-CN"
+                });
+
+                $('#endtime,.input-datepicker, .input-daterange').datepicker({
+                    weekStart: 1,
+                    language: "zh-CN"
+                });
+            },
+            add: {
+                title: "收款确认",//窗口标题
+                id: "addConfirmPayDlg",//窗口的ID,这里不能自己写，要跟窗口div的id相同
+                height: "600px",
+                width: "1000px",
+                templId: "addConfirmPayTemp",//窗口内容的ID(即script标签的ID)
+                openCallback: function () {//点击事件，比如提交，关闭窗口等
+                    $('.input-datepicker, .input-daterange').datepicker({
+                        weekStart: 1,
+                        language: "zh-CN"
+                    });
+                    $("#printBtn").hide();
+                    //去除输入框中的首尾空格
+                    $(".form-control").on("blur",function(event) {
+                        $(this).val($(this).val().trim());
+                    });
+
+                    //隐藏保存、保存并提交两个按钮
+                    $("#savebtn").show();
+                    $("#submitbtn").show();
+
+                    $("#savebtn").on("click", function () {
+                        $('#savebtn').attr("disabled",true);
+                        $('#submitbtn').attr("disabled",true);
+                        addData(table, "insert");
+                    });
+
+                    $("#submitbtn").on("click", function () {
+                        $('#savebtn').attr("disabled",true);
+                        $('#submitbtn').attr("disabled",true);
+                        addData(table, "insertAndSubmit");
+                    });
+                },
+                btn: false
+            },
+            edit : true,
+            del : true,
+            detail:true,
+            handleCol: true,
+            detail: { // 详情
+                onclick: function(index, row) {
+                    if(checkConfPayFlag) {
+                        checkConfPayFlag = false;
+                        editstable(row, table, "row", "detail");
+                    }
+                }
+            },
+
+            edit: { // 编辑
+                onclick: function(index, row) {
+                    if(checkConfPayFlag) {
+                        checkConfPayFlag = false;
+                        editstable(row, table, "row", "edit");
+                    }
+                }
+            },
+
+            del: { // 删除
+                onclick: function(index, row) {
+                    if(checkConfPayFlag) {
+                        checkConfPayFlag = false;
+                        deletetable(row, table, "row");
+                    }
+                }
+            },
+
+            seniorSearch: { // 高级搜索配置
+                formList: [{
+                    filed: "付款企业名称",
+                    name: "name"
+                }],
+                plusFiled: template("reqSearchTemp", {})
+            },
+
+            // 表格的头部，有多少列，就写多少
+            columns: [{
+                filed: "收款确认单号",
+                name: "code"
+            }, {
+                filed: "付款企业名称",
+                name: "name"
+            }, {
+                filed: "确认收款日期",
+                name: "busi_date"
+            }, {
+                filed: "收款金额",
+                name: "payment_amount"
+            }, {
+                filed: "币种",
+                name: "enterprise_payment_name"
+            },{
+                filed: "联系人",
+                name: "payment_amount"
+            }, {
+                filed: "状态",
+                name: "state"
+            }],
+
+            //渲染列信息
+            columnDefs: [{
+                render: function(data, type, row) { // 格式化 列
+                    // 该列的原始数据是毫秒数   转成时间格式再渲染 .Format("yyyy-MM-dd")
+                    var showDate = getFormatTimehhmmssFun(data);
+                    return showDate;
+                },
+                targets: [4]// 第几列
+
+            },{
+                render: function(data, type, row) { // 美化状态列
+                    var changedData = beautifyStateColumn(data);
+                    return changedData;
+                },
+                targets: [8]
+
+            }],
+
+            // 表格获取信息的后台服务器地址
+            url: product_smf_domain + "collection/list",
+
+            ajax: function (data, callback, settings) {
+                //ajax配置为function,手动调用异步查询
+                $.ajax({
+                    type: "GET",
+                    url: "/collection/list",
+                    data: {},
+                    dataType: "json",
+                    success: function (result) {
+                        layer.msg("接口调用成功");
+                        var finalData = result.data[0];
+                        //封装返回数据
+                        var returnData = {};
+                        returnData.draw = data.draw;//自行返回draw参数,最好由后台返回
+                        returnData.recordsTotal = finalData.totalCount;
+                        returnData.recordsFiltered = finalData.pageSize;
+                        returnData.data = finalData.results;
+                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+
+                        callback(returnData);
+                    },
+                    error: function (XMLHttpRequest, textStatus,
+                                     errorThrown) {
+                        layer.msg("查询失败");
+                    }
+                });
+
+            }
+        };
+
+        var table = suneeeUI.seTable("confirm-payment-table", option);
+
+        //---------------------------------------工具函数区--------------------------------------begin
+
+        //时间格式化yyyy-mm-dd hh:mm:ss
+        function getFormatTimehhmmssFun(time)
+        {
+            if(time == undefined || time == "")
+            {
+                return "";
+            } else
+            {
+                return new Date(time).Format("yyyy-MM-dd");
+            }
+        }
+
+        //自定义金额校验
+        jQuery.validator.addMethod("moneyLegal", function(value, element) {
+            var str = value.toString();
+            var flag = true;
+            //判断是否满足(20,2)
+            if(str.indexOf("\.") != -1)
+            {
+                var len = str.length - str.indexOf("\.") - 1;
+                if(len > 2 || str.indexOf("\.") > 18)
+                {
+                    flag = false;
+                }
+            } else if(str.length > 18)
+            {
+                flag = false;
+            }
+            return value >= 0 && flag;
+        }, "请正确填写金额");
+        //美化状态列
+        function beautifyStateColumn(state)
+        {
+            if(state == undefined || state == "")
+            {
+                return "";
+            }
+
+            var clazz = "";
+            var changedData = "";
+            if("新建" == state)
+            {
+                clazz = "'label label-danger'";
+            } else if("已作废" == state)
+            {
+                clazz = "'label label-default'";
+            } else
+            {
+                clazz = "'label label-primary'";
+            }
+            changedData = "<div align='center'><label style='display:inline-block;width:60px' class=" +
+                    clazz + " >" + state + "</label></div>";
+            return changedData;
+        }
+
+        //数据校验
+        function dataValidate(fromID) {
+            var validate = $("#" + fromID).validate({
+                rules: { //校验规则
+                    code:{
+                        required: true,
+                        minlength: 0,
+                        maxlength: 50
+                    },
+                    enterprise_application_name: {
+                        required: true,
+                        minlength: 0,
+                        maxlength: 50
+                    },
+                    busi_date: {
+                        required: true
+
+                    },
+                    amount: {
+                        moneyLegal: true
+                    },
+                    payment_amount: {
+                        moneyLegal: true
+                    },
+                    currency_name: {
+                        required: true,
+                        minlength: 0,
+                        maxlength: 50
+                    }
+                },
+                messages: { //校验提示信息
+                    code: {
+                        required: "收款确认单号不能为空",
+                        minlength: "收款确认单号长度不超过50字",
+                        maxlength: "收款确认单号长度不超过50字"
+                    },
+                    enterprise_application_name: {
+                        required: "发货申请企业名称不能为空",
+                        minlength: "发货申请企业名称长度不超过50字",
+                        maxlength: "发货申请企业名称长度不超过50字"
+                    },
+                    busi_date: {
+                        required: "业务日期不能为空"
+
+                    },
+                    amount: {
+                        moneyLegal: "金额不合法"
+                    },
+                    payment_amount: {
+                        moneyLegal: "金额不合法"
+                    },
+                    currency_name: {
+                        required: "币种不能为空",
+                        minlength: "币种长度不超过15字",
+                        maxlength: "币种长度不超过15字"
+                    }
+                }
+            });
+            return validate.form();
+        }
+
+
+        //新增数据事件
+        function addData(tableObj, type)
+        {
+            //验证数据
+            if(!dataValidate("confirmPayForm"))
+            {
+                //设置表单状态为可提交
+                $('#savebtn').attr("disabled", false);
+                return;
+            }
+
+            //设置数据
+            var data = { 'confirmPayList': getTbodyJsonDataById("confirmPayForm") };
+            data.saveType = type;
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify(data),
+                url: product_smf_domain + "collection/insert",
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                async: true,
+                success: function(data) {
+                    if(data.code == '1')
+                    {
+                        tableObj.reload();
+                        // 关闭窗口
+                        layer.closeAll();
+                        layer.close(layer.index);
+
+                    } else
+                    {
+                        //设置表单状态为可提交
+                        $('#savebtn').attr("disabled", false);
+                    }
+                    layer.msg(data.msg);
+
+                },
+                error: function(data) {
+                    layer.msg(data.msg);
+                    console.log(e);
+                    //设置表单状态为可提交
+                    $('#savebtn').attr("disabled", false);
+                }
+            });
+        }
+
+        //查询数据
+        function itemtable(tableObj)
+        {
+            row = tableObj.getSelectRow();
+            if(row.length == 1)
+            {
+                $.ajax({
+                    type: "GET",
+                    url: product_smf_domain + "confirmPay/getDOByPrimaryKey",
+                    data: { "pk_collection_confirm": row[0].data.pk_collection_confirm },
+                    dataType: "json",
+                    async: true,
+                    success: function(data) {
+                        data.data[0].bookindate = new Date(data.data[0].bookindate).Format("yyyy-MM-dd hh:mm:ss");
+                        var editTempl = template("addConfirmPayTemp", data.data[0]);
+                        var index = layer.open({
+                            type: 1,
+                            title: "查询详情",
+                            area: ['1100px', '600px'], //宽高
+                            content: editTempl,
+                            success: function() {
+                                checkConfPayFlag = true;
+                                $('.input-datepicker, .input-daterange').datepicker({
+                                    weekStart: 1,
+                                    language: "zh-CN"
+                                });
+                                // 窗口打开完后的回调函数
+                                $.ajax({
+                                    type: "GET",
+                                    url: product_smf_domain + "confirmPay/Initload",
+                                    data: {},
+                                    dataType: "json",
+                                    async: false,
+                                    success: function(data) {
+                                        if(data.code == "0001")
+                                        {
+                                            layer.msg(data.msg);
+                                        } else if(data.code == "0000")
+                                        {
+                                            var returndata = data.data[0];
+                                        }
+                                    }
+                                });
+
+                                $("#savebtn").hide();
+                                $('#confirmPayForm input').attr("readonly", "readonly");
+                                $('#confirmPayForm select').attr("disabled", "disabled");
+                                $('#confirmPayForm textarea').attr("readonly", "readonly");
+                                $('#confirmPayTbody input').attr("readonly", "readonly");
+                            },
+                            yes: function() {
+                                layer.close(index);
+                            }
+                        });
+                    }
+                });
+            } else
+            {
+                checkConfPayFlag = true;
+                layer.alert("请选择1条记录！");
+            }
+        }
+
+        //编辑按钮
+        //handleType:区分操作是否是在操作列中的按钮进行
+        //openType：区分操作列的详情和编辑图标按钮
+        function editstable(defaultRow, tableObj, handleType, openType)
+        {
+            if("row" == handleType)
+            {
+                edits(defaultRow, tableObj, openType);
+            } else
+            {
+                row = tableObj.getSelectRow();
+                if(row.length == 1)
+                {
+                    edits(row[0].data, tableObj, openType);
+                } else
+                {
+                    checkConfPayFlag = true;
+                    layer.alert("请选择1条记录！");
+                }
+            }
+        }
+
+        //编辑
+        function edits(row, table, openType)
+        {
+            debugger
+            $.ajax({
+                type: "GET",
+                url: product_smf_domain + "confirmPay/getDOByPrimaryKey",
+                data: { "pk_collection_confirm": row.pk_collection_confirm },
+                dataType: "json",
+                async: true,
+                success: function(data) {
+                    data.data[0].bookindate = new Date(data.data[0].bookindate).Format("yyyy-MM-dd hh:mm:ss");
+                    var editTempl = template("addConfirmPayTemp", data.data[0]);
+                    var index = layer.open({
+                        type: 1,
+                        id:"confirmPayEditWin",
+                        title: "编辑",
+                        area: ['1100px', '600px'], //宽高
+                        content: editTempl,
+                        success: function() {
+                            checkConfPayFlag = true;
+                            // 窗口打开完后的回调函数
+                            $.ajax({
+                                type: "GET",
+                                url: product_smf_domain + "confirmPay/Initload",
+                                data: {},
+                                dataType: "json",
+                                async: false,
+                                success: function(data)
+                                {
+                                    if(data.code == "0001")
+                                    {
+                                        layer.msg(data.msg);
+                                    } else if(data.code == "0000")
+                                    {
+                                        var returndata = data.data[0];
+                                    }
+                                }
+                            });
+
+                            if(data.data[0].state != '新建' || "detail" == openType)
+                            {
+                                $("#savebtn").hide();
+                                $('#confirmPayForm input').attr("readonly", "readonly");
+                                $('#confirmPayForm select').attr("disabled", "disabled");
+                                $('#confirmPayForm textarea').attr("readonly", "readonly");
+                                $('#confirmPayTbody input').attr("readonly", "readonly");
+                            } else
+                            {
+                                getEnterpriseByName();
+                                autoCompleteValidate();
+
+                                $(".form-control").on("blur", function(event) { //去除输入框中的首尾空格
+                                    $(this).val($(this).val().trim());
+                                });
+
+                                $('.input-datepicker, .input-daterange').datepicker({
+                                    weekStart: 1,
+                                    language: "zh-CN"
+                                });
+                            }
+
+                            //$('#savebtn').attr("disabled",false);//打开窗口时解禁保存按钮
+
+                            $("#savebtn").on("click", function() {
+                                $('#savebtn').attr("disabled", true); //禁用保存按钮
+                                if(!dataValidate("confirmPayForm")) //验证数据
+                                {
+                                    $('#savebtn').attr("disabled", false); //设置表单状态为可提交
+                                    return;
+                                }
+                                save(table, "save");
+                            });
+
+                            $("#printbtn").on("click", function() {
+                                printSelect();
+                            });
+                        },
+                        yes: function() {
+                            layer.close(index);
+                        }
+                    });
+                }
+            });
+        }
+
+
+        //打印方法
+        function printSelect(){
+            var sdf=$("#confirmPayEditWin");
+            var temp = $("#confirmPayEditWin").clone();
+            winname = window.open('', "_blank",'');
+            winname.document.body.innerHTML=sdf["0"].innerHTML;
+            var body=$(winname.document.body);
+            body.find("#confirmPayForm").css({"width":"100%"});
+            body.find("#confirmPayForm table").css({"width":"100%"});
+            winname.print();
+            winname.close();
+        }
+
+        //确认保存方法
+        function save(tableObj, type)
+        {
+            if(!dataValidate("confirmPayForm"))
+            {
+                //设置表单状态为可提交
+                $('#savebtn').attr("disabled", false);
+                return;
+            }
+            var data = { 'confirmPayList': getTbodyJsonDataById("confirmPayForm") };
+            data.saveType = type;
+
+            $.ajax({
+                type: "POST",
+                url: product_smf_domain + "confirmPay/update",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                async: true,
+                success: function(data) {
+                    if(data.code == '1')
+                    {
+                        tableObj.reload();
+                        layer.closeAll();
+                        layer.close(layer.index);
+                    } else
+                    {
+                        $('#savebtn').attr("disabled", false);
+                    }
+                    layer.msg(data.msg);
+                },
+                error: function(data) {
+                    layer.msg(data.msg);
+                    console.log(e);
+                    $('#savebtn').attr("disabled", false);
+                }
+            });
+
+        }
+
+        //删除
+        /* 			function deletetable(defaultRow, tableObj, handleType)
+         {
+         if("row" == handleType)
+         {
+         if(defaultRow.state != '新建')
+         {
+         checkConfPayFlag = true;
+         layer.msg(defaultRow.state + "数据不能删除，请重新选择！");
+         return;
+         }
+         checkConfPayFlag = true;
+         layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', {
+         btn: ['确定', '取消']
+         },
+         function() {
+         delete(defaultRow, tableObj, handleType);
+         },
+         function() {});
+         } else
+         {
+         var rows = tableObj.getSelectRow();
+         if(rows.length > 0)
+         {
+         for(var i = 0; i < rows.length; i++)
+         {
+         if(rows[i].data.state != "新建")
+         {
+         checkConfPayFlag = true;
+         layer.msg("数据已审核或已作废不能删除，请重新选择！");
+         return;
+         }
+         }
+         checkConfPayFlag = true;
+         layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', {
+         btn: ['确定', '取消']
+         }, function() {
+         console.log(rows[0].data);
+         delete(rows, tableObj, handleType);
+         }, function() {
+
+         });
+         } else
+         {
+         checkConfPayFlag = true;
+         layer.alert("请选择删除数据！");
+         }
+         }
+         } */
+
+        //批量删除
+        /* 			function delete(row, tableObj, handleType)
+         {
+         debugger;
+         var arr = [];
+         var metadata = {};
+         if("row" == handleType)
+         {
+         metadata["pk_collection_confirm"] = row.pk_collection_confirm;
+         metadata["time_stamp"] = row.time_stamp;
+         arr.push(metadata);
+         } else
+         {
+         for(var i = 0; i < row.length; i++)
+         {
+         metadata = {};
+         metadata["pk_collection_confirm"] = row[i].data.pk_collection_confirm;
+         metadata["time_stamp"] = row[i].data.time_stamp;
+         if(row[i].data.state != "已作废" && row[i].data.state != "已归档")
+         {
+         arr.push(metadata);
+         }
+         }
+         }
+         var data = { 'confirmPayList': arr };
+         $.ajax({
+         type: "POST",
+         url: product_smf_domain + "confirmPay/delete",
+         data: JSON.stringify(data),
+         dataType: "json",
+         contentType: "application/json;charset=utf-8",
+         async: true,
+         success: function(data)
+         {
+         if(data.code == '1')
+         {
+         tableObj.reload();
+         layer.msg(data.msg);
+         } else
+         {
+         layer.msg(data.msg);
+         }
+         }
+         });
+         } */
+
+        //审核,state=0,删除;state=1,正常未审核;state=2,已审核
+        function audittable(tableObj)
+        {
+            debugger;
+            var rows = tableObj.getSelectRow();
+            if (rows.length == 1)
+            {
+                if(rows[0].data.state != "审核中")
+                {
+                    checkConfPayFlag = true;
+                    layer.msg(rows[0].data.state+"数据不能审核");
+                    return;
+                }
+
+                var selectedRow = rows[0].data;
+
+                $.ajax({
+                    type: "POST",
+                    url: product_smf_domain + "confirmPay/approve",
+                    data:JSON.stringify(selectedRow),
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    async: true,
+                    success: function (ResultMsg) {
+                        checkConfPayFlag = true;
+                        if (ResultMsg.code == '1')
+                        {
+                            var approveTempl = template("addConfirmPayTemp", {});
+                            var index = layer.open({
+                                type: 1,
+                                title: "审核",
+                                area: ['400px', '300px'], //宽高
+                                content: confirmPayTemp,
+                                success:function(){
+                                    $('#confPayAgreebtn').attr("disabled",false);
+                                    $('#confPayDisagreebtn').attr("disabled",false);
+                                    $('#confPayRejectbtn').attr("disabled",false);
+                                    $('#confPayEndbtn').attr("disabled",false);
+
+                                    $("#confPayAgreebtn").on("click", function () {
+                                        $('#confPayAgreebtn').attr("disabled",true);
+                                        $('#confPayDisagreebtn').attr("disabled",true);
+                                        $('#confPayRejectbtn').attr("disabled",true);
+                                        $('#confPayEndbtn').attr("disabled",true);
+                                        auditSelect(selectedRow,tableObj,"agree");
+                                    });
+
+                                    $("#confPayDisagreebtn").on("click", function () {
+                                        $('#confPayAgreebtn').attr("disabled",true);
+                                        $('#confPayDisagreebtn').attr("disabled",true);
+                                        $('#confPayRejectbtn').attr("disabled",true);
+                                        $('#confPayEndbtn').attr("disabled",true);
+                                        auditSelect(selectedRow,tableObj,"disagree");
+                                    });
+
+                                    $("#confPayRejectbtn").on("click", function () {
+                                        $('#confPayAgreebtn').attr("disabled",true);
+                                        $('#confPayDisagreebtn').attr("disabled",true);
+                                        $('#confPayRejectbtn').attr("disabled",true);
+                                        $('#confPayEndbtn').attr("disabled",true);
+                                        auditSelect(selectedRow,tableObj,"reject");
+                                    });
+
+                                    $("#confPayEndbtn").on("click", function () {
+                                        $('#confPayAgreebtn').attr("disabled",true);
+                                        $('#confPayDisagreebtn').attr("disabled",true);
+                                        $('#confPayRejectbtn').attr("disabled",true);
+                                        $('#confPayEndbtn').attr("disabled",true);
+                                        auditSelect(selectedRow,tableObj,"end");
+                                    });
+                                },
+                                yes: function () {
+                                    layer.close(index);
+                                }
+                            })
+                        }else
+                        {
+                            layer.msg(ResultMsg.msg);
+                        }
+                    }
+                })
+            }else
+            {
+                checkConfPayFlag = true;
+                layer.alert("请选择一条审核数据！");
+            }
+        }
+
+        //审核
+        function auditSelect(row,tableObj,type) {
+            var arr = [];
+            var metadata = {};
+            var opinion = $("#confirmPayOption").val();
+            metadata["pk_collection_confirm"] = row.pk_collection_confirm;
+            metadata["time_stamp"] = row.time_stamp;
+            metadata["type"] = type;
+            metadata["opinion"] = opinion;
+            arr.push(metadata);
+            var data = { 'confirmPayList' : arr };
+
+            $.ajax({
+                type : "POST",
+                url : product_smf_domain + "confirmPay/auditbyid",
+                data : JSON.stringify(data),
+                dataType : "json",
+                contentType : "application/json;charset=utf-8",
+                async : true,
+                success : function(ResultMsg) {
+                    if(ResultMsg.code =='1')
+                    {
+                        layer.closeAll();
+                        tableObj.reload();
+                    }
+                    layer.msg(ResultMsg.msg);
+                }
+            });
+        }
+
+
+        //设置data格式
+        function getTbodyJsonDataById(id) {
+            var arr = [];
+            var data = {};
+            var name = "";
+            var value = "";
+            $("#" + id)
+                    .children()
+                    .each(
+                            function () {
+                                data = {};
+                                $(this).find("input[name]").each(function () {
+                                    name = $(this).attr('name');
+                                    value = $(this).val();
+                                    data[name] = value;
+                                })
+                                $(this).find("hidden[name]").each(function () {
+                                    name = $(this).attr('name');
+                                    value = $(this).text();
+                                    data[name] = value;
+                                })
+                                $(this).find("select[name]").each(function () {
+                                    name = $(this).attr('name');
+                                    value = $(this).val();
+                                    data[name] = value;
+                                })
+
+                                $(this).find("textarea[name]").each(function () {
+                                    name = $(this).attr('name');
+                                    value = $(this).val();
+                                    data[name] = value;
+                                })
+                                if (!isEmptyObject(data)) {
+                                    arr.push(data);
+                                }
+                            })
+            return arr;
+        }
+
+
+        function getEnterpriseByName(){
+            var name=$("#enterprise_application_name").val();
+            if ($("input").hasClass("confirmPay_application_entry")) {
+                var test = $(".confirmPay_application_entry")
+                        .bigAutocomplete(
+                                {
+                                    width : 'auto',
+                                    id : [ 'enterprise_application_name' ],
+                                    highlight : false,
+                                    minChars : 0,
+                                    mustMatch : true,
+                                    matchContains : true,
+                                    autoFill : true,
+                                    ajax : {
+                                        url : product_smf_domain
+                                        + 'saleApplication/getEnterpriseByName?type=application&name=name',
+                                        type : "GET",
+                                        success : function(result) {
+                                            layer.alert("查询企业信息成功");
+                                            if (result.code == 0) {
+                                                layer.msg(result.msg);
+                                            }
+                                            $("#pk_enterprise_application").val("");
+                                            var Str = result.data;
+                                            var datas = [];
+                                            for (var i = 0; i < Str.length; i++) {
+                                                datas[i] = [];
+                                                datas[i].push(Str[i].name);
+                                            }
+                                            test.setData(datas, true); // 设置显示的内容，并更新
+                                            test.setTitle([ '企业名称' ]); // 设置标题
+                                        },
+                                        error : function(msg) {
+                                            layer.alert("查询企业信息异常");
+                                        }
+                                    }
+                                });
+            }
+        }
+
+    })
+
+
+</script>
+
+
+
+
+
+
+</body>
+</html>

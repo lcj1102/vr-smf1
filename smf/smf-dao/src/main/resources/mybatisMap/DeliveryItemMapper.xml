@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.DeliveryItemDao" >
+  <resultMap id="BaseResultMap" type="com.suneee.smf.smf.model.DeliveryItemVO" >
+    <id column="pk_delivery_item" property="pk_delivery_item"/>
+    <result column="pk_delivery_advice" property="pk_delivery_advice"/>
+    <result column="rownumber" property="rownumber"/>
+    <result column="goods_name" property="goods_name"/>
+    <result column="spec" property="spec"/>
+    <result column="producing_area" property="producing_area"/>
+    <result column="quality" property="quality"/>
+    <result column="packing" property="packing"/>
+    <result column="inputmanid" property="inputmanid"/>
+    <result column="inputmanname" property="inputmanname"/>
+    <result column="bookindate" property="bookindate"/>
+    <result column="modiferid" property="modiferid"/>
+    <result column="modifername" property="modifername"/>
+    <result column="modefydate" property="modefydate"/>
+    <result column="cancelid" property="cancelid"/>
+    <result column="cancelname" property="cancelname"/>
+    <result column="canceldate" property="canceldate"/>
+    <result column="pk_measurement" property="pk_measurement"/>
+    <result column="measurement_name" property="measurement_name"/>
+    <result column="number" property="number"/>
+    <result column="price" property="price"/>
+    <result column="money" property="money"/>
+    <result column="batch_number" property="batch_number"/>
+    <result column="storage_location" property="storage_location"/>
+    <result column="enterpriseid" property="enterpriseid"/>
+    <result column="sourcebilltype" property="sourcebilltype"/>
+    <result column="sourcebillid" property="sourcebillid"/>
+    <result column="sourcebillitemid" property="sourcebillitemid"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+		pk_delivery_item, pk_delivery_advice, rownumber, goods_name, spec,producing_area,
+		quality,packing, inputmanid,inputmanname,bookindate,modiferid,modifername,modefydate,
+		cancelid,cancelname,canceldate, pk_measurement,measurement_name,number,price,
+		money,batch_number,storage_location,enterpriseid,sourcebilltype,sourcebillid,sourcebillitemid
+  </sql>
+  <insert id="insert" parameterType="com.suneee.smf.smf.model.DeliveryItemVO">
+    	INSERT INTO smf_delivery_item (
+			pk_delivery_advice,rownumber,goods_name,spec,producing_area,quality,packing,inputmanid,inputmanname,
+			bookindate,pk_measurement,measurement_name,number,price,money,batch_number,storage_location,enterpriseid,
+			sourcebilltype,sourcebillid,sourcebillitemid
+		) VALUES (
+			#{pk_delivery_advice},#{rownumber},#{goods_name},#{spec},#{producing_area},#{quality},#{packing},#{inputmanid},#{inputmanname},
+			#{bookindate},#{pk_measurement},#{measurement_name},#{number},#{price},#{money},#{batch_number},#{storage_location},#{enterpriseid},
+			#{sourcebilltype},#{sourcebillid},#{sourcebillitemid}
+		)
+    </insert>
+   <select id="queryListByDeliveryAdviceId" resultMap="BaseResultMap" parameterType="com.suneee.smf.smf.model.DeliveryItemDO">
+  	   select
+  	   <include refid="Base_Column_List" />
+  	   from smf_delivery_item 
+  	   	where pk_delivery_advice=#{pk_delivery_advice} 
+  	   	and enterpriseid = #{enterpriseid} 
+  	   	and cancelid is null
+  	   ORDER BY rownumber ASC
+  </select>
+  <select id="getRestByPrimaryKey" parameterType="com.suneee.smf.smf.model.DeliveryItemVO" resultType="com.suneee.smf.smf.model.DeliveryItemVO">
+  		select
+		<include refid="Base_Column_List" />
+		from smf_delivery_item
+		where pk_delivery_item = #{pk_delivery_item} and enterpriseid = #{enterpriseid}
+  </select>
+  <update id="updateById" parameterType="com.suneee.smf.smf.model.DeliveryItemVO">
+  		UPDATE smf_delivery_item set
+			pk_delivery_advice = #{pk_delivery_advice},
+			rownumber = #{rownumber},
+			goods_name = #{goods_name},
+			spec = #{spec},
+			producing_area = #{producing_area},
+			quality = #{quality},
+			packing = #{packing},
+			modiferid = #{modiferid},
+			modifername = #{modifername},
+			modefydate = #{modefydate},
+			pk_measurement = #{pk_measurement},
+			measurement_name = #{measurement_name},
+			number = #{number},
+			price = #{price},
+			money = #{money},
+			batch_number = #{batch_number},
+			storage_location = #{storage_location},
+			enterpriseid = #{enterpriseid},
+			sourcebilltype = #{sourcebilltype},
+			sourcebillid = #{sourcebillid},
+			sourcebillitemid = #{sourcebillitemid}
+    	where pk_delivery_item = #{pk_delivery_item} and enterpriseid = #{enterpriseid}
+  </update>
+  <update id="deleteById" parameterType="com.suneee.smf.smf.model.DeliveryItemVO">
+  		UPDATE smf_delivery_item set
+  		cancelid = #{cancelid},
+		cancelname = #{cancelname},
+		canceldate = #{canceldate}
+		where pk_delivery_item = #{pk_delivery_item} and enterpriseid = #{enterpriseid}
+  </update>
+</mapper>

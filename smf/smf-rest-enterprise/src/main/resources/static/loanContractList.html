@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>长期借款合同</title>
+     <style>
+     	th {
+			text-align:center;
+	    }
+
+		td select{
+			width:100%;
+		}
+		th select{
+			width:100%;
+		}
+		th select{
+			text-align:center;
+		}
+		
+		.approved{
+	text-align:left;
+    padding-left:61px;
+    margin-bottom:10px;
+}
+
+.approvedBox{
+	padding-top:10px;
+	margin-bottom:20px;
+}
+
+.approvedLayer  input{
+	margin:0 5px;
+}
+.textareaBox{
+	width:75%;
+}
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="loan_contract-table"></div>
+    </div>
+</div>
+
+<!--  capitalInjectionList.html-->
+<script id="addLoanContractTeml" type="text/html">
+    <div id="addLoanContractDlg" class="from_table_con">
+        <form id="pubLoanContract" method="post" role="form">
+            <table cellpadding="0" cellspacing="0" class="from_table">
+				<tr>
+					<th>长期借款合同号</th>
+					<td>
+            			<input type="hidden" class="form-control" id="pk_loan_contract" name="pk_loan_contract"
+                               value="{{if pk_loan_contract != undefined}}{{pk_loan_contract}}{{/if}}"/>
+						<input type="text" class="form-control" id="code" name="code" readonly="readonly"
+                           value="{{if code != undefined}}{{code}}{{/if}}"
+                           title="{{if code != undefined}}{{code}}{{/if}}"/>
+            		</td>
+					<th>长期借款合同名称</th>
+					<td>
+            			<input type="text" class="form-control" id="name" name="name" 
+                               value="{{if name != undefined}}{{name}}{{/if}}"
+                               title="{{if name != undefined}}{{name}}{{/if}}"/>
+            		</td>
+            		<th>借款企业名称<label class="required">*</label></th>
+					<td>
+            			<input type="hidden" class="form-control" id="pk_enterprise" name="pk_enterprise"
+                            value="{{if pk_enterprise != undefined}}{{pk_enterprise}}{{/if}}"/>
+						<input type="hidden" class="form-control" id="enterprise_code" name="enterprise_code"
+                            value="{{if enterprise_code != undefined}}{{enterprise_code}}{{/if}}"/>
+        				<input type="text" class="form-control  loancontract_enterprise_name" id="enterprise_name" name="enterprise_name"  autocomplete="off"
+                           	value="{{if enterprise_name != undefined}}{{enterprise_name}}{{/if}}"
+                           	title="{{if enterprise_name != undefined}}{{enterprise_name}}{{/if}}"/>
+			        </td>
+				</tr>
+				<tr>
+					<th>合同签订日期<label class="required">*</label></th>
+					<td>
+            			<div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" id="busi_date" name="busi_date" 
+								   value="{{if busi_date != undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"
+								   title="{{if busi_date != undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+                        </div>
+			         </td>
+			        <th>借款限额</th>
+					<td>
+        				<input type="number" class="form-control" id="loan_limit" name="loan_limit" 
+                           value="{{if loan_limit != undefined}}{{loan_limit}}{{/if}}"
+                           title="{{if loan_limit != undefined}}{{loan_limit}}{{/if}}"/>
+			    	</td>
+					<th>年化利率（%）<label class="required">*</label></th>
+					<td>
+            			<input type="number" class="form-control" id="interest_rate" name="interest_rate" 
+                               value="{{if interest_rate != undefined}}{{interest_rate}}{{/if}}"
+                               title="{{if interest_rate != undefined}}{{interest_rate}}{{/if}}"/>
+            		</td>
+				</tr>
+				<tr>
+					<th>币种名称<label class="required">*</label></th>
+					<td>
+	                    <input type="hidden" class="form-control" id="pk_currency" name="pk_currency" 
+	                        value="{{if pk_currency != undefined}}{{pk_currency}}{{/if}}"/>
+			            <input type="text" class="form-control" id="currency_name" name="currency_name" 
+                               value="{{if currency_name != undefined}}{{currency_name}}{{/if}}"
+                               title="{{if currency_name != undefined}}{{currency_name}}{{/if}}"/>		   
+			        </td>
+					<th>借款企业注册地址</th>
+					<td>
+		            	<input type="text" class="form-control" readonly="readonly" id="address" name="address" 
+		                       value="{{if address != undefined}}{{address}}{{/if}}"
+		                       title="{{if address != undefined}}{{address}}{{/if}}"/>
+			    	</td>
+			    	<th>借款企业统一社会信用代码</th>
+					<td>
+        				<input type="text" class="form-control" readonly="readonly" id="credit_code" name="credit_code" 
+                           value="{{if credit_code != undefined}}{{credit_code}}{{/if}}"
+                           title="{{if credit_code != undefined}}{{credit_code}}{{/if}}"/>
+			        </td>
+				</tr>
+				<tr>
+					<th>借款企业联系人</th>
+					<td>
+	        			<input type="text" class="form-control" readonly="readonly" id="contact" name="contact" 
+	                           value="{{if contact != undefined}}{{contact}}{{/if}}"
+	                           title="{{if contact != undefined}}{{contact}}{{/if}}"/>
+            		</td>
+            		<th>借款企业联系电话</th>
+					<td>
+						<input type="text" class="form-control" readonly="readonly" id="contact_number" name="contact_number"
+					    	value="{{if contact_number!=undefined}}{{contact_number}}{{/if}}"
+					    	title="{{if contact_number!=undefined}}{{contact_number}}{{/if}}"/>
+					</td>
+					<th>状态</th>
+					<td>
+						<input type="text" class="form-control" id="state" name="state"
+							value="{{if state != undefined}}{{state}}{{/if}}" readonly = "readonly"
+							title="{{if state != undefined}}{{state}}{{/if}}"/>
+					</td>
+				</tr>
+				<tr>
+					<th>登记人姓名</th>
+					<td>
+						<input type="hidden" class="form-control"
+	                        value="{{if inputmanid != undefined}}{{inputmanid}}{{/if}}"/>
+						<input type="text" class="form-control" readonly="readonly" id="inputmanname" name="inputmanname"
+			        		value="{{if inputmanname!=undefined}}{{inputmanname}}{{/if}}"
+			        		title="{{if inputmanname!=undefined}}{{inputmanname}}{{/if}}"/>
+					</td>
+					<th>修改人姓名</th>
+					<td>
+						<input type="hidden" class="form-control"
+	                        value="{{if modiferid != undefined}}{{modiferid}}{{/if}}"/>
+						<input type="text" class="form-control" readonly="readonly" id="modifername" name="modifername"
+			        		value="{{if modifername!=undefined}}{{modifername}}{{/if}}"
+			        		title="{{if modifername!=undefined}}{{modifername}}{{/if}}"/>
+					</td>
+					<th>作废人姓名</th>
+					<td>
+						<input type="hidden" class="form-control"
+	                        value="{{if cancelid != undefined}}{{cancelid}}{{/if}}"/>
+						<input type="text" class="form-control" readonly="readonly" id="cancelname" name="cancelname"
+			        		value="{{if cancelname!=undefined}}{{cancelname}}{{/if}}"
+			        		title="{{if cancelname!=undefined}}{{cancelname}}{{/if}}"/>
+					</td>
+				</tr>
+				<tr>
+					<th>登记日期</th>
+					<td>
+						<input type="text" class="form-control" readonly="readonly"
+			        		value="{{if bookindate!=undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"
+			        		title="{{if bookindate!=undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/>
+					</td>
+					<th>最后修改日期</th>
+					<td>
+						<input type="text" class="form-control" readonly="readonly"
+			        		value="{{if modefydate!=undefined}}{{modefydate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"
+			        		title="{{if modefydate!=undefined}}{{modefydate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/>
+					</td>
+					<th>作废日期</th>
+					<td>
+						<input type="text" class="form-control" readonly="readonly"
+			        		value="{{if canceldate!=undefined}}{{canceldate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"
+			        		title="{{if canceldate!=undefined}}{{canceldate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/>
+			        	<input type="hidden" id="time_stamp" name="time_stamp" class="form-control"
+			                value="{{if time_stamp != undefined}}{{time_stamp}}{{/if}}"/>
+			            <input type="hidden" id="enterpriseid" name="enterpriseid" class="form-control"
+			                value="{{if enterpriseid != undefined}}{{enterpriseid}}{{/if}}"/>
+					</td>
+				</tr>
+			</table>
+            <hr style=" height:2px;border:none;border-top:2px ridge #185598;"/>
+            <div class="form-group" align="center">
+                <input type="button" id="saveBtn" value="保存" class="btn btn-primary" style="margin-left: 6px;margin-right: 6px;"/>
+                <input type="button" id="submitBtn" value="保存并提交" class="btn btn-primary" style="margin-left: 6px;margin-right: 6px;"/>
+                <input type="button" id="printbtn" value="打印" class="btn btn-primary" style="margin-left: 6px;margin-right: 6px;"/>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script id="approveCreditApplicationTemp" type="text/html">
+<!--<div>
+	<div class="form-group" align="center">
+		<label class="col-xs-3 control-label">
+			审批意见：
+		</label>
+		<div class="col-xs-9">
+	    	<textarea id="creditAppcationOption" rows='5' style="width: 100%;"></textarea>
+		</div>
+	</div>
+
+	<div class="form-group" align="center">
+		<div class="col-xs-12">
+			<input type="button" id="loanContractAgreeBtn" value="审核通过" class="btn btn-primary"/>
+        	<input type="button" id="loanContractDisagreeBtn" value="退回" class="btn btn-primary"/>
+        	<input type="button" id="loanContractRejectBtn" value="审核驳回" class="btn btn-primary"/>
+        	<input type="button" id="loanContractEndBtn" value="流程终止" class="btn btn-primary"/>
+		</div>
+   	</div>
+</div> -->
+
+<div class="approvedLayer">
+		<div class="form-group approvedBox" align="center">
+			<div class="approved">审批意见：</div>	
+			<div class="textareaBox">
+				<textarea id="creditAppcationOption" rows='5' style="width:100%;resize:none;"></textarea>
+			</div>
+		</div>
+		<div class="form-group" align="center">
+			<div class="col-xs-12">
+				<input type="button" id="loanContractAgreeBtn" value="审核通过" class="btn btn-primary"/>
+        		<input type="button" id="loanContractDisagreeBtn" value="退回" class="btn btn-primary"/>
+        		<input type="button" id="loanContractRejectBtn" value="审核驳回" class="btn btn-primary"/>
+        		<input type="button" id="loanContractEndBtn" value="流程终止" class="btn btn-primary"/>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!-- 高级搜索状态查询条件 -->
+<script id="loanContractSearchTemp" type="text/html">
+    
+	<div class="form-group">
+		<label class="col-xs-1 control-label"></label>
+		<div class="col-xs-10">
+   			<div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+        		<input type="text" id="starttime" name="starttime" class="form-control text-center" placeholder="开始日期">
+        		<span class="input-group-addon">&lt;=合同签订日期&lt;=</span>
+        		<input type="text" id="endtime" name="endtime" class="form-control text-center" placeholder="结束日期">
+    		</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-3 control-label" style="margin-top: -5px;">状态：</label>
+		<div class="col-xs-9">
+			<input style="width:30px;position:relative;top:2px;" type="checkbox" name="state" />&nbsp;包含已作废
+		</div>
+	</div>
+</script>
+<!--附件-->
+<script id="loanContractFileListTempl" type="text/html">
+	<div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
+		<div class="table-options clearfix">
+			<input type="hidden" id="loanContractId" />
+			<div class=" btn-group btn-group-sm  options_btn sebtn-group" id="addFileBtn">
+				<a href="javascript:void(0)" class="btn btn-primary btn-sm" data-toggle="tooltip" title="新增" id="addFile">新增</a>
+			</div>
+			<div class=" btn-group btn-group-sm  options_btn sebtn-group" id="delFileBtn">
+				<a href="javascript:void(0)" class="btn btn-primary btn-sm" data-toggle="tooltip" title="删除" id="deleteFile">删除</a>
+			</div>
+		</div>
+        <table cellpadding="0" cellspacing="0" class="table table-striped table-vcenter table-bordered table-condensed table-hover  real-table dataTable no-footer">
+			<thead>
+				<tr>
+					<th></th>
+					<th>附件编号</th>
+					<th>附件名称</th>  
+					<th>附件类型</th>
+					<th>文件大小</th>
+				</tr>
+			</thead>
+			<tbody id="fileListTbody">
+			</tbody>	
+		</table>
+    </div>
+</script>
+<script id="addLoanContractFileTemp" type="text/html">
+	<div id="addLoanContractFileDlg" class="from_table_con">
+        <form method="post" role="form" id="pubLoanContractFile">
+            <table cellpadding="0" cellspacing="0" class="from_table">
+				<tr>
+					<td>附件编号<label class="required">*</label></td>
+					<td>
+						<input type="hidden" id="pk_attachments" name="pk_attachments" value="{{if pk_attachments!=undefined}}{{pk_attachments}}{{/if}}" />
+						<input type="hidden" id="sourcebillid" name="sourcebillid" value="{{if sourcebillid!=undefined}}{{sourcebillid}}{{/if}}" />
+						<input type="text" id="code" name="code" value="{{if code!=undefined}}{{code}}{{/if}}"/>
+					</td>
+					<td>附件名称</td>
+					<td>
+						<input type="text" id="name" name="name" value="{{if name!=undefined}}{{name}}{{/if}}"/>
+					</td>
+					<td>附件类型</td>
+					<td>
+						<input type="text" id="type" name="type" value="{{if type!=undefined}}{{type}}{{/if}}"/>
+						<input type="hidden" id="size" name="size" value="{{if size!=undefined}}{{size}}{{/if}}"/>
+						<input type="hidden" id="url" name="url" value="{{if url!=undefined}}{{url}}{{/if}}"/>
+					</td>
+				</tr>
+            </table>
+            <hr style=" height:2px;border:none;border-top:2px ridge #185598;"/>
+            <div class="form-group" align="center">
+                <input type="button" id="fileupload" value="上传文件" class="btn btn-primary"/>
+
+                <input type="button" id="savefilebtn" value="保存" class="btn btn-primary"/>
+            </div>
+        </form>
+		<div class="progress" id="progressDiv" hidden>
+		    <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+        		0%
+      		</div>
+    	</div>
+    </div>
+</script>
+
+
+<script type="text/javascript">
+	var workflowUrl = "http://test.flw.scn.weilian.cn:81/web-basic/";
+    $(function () {
+    	var  checkLoanContractFlag = true;
+        //表格的属性对象，用于初始化表格的设置
+        var option = {
+        	
+            add: {
+                title: "新增",//窗口标题
+                id: "addLoanContractDlg",//窗口的ID,这里不能自己写，要跟窗口div的id相同
+                height: "370px",
+                width: "900px",
+                templId: "addLoanContractTeml",//窗口内容的ID(即script标签的ID)
+                openCallback: function () {//点击事件，比如提交，关闭窗口等
+                     $('.input-datepicker, .input-daterange').datepicker({
+                         weekStart: 1,
+                         language: "zh-CN"
+                     });
+                	debugger;
+                    $("#printbtn").remove();
+                    //企业自动提示
+                    applicationAutoComplete();
+                    //验证表单
+                    autoCompleteValidate();
+                	//数字输入框禁用滚轮方法
+                    disableWheelCredit();
+					//去除输入框中的首尾空格
+                    $(".form-control").on("blur",function(event) {
+                		$(this).val($(this).val().trim());
+                	});
+                	//解禁保存按钮
+					$('#saveBtn').attr("disabled",false);
+                	
+                    $("#saveBtn").on("click", function () {
+       					$('#saveBtn').attr("disabled",true);
+       					$('#submitBtn').attr("disabled",true);
+                        addData(table,"save");
+                    });
+                    
+                    $("#submitBtn").on("click", function () {
+       					$('#saveBtn').attr("disabled",true);
+       					$('#submitBtn').attr("disabled",true);
+                        addData(table,"submit");
+                    });
+                },
+                btn: false
+            },
+            plusBtn: [{
+                id: "level_edit", // 按钮的id
+                text: "编辑", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }, {
+                id: "level_delete", // 按钮的id
+                text: "删除", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }, {
+                id: "level_submit", // 按钮的id
+                text: "提交", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }, {
+                id: "level_approve", // 按钮的id
+                text: "审核", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }, {
+                id: "level_fileList", // 按钮的id
+                text: "附件", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            },{
+                id: "level_modification", // 按钮的id
+                text: "变更", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }, {
+                id: "level_process", // 按钮的id
+                text: "流程进度", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }],
+            onInit: function () {
+                $("#level_edit").on("click", function () 
+                {
+                	if ( checkLoanContractFlag) {
+                		checkLoanContractFlag = false;
+	                    editstable(null,table,"","");
+                	}
+                });
+                
+                $("#level_delete").on("click", function () 
+                {
+                	if ( checkLoanContractFlag) {
+                		checkLoanContractFlag = false;
+	                    deletetable(null,table,"");
+                	}
+                });
+                
+                $("#level_submit").on("click", function () {
+                	if ( checkLoanContractFlag) {
+                		checkLoanContractFlag = false;
+                		submittable(table);
+                	}
+                });
+                
+                $("#level_approve").on("click", function () 
+                {
+                	if ( checkLoanContractFlag) {
+                		checkLoanContractFlag = false;
+	                	approvetable(table);
+                	}
+                });
+                
+                $("#level_fileList").on("click", function () 
+                {
+                	if ( checkLoanContractFlag) {
+                		checkLoanContractFlag = false;
+                		filetable(table);
+                	}
+                });
+                $("#level_modification").on("click", function () 
+                {
+                	if ( checkLoanContractFlag) {
+                		checkLoanContractFlag = false;
+	                    modification(table);
+                	}
+                });
+                $("#level_process").on("click", function() {
+                	if ( checkLoanContractFlag) {
+                		checkLoanContractFlag = false;
+						viewProcess(table);
+                	}
+				});
+                
+             	// 日期选择
+                $('#beginForBusiDate,.input-datepicker,.input-daterange').datepicker({
+                    weekStart: 1,
+                    language: "zh-CN"
+                });
+                $('#endForBusiDate,.input-datepicker,.input-daterange').datepicker({
+                    weekStart: 1,
+                    language: "zh-CN"
+                });
+            },
+            // 表格获取信息的后台服务器地址
+            url: domaindata.product_smf_domain + "loanContract/selectLoanContract",
+            // 表格的头部
+            columns: [{
+                filed: "长期借款合同主键",
+                name: "pk_loan_contract"
+            }, {
+                filed: "长期借款合同号",
+                name: "code"
+            },{
+                filed: "长期借款合同名称",
+                name: "name"
+            },{
+                filed: "借款企业主键",
+                name: "pk_enterprise"
+            }, {
+                filed: "借款企业名称",
+                name: "enterprise_name"
+            }, {
+                filed: "合同签订日期",
+                name: "busi_date"
+            },{
+                filed: "借款限额",
+                name: "loan_limit"
+            },{
+                filed: "年化利率（%）",
+                name: "interest_rate"
+            },{
+                filed: "借款企业联系人",
+                name: "contact"
+            },{
+                filed: "借款企业联系电话",
+                name: "contact_number"
+            },{
+                filed: "状态",
+                name: "state"
+            },{
+                filed: "时间戳",
+                name: "time_stamp"
+            }],
+            
+			handleCol: true,
+            search: true,
+            tools:true,
+            detail: { // 详情
+                onclick:function (index,row) {
+                	if( checkLoanContractFlag){
+                		 checkLoanContractFlag = false;
+                		editstable(row,table,"row","detail");
+                	}
+                }
+            },
+            
+            edit: { // 编辑
+                onclick:function (index,row) {
+                	if( checkLoanContractFlag){
+                		checkLoanContractFlag = false;
+                		editstable(row,table,"row","edit");
+                	}
+            	}
+        	},
+            
+            del: { // 删除
+                onclick:function (index,row) {
+                	if( checkLoanContractFlag){
+                		checkLoanContractFlag = false;
+                		deletetable(row,table,"row");
+                	}
+            	}
+        	},
+        	
+            //渲染列信息
+            columnDefs : [{
+                render : function(data, type, row) { // 格式化时间列
+                	 var showDate = getFormatTimehhmmssFun(data);
+                     return showDate;
+                },
+                targets : [7]//第几列
+                
+            }, { 
+                "targets" : [2,5,13],//隐藏列序号
+                "visible" : false
+            },{
+                render : function(data, type, row) { // 美化状态列
+                	var changedData = beautifyStateColumn(data);
+                	return changedData;
+               },
+               targets : [12]
+               
+           },{
+				render : function(data, type, row) { // 格式化编码列
+					var showCode = getFormatCode(data);
+					return showCode;
+				},
+				targets : [3]// 第几列
+			}],
+            seniorSearch: { // 高级搜索配置
+                formList: [{
+                    filed: "借款合同号",
+                    name: "code"
+                },{
+                    filed: "借款合同名称",
+                    name: "name"
+                },{
+                    filed: "借款企业名称",
+                    name: "enterprise_name"
+                }],
+                plusFiled:template("loanContractSearchTemp",{})
+            },
+        };
+        var table = suneeeUI.seTable("loan_contract-table", option);
+   
+    //---------------------------------------------------------------------------------
+    
+    
+    //判断对象是否为空。
+    function isEmptyObject(obj) 
+  	{
+        for (var key in obj) 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    //时间格式化yyyy-mm-dd hh:mm:ss
+    function getFormatTimehhmmssFun(time) 
+    {
+        if (time == undefined || time == "") 
+        {
+            return "";
+        } else 
+        {
+            return new Date(time).Format("yyyy-MM-dd");
+        }
+    }
+    
+    //美化状态列
+    function beautifyStateColumn(state){
+    	if (state == undefined || state == "")  {
+            return "";
+        }
+    	var clazz = "";
+        var changedData = "";
+       	if("新建" == state || "审核中" == state) {
+       		clazz = "'label label-danger'";
+       	}else if("已作废" == state || "审核拒绝" == state) {
+       		clazz = "'label label-default'";
+       	}else {
+       		clazz = "'label label-primary'";
+       	}
+       	changedData = "<div align='center'><label style='display:inline-block;width:60px' class=" 
+       				+ clazz + " >" + state + "</label></div>";
+       	return changedData;
+    }
+  	//格式化编码列的方法
+  	function getFormatCode(data) {
+  		if (data == undefined || data == "") {
+  			return "";
+		} else {
+			return '<a class="loanContract_code" style="cursor:pointer">' + data + '</a>';
+		}
+  	}
+   //自定义业务日期不超过当前日期的校验
+  	   jQuery.validator.addMethod("dateLegal", function(value, element) { 
+  		   
+  		 //获取当前时间
+    	 var now = new Date().getTime();
+  		  
+  	     //获取页面设置时间
+  	     var old = now;
+  	     
+  		 if (value) { 
+  			var arr1 = value.split(" "); 
+  			var sdate = arr1[0].split('-'); 
+  			var date = new Date(sdate[0], sdate[1]-1, sdate[2]); 
+  			old = date.getTime();
+  		 }
+  	  
+  		 return now > old; 
+  		}, "合同签订日期应早于当前日期");
+    //非空校验（必录项）
+    function dataValidate(fromID) {
+        var validate = $("#" + fromID).validate({
+            rules: {
+            	//长期借款合同名称
+        		name: {
+        			rangelength:[0,255]
+        		},
+        		//借款企业名称
+        		enterprise_name: {
+        			required: true,
+        			rangelength:[0,255]
+        		},
+            	//合同签订日期
+            	busi_date: {
+            		required: true,
+//          		dateLegal: true
+            	},
+            	//币种名称
+                currency_name: {
+                    required: true,
+                    rangelength:[0,15]
+                },
+                //年化利率(%)
+                interest_rate: {
+                    required: true,
+                    min:0,
+                    max:9999.9999999999
+                },
+                //借款限额
+                loan_limit: {
+                    min:0,
+                    max:9999999999999.99
+                }
+            },
+            messages: {
+            	name: {
+                    rangelength: "长期借款合同名称不能超过255个字"
+                },
+            	enterprise_name: {
+                    required: "借款企业名称不能为空",
+                    rangelength: "借款企业名称不能超过255个字"
+                },
+                busi_date: {
+                    required: "合同签订日期不能为空",
+//                  dateLegal: "合同签订日期应早于当前日期"
+                },
+                currency_name: {
+                	required: "币种名称不能为空",
+                	rangelength: "币种名称不能超过15个字"
+                },
+                interest_rate: {
+                	required: "年化利率不能为空",
+                	min:"年化利率必须大于0",
+                	max:"年化利率最大4位整数，保留10位小数"
+                },
+                loan_limit: {
+                    min:"借款限额必须大于0",
+                    max:"借款限额最大为13位整数，保留两位小数"
+                }
+            }
+        });
+        console.log(validate);
+        console.log(validate.form());
+        return validate.form();
+    }
+    //设置列表数据格式
+    function getTbodyJsonDataById(formID,saveType) {
+        var arr = [];
+        $("#" + formID).children().each(function () {
+			var data = {};
+			var name = "";
+	        var value = "";
+            $(this).find("input[name]").each(function() {
+                name = $(this).attr('name');
+                value = $(this).val();
+                data[name] = value;
+            })
+            $(this).find("hidden[name]").each(function () {
+                name = $(this).attr('name');
+                value = $(this).text();
+                data[name] = value;
+            })
+            $(this).find("select[name]").each(function () {
+                name = $(this).attr('name');
+                value = $(this).val();
+                data[name] = value;
+            })
+            if (!isEmptyObject(data)) {
+            	data.saveType = saveType;
+                arr.push(data);
+            }
+        })
+        return arr;
+    }
+    
+  	//点击编码查询详情
+	$("#loan_contract-table table.real-table").on("click",".loanContract_code",function () {
+		if ( checkLoanContractFlag) {
+			 checkLoanContractFlag = false;
+			var index = $(".loanContract_code").index(this);
+			var rowData = table.option.data[index];
+			editstable(rowData,table,"row","detail");
+		}
+		return false;
+	});
+    
+  	//新增数据事件
+    function addData(tableObj, type) {
+  		debugger;
+        //验证数据
+        if (!dataValidate("pubLoanContract"))
+        {
+        	//解禁保存按钮
+			$('#saveBtn').attr("disabled",false);
+			$('#submitBtn').attr("disabled",false);
+            return;
+        }
+        //设置数据
+       var data = getTbodyJsonDataById("pubLoanContract",type)[0];
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify(data),
+            url: domaindata.product_smf_domain + "loanContract/insert",
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            success: function (ResultMsg) {
+            	if(ResultMsg.code == '1') {
+	                tableObj.reload();
+	                layer.closeAll();
+	                layer.close(layer.index);
+            	}else {
+					$('#saveBtn').attr("disabled",false);
+					$('#submitBtn').attr("disabled",false);
+            	}
+            	layer.msg(ResultMsg.msg);//提示信息放在关闭动作之后
+            },error: function (e) {
+            	layer.msg("保存数据异常！");
+                console.log(e);
+				$('#saveBtn').attr("disabled",false);
+				$('#submitBtn').attr("disabled",false);
+            }
+        });
+    }
+    
+     //是否可编辑提示
+    //handleType:区分操作是否是在操作列中的按钮进行
+    //openType：区分操作列的详情和编辑图标按钮
+    function editstable(defaultRow,tableObj,handleType,openType)  {
+    	debugger;
+        if("row" == handleType) {
+			edits(defaultRow, tableObj, openType);
+		} else {
+			var rows = tableObj.getSelectRow();
+			if (rows.length == 0)  {
+	        	 checkLoanContractFlag = true;
+	        	layer.alert("请选择一条记录！");
+	        }
+	        if (rows.length > 1) {
+	        	 checkLoanContractFlag = true;
+	        	layer.alert("每次只能编辑一记录！");
+	        }
+	        if (rows.length == 1)  {
+	            console.log(rows[0].data);
+	            edits(rows[0].data, tableObj, openType);
+	        }
+		}
+    }
+    //编辑
+    function edits(row, table, openType){
+    	debugger;
+    	var windowTitle = "编辑";
+    	if(openType == "detail"){
+    		windowTitle = "查询详情"
+    	}
+    	console.log(row);
+        $.ajax({
+            type: "GET",
+            url: domaindata.product_smf_domain + "loanContract/selectLoanContractByID",
+            data: {"pk_loan_contract": row.pk_loan_contract},
+            dataType: "json",
+            async: true,
+            success: function (result) {
+                console.log(result.data[0]);
+                debugger
+                var editTempl = template("addLoanContractTeml", result.data[0]);
+                var index = layer.open({
+                    type: 1,
+                    title: windowTitle,
+                    area: ['900px', '370px'], //宽高
+                    content: editTempl,
+                    success: function () {
+                    	 checkLoanContractFlag = true;
+                    	 debugger;
+                    	if (result.data[0].state == '新建' && "detail" != openType){
+                    		$('.input-datepicker, .input-daterange').datepicker({
+                                weekStart: 1,
+                                language: "zh-CN"
+                            });
+							//去除输入框中的首尾空格
+                            $(".form-control").on("blur",function(event) {
+                        		$(this).val($(this).val().trim());
+                        	});
+                        	//企业自动提示
+                            applicationAutoComplete();
+                            //校验
+                           	autoCompleteValidate();
+                           	$("#printbtn").remove();
+                            $("#saveBtn").show();
+                            $("#submitBtn").show();
+                    	} else {
+                    		$('#pubLoanContract input').attr("readonly","readonly");
+                            $('#pubLoanContract select').attr("disabled","disabled");
+                            $('#pubLoanContract textarea').attr("readonly","readonly");
+                    		$("#saveBtn").remove();
+                    		$("#submitBtn").remove();
+                    	}
+                        //数字输入框禁用滚轮方法
+    					disableWheelCredit();
+                        
+                        $('#saveBtn').attr("disabled",false);
+                        $('#submitBtn').attr("disabled",false);
+                       
+                        $("#saveBtn").on("click", function () {
+                            $('#saveBtn').attr("disabled",true);
+                            $('#submitBtn').attr("disabled",true);
+                            save(table,"save");
+                        });
+                        
+                        $("#submitBtn").on("click", function () {
+                            $('#saveBtn').attr("disabled",true);
+                        	$('#submitBtn').attr("disabled",true);
+                            save(table,"submit");
+                        });
+                        
+                        $("#printbtn").on("click", function(){
+                            var sdf=$("#addLoanContractDlg");
+                            var temp = $("#addLoanContractDlg").clone();
+                            winname = window.open('', "_blank",'');
+                            winname.document.body.innerHTML=sdf["0"].innerHTML;
+                            winname.print();
+                            winname.close();
+                        });
+                        
+                    },
+                    yes: function () 
+                    {
+                    	//layer.close(index);
+                    }
+                });
+            }
+        });
+    }
+
+    
+    //编辑数据保存
+    function save(tableObj,type){
+    	debugger;
+        if (!dataValidate("pubLoanContract")) {
+        	//解禁保存按钮
+			$('#saveBtn').attr("disabled",false);
+			$('#submitBtn').attr("disabled",false);
+            return;
+        }
+      	//设置数据
+        var data = getTbodyJsonDataById("pubLoanContract",type)[0];
+        $.ajax({
+            type: "POST",
+            url: domaindata.product_smf_domain + "loanContract/modify",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            success: function (ResultMsg) {
+            	debugger;
+            	if(ResultMsg.code == '1') {
+	                tableObj.reload();
+	                layer.closeAll();
+	                layer.close(layer.index);
+            	}else {
+					$('#saveBtn').attr("disabled",false);
+					$('#submitBtn').attr("disabled",false);
+            	}
+            	layer.msg(ResultMsg.msg);//提示信息放在关闭动作之后
+            }, 
+            error: function (e) {
+            	debugger;
+            	layer.msg(e.responseText);
+                console.log(e.responseText);
+				$('#saveBtn').attr("disabled",false);
+				$('#submitBtn').attr("disabled",false);
+            }
+        });
+    }
+   
+    //是否可删除提示
+    function deletetable(defaultRow,tableObj,handleType) {
+    	if("row" == handleType) {
+    		if(defaultRow.state != '新建') {
+    			 checkLoanContractFlag = true;
+    			layer.msg(defaultRow.state + "数据不能删除，请重新选择！");
+    			return;
+    		}
+    		checkLoanContractFlag = true;
+        	layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', 
+        			{ btn: ['确定', '取消'] }, 
+        			function () { deleteSelect(defaultRow, tableObj,handleType); }, 
+        			function (){ });
+    	}else {
+    		var rows = tableObj.getSelectRow();
+            if (rows.length > 0) {
+            	for (var i = 0; i < rows.length; i++) {
+            		if(rows[i].data.state != '新建') {
+            			 checkLoanContractFlag = true;
+            			layer.msg(rows[i].data.state + "数据不能删除，请重新选择！");
+            			return;
+            		}
+            	}
+            	 checkLoanContractFlag = true;
+            	layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', 
+            		{ btn: ['确定', '取消'] },
+            		function () { deleteSelect(rows, tableObj,handleType); }, 
+            		function (){ });
+            } else {
+            	checkLoanContractFlag = true;
+                layer.alert("请选择删除数据！");
+            }
+    	}
+    }
+
+    //批量删除
+    function deleteSelect(rows, tableObj, handleType) {
+    	debugger;
+        var arr = [];
+        var metadata = {};
+        if("row" == handleType){
+            metadata["pk_loan_contract"] = rows.pk_loan_contract;
+            metadata["time_stamp"] = rows.time_stamp;
+            arr.push(metadata);
+        }else  {
+        	for (var i = 0; i < rows.length; i++) {
+                metadata = {};
+                metadata["pk_loan_contract"] = rows[i].data.pk_loan_contract;
+                metadata["time_stamp"] = rows[i].data.time_stamp;
+                arr.push(metadata);
+            }
+        }
+        console.log(arr);
+        var data = {'loanContractDOList': arr };//对应LoanContractDOList里面的字段loanContractDOList
+        $.ajax({
+            type: "POST",
+            url: domaindata.product_smf_domain + "loanContract/delete",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            success: function (data)  {
+            	checkLoanContractFlag = true;
+            	if(data.code == '1') {
+            		tableObj.reload();
+                    layer.msg(data.msg);
+            	}else{
+            		layer.msg(data.msg);
+            	}
+            }
+        });
+    }
+    
+    //提交
+    function submittable(tableObj) {
+   	  row = tableObj.getSelectRow();
+        if (row.length == 1) {
+        	if(row[0].data.state != "新建"){
+        		checkLoanContractFlag = true;
+            	layer.msg(row[0].data.state+"数据不能提交");
+            	return;
+            }
+        	//判断当前登录人是否有改数据的审批权限
+	       	 $.ajax({
+	               type: "POST",
+	               url: domaindata.product_smf_domain + "loanContract/submitModel",
+	               data:JSON.stringify(row[0].data),
+	               dataType: "json",
+	               contentType: "application/json;charset=utf-8",
+	               async: true,
+	               success: function (data) {
+			        	checkLoanContractFlag = true;
+			           	if (data.code == '1') {
+			           		tableObj.reload();
+			                layer.msg(data.msg);
+			           	} else {
+			           		layer.msg(data.msg);
+			           	}
+	               },
+	               error : function () {
+	            	    checkLoanContractFlag = true;
+	               }
+	       	 });
+        } else {
+        	 checkLoanContractFlag = true;
+            layer.alert("请选择1条数据！");
+        }
+   }
+    
+    //是否可审核提示
+    function approvetable(tableObj) {
+    	debugger;
+        rows = tableObj.getSelectRow();
+        if(rows.length == 0) {
+        	 checkLoanContractFlag = true;
+            layer.alert("请选择审核数据！");
+            return;
+        }
+        if (rows.length > 1) {
+        	 checkLoanContractFlag = true;
+        	layer.msg("每次只能审核一条记录！！");
+        	return;
+        }
+        if(rows.length == 1) {
+        	var selectedRow = rows[0].data;
+        	if(selectedRow.state != "审核中"){
+        		checkLoanContractFlag = true;
+            	layer.msg(selectedRow.state+"数据不能审核");
+            	return;
+            }
+        	$.ajax({
+        		type: "POST",
+                url: domaindata.product_smf_domain + "loanContract/checkApproveById",
+                data:JSON.stringify(selectedRow),
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                async: true,
+                success: function (ResultMsg) {
+                	checkLoanContractFlag = true;
+                	if (ResultMsg.code == '1') {
+                		var approveTempl = template("approveCreditApplicationTemp", {});
+                		var index = layer.open({
+                			 type: 1,
+	                         title: "审核",
+	                         area: ['500px', '260px'], //宽高
+	                         content: approveTempl,
+	                         success:function(){
+	                        		$('#loanContractAgreeBtn').attr("disabled",false);
+                            		$('#loanContractDisagreeBtn').attr("disabled",false);
+                            		$('#loanContractRejectBtn').attr("disabled",false);
+                            		$('#loanContractEndBtn').attr("disabled",false);
+                            		
+	                            	$("#loanContractAgreeBtn").on("click", function () {
+	                            		$('#loanContractAgreeBtn').attr("disabled",true);
+	                            		$('#loanContractDisagreeBtn').attr("disabled",true);
+	                            		$('#loanContractRejectBtn').attr("disabled",true);
+	                            		$('#loanContractEndBtn').attr("disabled",true);
+	                            		approveSelect(selectedRow,"agree",tableObj);
+	                                });
+	                            	
+	                            	$("#loanContractDisagreeBtn").on("click", function () {
+	                            		$('#loanContractAgreeBtn').attr("disabled",true);
+	                            		$('#loanContractDisagreeBtn').attr("disabled",true);
+	                            		$('#loanContractRejectBtn').attr("disabled",true);
+	                            		$('#loanContractEndBtn').attr("disabled",true);
+	                            		approveSelect(selectedRow,"disagree",tableObj);
+	                                });
+	                            	
+	                            	$("#loanContractRejectBtn").on("click", function () {
+	                            		$('#loanContractAgreeBtn').attr("disabled",true);
+	                            		$('#loanContractDisagreeBtn').attr("disabled",true);
+	                            		$('#loanContractRejectBtn').attr("disabled",true);
+	                            		$('#loanContractEndBtn').attr("disabled",true);
+	                            		approveSelect(selectedRow,"reject",tableObj);
+	                                });
+	                            	
+	                            	$("#loanContractEndBtn").on("click", function () {
+	                            		$('#loanContractAgreeBtn').attr("disabled",true);
+	                            		$('#loanContractDisagreeBtn').attr("disabled",true);
+	                            		$('#loanContractRejectBtn').attr("disabled",true);
+	                            		$('#loanContractEndBtn').attr("disabled",true);
+	                            		approveSelect(selectedRow,"end",tableObj);
+	                                });
+	                         },
+	                         yes: function () {
+	                             layer.close(index);
+	                         }
+                		 })
+                	}else {
+                		layer.msg(ResultMsg.msg);
+                	}
+                }
+        	})
+        }
+    }
+
+    //批量审核
+    function approveSelect(selectedRow, type, tableObj) {
+        debugger;
+        selectedRow.type = type;
+        selectedRow.option = $("#creditAppcationOption").val();
+    	console.log(selectedRow);
+        $.ajax({
+            type: "POST",
+            url: domaindata.product_smf_domain + "loanContract/approve",
+            data: JSON.stringify(selectedRow),
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            success: function (ResultMsg) {
+            	if(ResultMsg.code == '1') {
+            		layer.closeAll();
+            		tableObj.reload();
+            	} else {
+            		$('#loanContractAgreeBtn').attr("disabled",false);
+            		$('#loanContractDisagreeBtn').attr("disabled",false);
+            		$('#loanContractRejectBtn').attr("disabled",false);
+            		$('#loanContractEndBtn').attr("disabled",false);
+            	}
+            	layer.msg(ResultMsg.msg);
+            }
+        });
+    }
+    //变更
+    function modification(tableObj) {
+  		rows = tableObj.getSelectRow();
+        if(rows.length == 0) {
+        	checkLoanContractFlag = true;
+            layer.alert("请选择变更数据！");
+            return;
+        }
+        if (rows.length > 1) {
+        	checkLoanContractFlag = true;
+        	layer.msg("每次只能变更一条记录！！");
+        	return;
+        }
+        if(rows.length == 1) {
+        	var selectedRow = rows[0].data;
+        	if(selectedRow.state != "已审核"){
+        		checkLoanContractFlag = true;
+            	layer.msg(selectedRow.state+"数据不能变更");
+            	return;
+            }
+        	$.ajax({
+	            type: "GET",
+	            url: domaindata.product_smf_domain + "loanContract/selectLoanContractByID",
+	            data: { "pk_loan_contract": selectedRow.pk_loan_contract },
+	            dataType: "json",
+	            async: true,
+	            success: function (result) {
+	                console.log(result.data[0]);
+	                debugger
+	                var editTempl = template("addLoanContractTeml", result.data[0]);
+	                var index = layer.open({
+	                    type: 1,
+	                    title: "变更",
+	                    area: ['1000px', '400px'], //宽高
+	                    content: editTempl,
+	                    success: function () {
+	                    	checkLoanContractFlag = true;
+	                    	//将长期借款合同号置空
+	                    	$("#code").val("");
+	                    	//将主键置空
+	                    	$("pk_loan_contract").val("");
+	                    	
+                            $("#saveBtn").show();
+                            $("#submitBtn").show();
+	                    	
+	                        //数字输入框禁用滚轮方法
+	    					disableWheelCredit();
+	                        
+	                        $('#saveBtn').attr("disabled",false);
+	                        $('#submitBtn').attr("disabled",false);
+	                       
+	                        $("#saveBtn").on("click", function () {
+	                            $('#saveBtn').attr("disabled",true);
+	                            $('#submitBtn').attr("disabled",true);
+	                            change(table,"save");
+	                        });
+	                        
+	                        $("#submitBtn").on("click", function () {
+	                            $('#saveBtn').attr("disabled",true);
+	                        	$('#submitBtn').attr("disabled",true);
+	                            change(table,"submit");
+	                        });
+	                        
+	                        $("#printbtn").on("click", function(){
+	                            var sdf=$("#addLoanContractDlg");
+	                            var temp = $("#addLoanContractDlg").clone();
+	                            winname = window.open('', "_blank",'');
+	                            winname.document.body.innerHTML=sdf["0"].innerHTML;
+	                            winname.print();
+	                            winname.close();
+	                        });
+	                        
+	                    },
+	                    yes: function () 
+	                    {
+	                    	//layer.close(index);
+	                    }
+	                });
+	            }
+	        });
+        }
+	}
+     //变更后数据保存
+	function change(tableObj,type){
+    	debugger;
+        if (!dataValidate("pubLoanContract")) {
+        	//解禁保存按钮
+			$('#saveBtn').attr("disabled",false);
+			$('#submitBtn').attr("disabled",false);
+            return;
+        }
+      	//设置数据
+        var data = getTbodyJsonDataById("pubLoanContract",type)[0];
+        $.ajax({
+            type: "POST",
+            url: domaindata.product_smf_domain + "loanContract/change",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            success: function (ResultMsg) {
+            	debugger;
+            	if(ResultMsg.code == '1') {
+	                tableObj.reload();
+	                layer.closeAll();
+	                layer.close(layer.index);
+            	}else {
+					$('#saveBtn').attr("disabled",false);
+					$('#submitBtn').attr("disabled",false);
+            	}
+            	layer.msg(ResultMsg.msg);//提示信息放在关闭动作之后
+            }, 
+            error: function (e) {
+            	debugger;
+            	layer.msg(e.responseText);
+                console.log(e.responseText);
+				$('#saveBtn').attr("disabled",false);
+				$('#submitBtn').attr("disabled",false);
+            }
+        });
+    }
+  	//查看流程进度
+	function viewProcess(tableObj) {
+  		debugger;
+		var rows = tableObj.getSelectRow();
+		if(rows.length == 1) {
+			var selectedRow = rows[0].data;
+			var state = selectedRow.state;
+			if(state == '新建') {
+				checkLoanContractFlag = true;
+				layer.msg("新建状态无流程进度！！");
+			}else {
+				$.ajax({
+	                type: "POST",
+	                url: domaindata.product_smf_domain + "loanContract/viewProcess",
+	                data: JSON.stringify(selectedRow),
+	                dataType: "json",
+	                contentType: "application/json;charset=utf-8",
+	                async: true,
+	                success: function (ResultMsg) {
+	                	 checkLoanContractFlag = true;
+	                	if (ResultMsg.code == '1') {
+	                		var arg1 = ResultMsg.data[0].initid;
+	                		var arg2 = ResultMsg.data[0].processDefinitionId;
+	                		var arg3 = ResultMsg.data[0].showreturn;
+	                		var url = workflowUrl + "workflowmanager/workdetail?initid=" + arg1
+	    						+ "&processDefinitionId=" + arg2 +"&showreturn=" + arg3;
+	    					window.open(url);
+	                	} else {
+	                		layer.msg(ResultMsg.msg);
+	                	}
+	                },
+	                error:function(){
+	                	checkLoanContractFlag = true;
+	                	layer.msg("查询流程进度出错 ！！");
+	                }
+	        	});
+			}
+		}else {
+			checkLoanContractFlag = true;
+			layer.alert("请选择一条记录！！")
+		}
+	}
+    //数字输入框禁用滚轮方法
+    function disableWheelCredit() {
+	    $("input[type='number']").each(function(){
+	    	var that = this;
+	    	if(that.addEventListener)
+	    	{	//兼容firefox
+	         	that.addEventListener('DOMMouseScroll',MouseWheelCredit,false);
+	        }//W3C 
+	        that.onmousewheel=MouseWheelCredit;//IE/Opera/Chrome
+	     });
+	}
+    
+    function MouseWheelCredit(event) {
+        event = event || window.event;
+        event.preventDefault();
+    }
+    
+  //附件按钮
+	function filetable(tableObj) {
+	  debugger;
+		row = tableObj.getSelectRow();
+		if (row.length == 1) {
+			console.log(row[0].data);
+			fileList(row[0].data, tableObj);
+		} else {
+			checkLoanContractFlag = true;
+			layer.alert("请选择1条记录！");
+		}
+	}
+	//附件
+	function fileList(row, table) {
+		$.ajax({
+			type : "GET",
+			url : domaindata.product_smf_domain + "loanContract/fileListById",
+			data : {
+				"pk_loan_contract" : row.pk_loan_contract
+			},
+			dataType : "json",
+			async : true,
+			success : function(data) {
+				debugger
+				var editTempl;
+				if (data.data[0] == null) {
+					editTempl = template("loanContractFileListTempl", {});
+				} else {
+					editTempl = template("loanContractFileListTempl",data.data[0]);
+				}
+				var index = layer.open({
+					type : 1,
+					title : "附件列表",
+					area : [ '900px', '500px' ], //宽高
+					content : editTempl,
+					success : function() {
+						 checkLoanContractFlag = true;
+						$("#addFile").on("click", addFile);
+						$("#deleteFile").on("click", deleteFile);
+						if (row.state!='新建' ) {
+							$("#addFileBtn").remove();
+							$("#delFileBtn").remove();
+						}
+						$("#loanContractId").val(row.pk_loan_contract);
+						var html = '';
+						$.each(data.data,function(index, obj) {
+							html = html + '<tr>';
+							html = html + '<td><input type="checkbox" data-time="'+obj.time_stamp+'" data-pk="'+obj.pk_attachments+'"/></td>';
+							html = html + '<td>' + obj.code + '</td>';
+							html = html + '<td><a href="javascript:void(0)" class="contract_file_download" data="' + obj.url + '" target="_blank">' + obj.name + '</a></td>';
+							html = html + '<td>' + obj.type + '</td>';
+							html = html + '<td>' + obj.size + '</td>';
+							html = html + '</tr>';
+						});
+						$("#fileListTbody").html(html);
+						
+						$(".contract_file_download").on("click",function(e){
+							downloadFile($(e.target).attr("data")); 
+						});
+					},
+					yes : function() {
+						layer.close(index);
+					}
+				});
+			}
+		});
+	}
+	
+	function addFile() {
+		var addFileTemp = template("addLoanContractFileTemp", {});
+		var index = layer.open({
+			type : 1,
+			title : "新增附件",
+			area : [ '700px', '400px' ], //宽高
+			content : addFileTemp,
+			success : function() {
+				loanContractApplicationfileupload();
+				$("#sourcebillid").val($("#loanContractId").val());
+				$("#savefilebtn").on("click", function() {
+					addFileData(index);
+				});
+			},
+			yes : function() {
+				layer.close(index);
+			}
+		});
+	}
+	//添加附件
+	function addFileData(index) {
+		//设置数据
+		var data = {
+			'file' : getFileTbodyJsonDataById("pubLoanContractFile")
+		};
+		if (data.file[0].code == null || data.file[0].code == '') {
+			layer.msg("附件编码不能为空");
+			return;
+		}
+		if (data.file[0].url == null || data.file[0].url == '') {
+			layer.msg("请上传文件！");
+			return;
+		}
+		console.log(JSON.stringify(data));//JSON.stringify()
+		$.ajax({
+			type : "POST",
+			data : JSON.stringify(data),
+			url : domaindata.product_smf_domain + "loanContract/insertFile",
+			dataType : "json",
+			contentType : "application/json;charset=utf-8",
+			async : true,
+			success : function(data) {
+				layer.msg(data.msg);
+				//刷新列表 tableObj.reload();
+				reloadFileList();
+				// 关闭窗口
+				layer.close(index);
+				layer.msg(data.msg);
+			}
+		});
+	}
+	//附件列表刷新
+	function reloadFileList() {
+		$.ajax({
+			type : "GET",
+			url : domaindata.product_smf_domain + "loanContract/fileListById",
+			data : {
+				"pk_loan_contract" : $("#loanContractId").val()
+			},
+			dataType : "json",
+			async : true,
+			success : function(data) {
+				var html = '';
+				$.each(data.data,function(index, obj) {
+					html = html + '<tr>';
+					html = html + '<td><input type="checkbox" data-pk="'+obj.pk_attachments+'" data-time="'+obj.time_stamp+'"/></td>';
+					html = html + '<td>' + obj.code + '</td>';
+					html = html + '<td><a href="javascript:void(0)" class="contract_file_download" data="' + obj.url + '" target="_blank">' + obj.name + '</a></td>';
+					html = html + '<td>' + obj.type + '</td>';
+					html = html + '<td>' + obj.size + '</td>';
+					html = html + '</tr>';
+				});
+				$("#fileListTbody").html(html);
+				
+				$(".contract_file_download").on("click",function(e){
+					downloadFile($(e.target).attr("data")); 
+				});
+			}
+		});
+	}
+	//进度条
+	var activeImg = null;
+	function loanContractApplicationfileupload() {
+		$("#fileupload").dropzone({
+			//url: domaindata.product_smf_domain+"/contract/fileupload",
+			url : "http://files.scn.weilian.cn/upload",
+			addRemoveLinks : true,
+			dictRemoveLinks : "x",
+			dictCancelUpload : "x",
+			uploadMultiple : false,
+			maxFiles : 1,
+			maxFilesize : 100,
+			acceptedFiles : ".gif,.jpg,.jpeg,.bmp,.png,.doc,.docx,.pdf,.PDF",
+			init : function() {
+				this.on("uploadprogress", function(file) {
+					//上传文件时触发的事件 进度条
+					$("#progressDiv").show();
+					$("#progressBar").attr("style","width:" + file.upload.progress + "%;")
+					$("#progressBar").html(file.upload.progress.toFixed(2) + "%");
+					//layer.msg(file.upload.progress);
+				});
+				this.on("success", function(file) {
+					$("#progressDiv").hide();
+					var resString = file.xhr.response
+					var res = JSON.parse(resString)
+					activeImg = res.downloadPath //visitPath
+					if (activeImg) {
+						layer.msg('上传成功', {
+							icon : 1
+						})
+						$('#url').val(activeImg);
+						$('#size').val(file.size);
+						$('#name').val(file.name);
+						//$('#attachments_type').val(file.type);
+					}
+				});
+				this.on("removedfile", function(file) {
+					layer.msg('删除成功', {
+						icon : 1
+					})
+					$('#url').val('');
+					$('#size').val('');
+					$('#name').val('');
+				});
+			}
+		});
+	}
+	//删除附件
+	function deleteFile() {
+		var arr = [];
+		var data = {};
+		$("#fileListTbody input[type=checkbox]:checked").each(function() {
+			data = {};
+			data["pk_attachments"] = $(this).attr("data-pk");
+			data["time_stamp"] = $(this).attr("data-time");
+			arr.push(data);
+		});
+		if (arr.length > 0) {
+			layer.confirm('你确定删除所选的文件吗？', {
+				btn : [ '确定', '取消' ]
+			//按钮
+			}, function() {
+				var delData = {
+					'file' : arr
+				};
+				$.ajax({
+					type : "POST",
+					data : JSON.stringify(delData),
+					url : domaindata.product_smf_domain + "loanContract/deleteFile",
+					dataType : "json",
+					contentType : "application/json;charset=utf-8",
+					async : true,
+					success : function(data) {
+						layer.msg(data.msg);
+						//刷新列表 
+						reloadFileList();
+						// 关闭窗口
+						layer.msg(data.msg);
+					}
+				});
+			}, function() {
+
+			});
+		} else {
+			layer.alert("请选择附件记录！");
+		}
+	}
+	//附件下载
+	function downloadFile(url) {
+		window.open(url);
+	}
+	//附件列表设置data格式
+	function getFileTbodyJsonDataById(id) {
+		var arr = [];
+		var data = {};
+		var name = "";
+		var value = "";
+		$("#" + id).children().each(
+			function() {
+				data = {};
+				$(this).find("input[name]").each(function() {
+					name = $(this).attr('name');
+					value = $(this).val();
+					data[name] = value;
+				})
+				
+				$(this).find("hidden[name]").each(function() {
+					name = $(this).attr('name');
+					value = $(this).text();
+					data[name] = value;
+				})
+				
+				$(this).find("select[name]").each(function() {
+					name = $(this).attr('name');
+					value = $(this).val();
+					data[name] = value;
+				})
+				
+				if(!isEmptyObject(data))
+				{
+					arr.push(data);
+				}
+			})
+		return arr;
+	}
+	
+	function applicationAutoComplete() {
+		if($("input").hasClass("loancontract_enterprise_name")){
+			var test = $(".loancontract_enterprise_name").bigAutocomplete({
+	     	 	width:'auto',
+	     	 	id:['code','shortname','statustype','name'],
+	     	 	highlight: false,
+	     	 	minChars: 0,
+	     	 	mustMatch:true,
+	     	 	matchContains:true,
+	     	 	autoFill:true,
+	     		ajax:{
+	     			url: domaindata.product_smf_domain+'loanContract/getEnterpriseByName',				
+	     			type : "GET",
+	     			success: function(data){
+	     				if(data.returnCode==0){
+	     					layer.msg(data.msg);
+	     				}
+	     				$("#pk_enterprise").val(""); 
+	    				var result = data;
+	    				var Str = result.data;
+	    				var datas = [];
+	    				for (var i = 0; i < Str.length; i++) {
+	    					datas[i] = [];
+	    					datas[i].push(Str[i].code);
+	    					datas[i].push(Str[i].shortname);
+	    					datas[i].push(Str[i].statustype);
+	    					datas[i].push(Str[i].name);
+	     		        }
+	     				test.setData(datas,true); // 设置显示的内容，并更新
+	     				test.setTitle(['企业编码','企业简称','企业地位','企业名称']); // 设置标题
+	     				 $("#bigAutocompleteContent").scrollTop(0);
+	     			},
+	     			error: function (msg) {
+	     				layer.msg("查询企业信息异常");
+	     	        }
+	     		},callback: function (data) {
+	     			$("#enterprise_name").val(data[3]); 
+	     			$.ajax({
+		                type: "get", 
+		                url: domaindata.product_smf_domain + "loanContract/getEnterpriseByCode",
+		                data: {"code":data[0]},
+		                async: false,
+		                dataType: "json",
+		                error: function () {
+		                },
+		                success: function (result) {
+		                    $('#pk_enterprise').val(result.data[0].pk_enterprise);
+		                    $('#enterprise_name').attr("title",data[3]);
+		                    $('#address').val(result.data[0].address);
+		                    $('#address').attr("title",result.data[0].address);
+		                    $('#credit_code').val(result.data[0].credit_code);
+		                    $('#credit_code').attr("title",result.data[0].credit_code);
+		                    $('#contact').val(result.data[0].contact);
+		                    $('#contact').attr("title",result.data[0].contact);
+		                    $('#contact_number').val(result.data[0].contact_number);
+		                    $('#contact_number').attr("title",result.data[0].contact_number);
+		                    $('#enterprise_code').val(result.data[0].code);
+		                    $('#enterprise_code').attr("title",result.data[0].code);
+		                }
+		         	});
+		     	}
+			});
+		}
+	}
+	//若手动修改  失去焦点后置空文本框
+	function autoCompleteValidate(){
+		$("#enterprise_name").change(function(){
+			$("#pk_enterprise").val(""); 
+		});
+		
+		$("#enterprise_name").blur(function(){
+			if ($("#enterprise_name").val() != null
+	                 && $("#enterprise_name").val() != '') {
+	             if ($("#pk_enterprise").val() == null
+	                     || $("#pk_enterprise").val() == '') {
+	                 $("#enterprise_name").val("");
+	                 $("#enterprise_name").attr("title","");
+	             }
+	         }
+		});
+	}
+});
+    
+</script>
+</body>
+</html>

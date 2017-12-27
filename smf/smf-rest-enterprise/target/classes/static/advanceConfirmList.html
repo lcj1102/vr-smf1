@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>放款确认</title>
+</head>
+<body>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="level-manage-table"></div>
+    </div>
+</div>
+ 
+     
+<script id="addAdvanceConfirm" type="text/html">
+    <div id="addAdvanceConfirmDlg" class="from_table_con">
+        <form method="post" role="form" id="pubAdvanceConfirm">
+            <table cellpadding="0" cellspacing="0" class="from_table">
+                <tr>
+					<td>放款确认单号<label class="required">*</label></td>
+                    <td><input type="text" class="form-control" id="code" name="code" readonly="readonly"
+                               value="{{if code!=undefined}}{{code}}{{/if}}" title="{{if code!=undefined}}{{code}}{{/if}}"/></td>
+                        <input type="hidden" id="pk_advance_confirm" name="pk_advance_confirm" value="{{if pk_advance_confirm!=undefined}}{{pk_advance_confirm}}{{/if}}"/>
+                    <td>申请企业名称<label class="required">*</label></td>
+                    <td>
+						<input type="hidden" id="pk_enterprise_application" name="pk_enterprise_application" value="{{if pk_enterprise_application!=undefined}}{{pk_enterprise_application}}{{/if}}"/>
+						<input type="text" class="form-control" id="enterprise_application_name" name="enterprise_application_name"
+                               value="{{if enterprise_application_name!=undefined}}{{enterprise_application_name}}{{/if}}" 
+								title="{{if enterprise_application_name!=undefined}}{{enterprise_application_name}}{{/if}}"/>
+                   </td>
+                </tr>
+				<tr>
+					<td>联系人</td>
+                    <td><input type="text" class="form-control" id="contact" name="contact"
+                               value="{{if contact!=undefined}}{{contact}}{{/if}}"
+								title="{{if contact!=undefined}}{{contact}}{{/if}}"/></td>
+					<td>联系电话</td>
+                    <td><input type="text" class="form-control" id="contact_number" name="contact_number" 
+                               value="{{if contact_number!=undefined}}{{contact_number}}{{/if}}"
+								title="{{if contact_number!=undefined}}{{contact_number}}{{/if}}"/>
+                    </td>
+				</tr>
+				<tr>
+					<td>收款账号<label class="required">*</label></td>
+                    <td><input type="text" class="form-control" id="bank_account" name="bank_account"
+                               value="{{if bank_account!=undefined}}{{bank_account}}{{/if}}"
+								title="{{if bank_account!=undefined}}{{bank_account}}{{/if}}"/>
+                    </td>
+					<td>开户行<label class="required">*</label></td>
+                    <td><input type="text" class="form-control" id="bank_deposit" name="bank_deposit"
+                               value="{{if bank_deposit!=undefined}}{{bank_deposit}}{{/if}}"
+								title="{{if bank_deposit!=undefined}}{{bank_deposit}}{{/if}}"/></td>
+				</tr>
+				<tr>
+					<td>申请金额</td>
+                    <td><input type="number" class="form-control" id="application_amount" name="application_amount"
+                               value="{{if application_amount!=undefined}}{{application_amount}}{{/if}}"
+								title="{{if application_amount!=undefined}}{{application_amount}}{{/if}}"/>
+                    </td>
+					<td>支付金额<label class="required">*</label></td>
+                    <td><input type="number" class="form-control" id="advances_amount" name="advances_amount"
+                               value="{{if advances_amount!=undefined}}{{advances_amount}}{{/if}}"
+								title="{{if advances_amount!=undefined}}{{advances_amount}}{{/if}}"/></td>
+				</tr>
+				<tr>
+					<td>申请日期</td>
+                    <td>
+						<div class="input-group input-daterange form-control" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" id="application_date" name="application_date" 
+                            	value="{{if application_date!=undefined}}{{application_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"
+								title="{{if application_date!=undefined}}{{application_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+                        </div>
+					</td>
+					<td>支付时间<label class="required">*</label></td>
+                     <td>
+						<div class="input-group input-daterange form-control" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" id="busi_date" name="busi_date" 
+                            	value="{{if busi_date!=undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"
+								title="{{if busi_date!=undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+                        </div>
+					</td>
+				</tr>
+				<tr>
+					<td>币种</td>
+                    <td>
+                    	<input type="hidden" id="pk_currency" name="pk_currency" value="{{if pk_currency!=undefined}}{{pk_currency}}{{/if}}"/>
+                    	<input type="text" class="form-control" id="currency_name" name="currency_name"
+                               value="{{if currency_name!=undefined}}{{currency_name}}{{/if}}"
+								title="{{if currency_name!=undefined}}{{currency_name}}{{/if}}"/>
+                    </td>
+                    <td>来源单据类型</td>
+                    <td>
+                    	<input type="hidden" id="sourcebillid" name="sourcebillid" value="{{if sourcebillid!=undefined}}{{sourcebillid}}{{/if}}"/>
+                    	<input type="text" class="form-control" id="sourcebilltype" name="sourcebilltype"
+                               value="{{if sourcebilltype!=undefined}}{{sourcebilltype}}{{/if}}"
+								title="{{if sourcebilltype!=undefined}}{{sourcebilltype}}{{/if}}"/>
+                    </td>
+				</tr>
+				<tr>
+					<td>付款方式</td>
+                    <td><input type="text" class="form-control" id="payment_method" name="payment_method"
+                               value="{{if payment_method!=undefined}}{{payment_method}}{{/if}}"
+								title="{{if payment_method!=undefined}}{{payment_method}}{{/if}}"/></td>
+					<td>付款凭证号</td>
+                    <td><input type="text" class="form-control" id="payment_billno" name="payment_billno"
+                               value="{{if payment_billno!=undefined}}{{payment_billno}}{{/if}}"
+								title="{{if payment_billno!=undefined}}{{payment_billno}}{{/if}}"/></td>
+                    
+				</tr>
+				<tr>
+					<td>记账标识</td>
+                    <td><input type="text" class="form-control" id="booked_flag" name="booked_flag"
+                               value="{{if booked_flag!=undefined}}{{booked_flag}}{{/if}}"
+								title="{{if booked_flag!=undefined}}{{booked_flag}}{{/if}}"/></td>
+					<td>状态</td>
+                    <td><input type="text" class="form-control" id="state" name="state" readonly="readonly"
+                               value="{{if state!=undefined}}{{state}}{{/if}}"
+								title="{{if state!=undefined}}{{state}}{{/if}}"/></td>
+				</tr>
+				<tr>
+					<td>登记人</td>
+                    <td><input type="text" class="form-control" readonly="readonly"
+                               value="{{if inputmanname!=undefined}}{{inputmanname}}{{/if}}"
+								title="{{if inputmanname!=undefined}}{{inputmanname}}{{/if}}"/></td>
+					<td>登记日期</td>
+                    <td><input type="text" class="form-control" readonly="readonly"
+                               value="{{if bookindate!=undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"
+								title="{{if bookindate!=undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/></td>
+				</tr>
+            </table>
+            <hr style=" height:2px;border:none;border-top:2px ridge #185598;"/>
+            <div class="form-group" align="center">
+                <input type="button" id="savebtn" value="保存" class="btn btn-primary"/>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" id="submitbtn" value="保存并提交" class="btn btn-primary"/>
+ 				&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" id="printbtn" value="打印" class="btn btn-primary" style="height:29px;"/>
+            </div>
+        </form>
+    </div>
+</script>
+<script id="AdvanceConfirmSearchTemp" type="text/html">
+	<div class="form-group">
+		<label class="col-xs-1 control-label"></label>
+		<div class="col-xs-10">
+   			<div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+        		<input type="text" id="beginForApplicationDateAdvance" name="beginForApplicationDate" class="form-control text-center" placeholder="开始日期">
+        		<span class="input-group-addon">&lt;=申请日期&lt;=</span>
+        		<input type="text" id="endForApplicationDateAdvance" name="endForApplicationDate" class="form-control text-center" placeholder="结束日期">
+    		</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-1 control-label"></label>
+		<div class="col-xs-10">
+   			<div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+        		<input type="text" id="beginForBusiDateAdvance" name="beginForBusiDate" class="form-control text-center" placeholder="开始日期">
+        		<span class="input-group-addon">&lt;=支付时间&lt;=</span>
+        		<input type="text" id="endForBusiDateAdvance" name="endForBusiDate" class="form-control text-center" placeholder="结束日期">
+    		</div>
+		</div>
+	</div>
+
+	<div>
+		<div class="form-group">
+			<label class="col-xs-3 control-label" style="margin-top: -5px;">
+				状态：
+			</label>
+			<div class="col-xs-9">
+				<input style="width:30px;position:relative;top:2px;" type="checkbox" name="state" />包含已作废
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/javascript">
+   // var domaindata.product_smf_domain  = "http://test.scf.scn.weilian.cn/";
+    var workflowUrl = "http://test.flw.scn.weilian.cn:81/web-basic/";
+    $(function () {
+    	var clickAdvanceConfirmFlag = true;
+        //表格的属性对象，用于初始化表格的设置
+        var option = {
+            // "新增窗口"的配置
+            plusBtn: [],
+            onInit: function () {
+
+             	// 日期选择
+                $('#beginForApplicationDateAdvance,.input-datepicker,.input-daterange').datepicker({
+                    weekStart: 1,
+                    language: "zh-CN"
+                });
+                $('#endForApplicationDateAdvance,.input-datepicker,.input-daterange').datepicker({
+                    weekStart: 1,
+                    language: "zh-CN"
+                });
+                
+             // 日期选择
+                $('#beginForBusiDateAdvance,.input-datepicker,.input-daterange').datepicker({
+                    weekStart: 1,
+                    language: "zh-CN"
+                });
+                $('#endForBusiDateAdvance,.input-datepicker,.input-daterange').datepicker({
+                    weekStart: 1,
+                    language: "zh-CN"
+                });
+            },
+            add: false,
+            detail: true,
+            edit: false,
+            del: false,
+            handleCol: true,
+            seniorSearch: { // 高级搜索配置
+                formList: [{
+                    filed: "放款确认单号",
+                    name: "code"
+                },{
+                    filed: "申请企业名称",
+                    name: "enterprise_application_name"
+                },{
+                    filed: "联系人",
+                    name: "contact"
+                }],
+                plusFiled:template("AdvanceConfirmSearchTemp",{})
+            },
+            search: true,
+            tools: {
+            	
+            },
+
+            // 表格的头部，有多少列，就写多少
+            columns: [{
+                filed: "放款确认Id",
+                name: "pk_advance_confirm"
+            },{
+                filed: "放款确认单号",
+                name: "code"
+            }, {
+                filed: "申请企业名称",
+                name: "enterprise_application_name"
+            }, {
+                filed: "申请日期",
+                name: "application_date"
+            }, {
+                filed: "支付时间",
+                name: "busi_date"
+            },{
+                filed: "支付金额",
+                name: "advances_amount"
+            },{
+                filed: "状态",
+                name: "state"
+            },{
+                filed: "时间戳",
+                name: "time_stamp"
+            }],
+            //渲染列信息
+            columnDefs : [{
+                render : function(data, type, row) { // 格式化 列
+                	 var showDate = getFormatTimehhmmssFun(data);
+                     return showDate;
+                },
+                targets : [5,6]
+                // 第几列
+            },{
+				render : function(data, type, row) { // 格式化 列
+					// 格式化编码列
+					var showCode = getFormatCode(data);
+					return showCode;
+				},
+				targets : [3]
+				// 第几列
+			},{
+				render : function(data, type, row) { // 格式化 列
+					// 格式化状态列
+					var showDate = getFormatState(data);
+					return showDate;
+				},
+				targets : [8]
+				// 第几列
+			}, { //隐藏列,序号+
+                "targets" : [2,9],
+                "visible" : false
+            }],detail: { // 详情的配置
+                onclick:function (index,row) {
+                	if(clickAdvanceConfirmFlag){
+               			clickAdvanceConfirmFlag = false;
+               			edits(row,table,"detail");
+                	}
+                }
+            } ,del: false, 
+            edit: false,
+
+            // 表格获取信息的后台服务器地址
+            url: domaindata.product_smf_domain  + "advanceconfirm/advanceconfirmList",
+            ajax: function (data, callback, settings) {
+                //ajax配置为function,手动调用异步查询
+                $.ajax({
+                    type: "GET",
+                    url: "/advanceconfirm/advanceconfirmList",
+                    data: {},
+                    dataType: "json",
+                    success: function (result) {
+                        layer.msg("接口调用成功");
+                        var finalData = result.data[0];
+                        //封装返回数据
+                        var returnData = {};
+                        returnData.draw = data.draw;//自行返回draw参数,最好由后台返回
+                        returnData.recordsTotal = finalData.totalCount;
+                        returnData.recordsFiltered = finalData.pageSize;
+                        returnData.data = finalData.results;
+                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+
+                        callback(returnData);
+                    },
+                    error: function (XMLHttpRequest, textStatus,
+                                     errorThrown) {
+                        layer.msg("查询失败");
+                    }
+                });
+               
+
+            }
+        };
+        var table = suneeeUI.seTable("level-manage-table", option);
+      
+
+        //时间格式化yyyy-mm-dd hh:mm:ss
+        function getFormatTimehhmmssFun(time) {
+        	
+            if (time == undefined || time == "" ) {
+                return "";
+            } else {
+                return new Date(time).Format("yyyy-MM-dd");
+            }
+        }
+      //格式化编码列的方法
+		function getFormatCode(data) {
+			if (data == undefined || data == "") {
+				return "";
+			} else {
+				return '<a class="advance_confirm_code" style="cursor:pointer">'+data+'</a>';
+			}
+		}
+		//格式化状态列的方法
+		function getFormatState(data) {
+			var state = data;
+			if (state == undefined || state == "") 
+	        {
+	            return "";
+	        }
+	    	var clazz = "";
+	        var changedData = "";
+	       	if("新建" == state || "审核中" == state)
+	       	{
+	       		clazz = "'label label-danger'";
+	       	}else if("已作废" == state || "审核拒绝" == state)
+	       	{
+	       		clazz = "'label label-default'";
+	       	}else
+	       	{
+	       		clazz = "'label label-primary'";
+	       	}
+	       	changedData = "<div align='center'><label style='display:inline-block;width:60px' class=" 
+	       				+ clazz + " >" + state + "</label></div>";
+	       	return changedData;
+		}
+		
+
+
+		//点击编码查询详情
+		$("#level-manage-table table.real-table").on("click",".advance_confirm_code",function () {
+			if (clickAdvanceConfirmFlag) {
+				clickAdvanceConfirmFlag = false;
+				var index = $(".advance_confirm_code").index(this);
+				var rowData =  table.option.data[index];
+				edits(rowData,table,"detail");
+			}
+			return false;
+		});
+
+        
+        //编辑按钮
+        function editstable(tableObj) {
+            row = tableObj.getSelectRow();
+            if (row.length == 1) {
+                console.log(row[0].data);
+                edits(row[0].data, tableObj,"edit");
+            } else {
+            	clickAdvanceConfirmFlag = true;
+                layer.alert("请选择1条记录！");
+            }
+        }
+
+        //编辑
+        function edits(row, table,type) {
+            $.ajax({
+                type: "GET",
+                url: domaindata.product_smf_domain  + "advanceconfirm/byid",
+                data: {
+                    "id": row.pk_advance_confirm
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    console.log(data.data[0]);
+                    var editTempl = template("addAdvanceConfirm", data.data[0]);
+                    var index = layer.open({
+                        type: 1,
+                        title: "放款确认",
+                        area: ['900px', '500px'], //宽高
+                        content: editTempl,
+                        success: function () {
+                        	if(type == "edit"){
+	                        	clickAdvanceConfirmFlag = true;
+	                        	
+	                            $("#addbtn").hide();
+	                        	if (data.data[0].state != '新建') {
+	                        		$('#pubAdvanceConfirm input').attr("readonly","readonly");
+	                        		$('#pubAdvanceConfirm select').attr("disabled","disabled");
+	                        		$('#pubAdvanceConfirm textarea').attr("readonly","readonly");
+	                                $("#savebtn").hide();
+	                        		$("#submitbtn").hide();
+	                        	} else {
+	                        		$('.input-datepicker, .input-daterange').datepicker({
+	                                    weekStart: 1,
+	                                    language: "zh-CN"
+	                                });
+	                        		 
+	                        		//去除输入框中的首尾空格
+	                                $(".form-control").on("blur",function(event) {
+	                            		$(this).val($(this).val().trim());
+	                            	});
+	                        		 
+		                            $("#savebtn").show();
+		                            $("#submitbtn").show();
+	                        	}
+	                        	
+	                        	//数字输入框禁用滚轮方法
+	                            disableWheelAdvanceConfirm();
+	                        	
+	                        	//设置表单状态为可提交
+	           					$('#savebtn').attr("disabled",false);
+	           					$('#submitbtn').attr("disabled",false);
+	                        	
+	           				 $("#savebtn").on("click", function () {
+	                             //设置表单状态为可提交
+	                             $('#savebtn').attr("disabled",true);
+	                             $('#submitbtn').attr("disabled",true);
+	                             save(table,"save");
+	                            
+	                         });
+	                         $("#submitbtn").on("click", function () {
+	                             $('#savebtn').attr("disabled",true);
+	                         	 $('#submitbtn').attr("disabled",true);
+	                             save(table,"submit");
+	                         });
+                           }else{
+                        	    clickAdvanceConfirmFlag = true;
+								$('#pubAdvanceConfirm input').attr("readonly","readonly");
+	           					$('#pubAdvanceConfirm select').attr("disabled","disabled");
+								$('#pubAdvanceConfirm textarea').attr("readonly","readonly");
+					        	$("#savebtn").remove();
+					        	$("#submitbtn").remove();
+					        	$("#printbtn").show();  
+                           } 
+                        	$("#printbtn").on("click", function(){
+                                var sdf=$("#addAdvanceConfirmDlg");
+                                var temp = $("#addAdvanceConfirmDlg").clone();
+                                winname = window.open('', "_blank",'');
+                                winname.document.body.innerHTML=sdf["0"].innerHTML;;
+                                winname.print();
+                                winname.close();
+                    		});
+                        },
+                       /*  yes: function () {
+                            layer.close(index);
+                        } */
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                	clickAdvanceConfirmFlag = true;
+                }
+            });
+        }
+		
+        
+
+        //判断对象是否为空。
+        function isEmptyObject(obj) {
+            for (var key in obj) {
+                return false;
+            }
+            return true;
+        }
+    
+
+  //数字输入框禁用滚轮方法
+    function disableWheelAdvanceConfirm(){
+	    
+	    $("input[type='number']").each(function(){
+	    	var that = this;
+	    	if(that.addEventListener){ //兼容firefox
+	         	that.addEventListener('DOMMouseScroll',MouseWheelAdvanceConfirm,false); 
+	          }//W3C 
+	          that.onmousewheel=MouseWheelAdvanceConfirm;//IE/Opera/Chrome 
+	     });
+	}   
+    function MouseWheelAdvanceConfirm(event) {
+        event = event || window.event;
+        event.preventDefault();
+    }
+    
+    });
+</script>
+
+
+</body>
+</html>

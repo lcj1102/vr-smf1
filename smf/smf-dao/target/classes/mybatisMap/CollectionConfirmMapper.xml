@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.CollectionConfirmDao" >
+  <resultMap id="BaseResultMap" type="com.suneee.smf.smf.model.CollectionConfirmVO" >
+      <id column="pk_collection_confirm" property="pk_collection_confirm" jdbcType="NUMERIC" />
+      <result column="code" property="code" jdbcType="VARCHAR" />
+      <result column="pk_enterprise_payment" property="pk_enterprise_payment" jdbcType="INTEGER" />
+      <result column="enterprise_payment_name" property="enterprise_payment_name" jdbcType="VARCHAR" />
+      <result column="contact" property="contact" jdbcType="VARCHAR" />
+      <result column="contact_number" property="contact_number" jdbcType="VARCHAR" />
+      <result column="payment_method" property="payment_method" jdbcType="VARCHAR" />
+      <result column="payment_billno" property="payment_billno" jdbcType="VARCHAR" />
+      <result column="payment_account" property="payment_account" jdbcType="VARCHAR" />
+      <result column="payment_bank" property="payment_bank" jdbcType="VARCHAR" />
+      <result column="collection_amount" property="collection_amount" jdbcType="NUMERIC" />
+      <result column="pk_currency" property="pk_currency" jdbcType="INTEGER" />
+      <result column="currency_name" property="currency_name" jdbcType="VARCHAR" />
+      <result column="busi_date" property="busi_date" jdbcType="TIMESTAMP" />
+      <result column="sourcebilltype" property="sourcebilltype" jdbcType="VARCHAR" />
+      <result column="sourcebillid" property="sourcebillid" jdbcType="INTEGER" />
+      <result column="state" property="state" jdbcType="VARCHAR" />
+      <result column="inputmanid" property="inputmanid" jdbcType="INTEGER" />
+      <result column="inputmanname" property="inputmanname" jdbcType="VARCHAR" />
+      <result column="bookindate" property="bookindate" jdbcType="TIMESTAMP" />
+      <result column="modiferid" property="modiferid" jdbcType="INTEGER" />
+      <result column="modifername" property="modifername" jdbcType="VARCHAR" />
+      <result column="modefydate" property="modefydate" jdbcType="TIMESTAMP" />
+      <result column="cancelid" property="cancelid" jdbcType="INTEGER" />
+      <result column="cancelname" property="cancelname" jdbcType="VARCHAR" />
+      <result column="canceldate" property="canceldate" jdbcType="TIMESTAMP" />
+      <result column="enterpriseid" property="enterpriseid" jdbcType="INTEGER" />
+      <result column="time_stamp" property="time_stamp" jdbcType="TIMESTAMP" />
+      <result column="repayment_principal" property="repayment_principal" jdbcType="NUMERIC" />
+      <result column="repayment_interest" property="repayment_interest" jdbcType="NUMERIC" />
+      <result column="logistics_cost" property="logistics_cost" jdbcType="NUMERIC" />
+      <result column="supervision_cost" property="supervision_cost" jdbcType="NUMERIC" />
+      <result column="overflow_amount" property="overflow_amount" jdbcType="NUMERIC" />
+      <result column="booked_flag" property="booked_flag" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+    <select id="selectByExample1" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        *
+        from smf_collection_confirm where 1=1
+
+        <if test="code != null and code !=''">
+            and code like concat('%',#{code},'%')
+        </if>
+        <if test="enterprise_payment_name != null and enterprise_payment_name !=''">
+            and enterprise_payment_name like concat('%',#{enterprise_payment_name},'%')
+        </if>
+        <if test="beginAmount != null">
+            and collection_amount &gt;= #{beginAmount}
+        </if>
+        <if test="endAmount !=null">
+            and collection_amount &lt;= #{endAmount}
+        </if>
+        <if test="beginDate != null">
+            and busi_date &gt;= #{beginDate}
+        </if>
+        <if test="endDate !=null">
+            and busi_date &lt; #{endDate}
+        </if>
+
+
+        <if test="state == null">
+            and state != '已作废'
+        </if>
+        <if test="enterpriseid != null and enterpriseid !=''">
+            and enterpriseid = #{enterpriseid}
+        </if>
+        <if test="searchValue != null and searchValue !=''">
+            and (enterprise_payment_name like concat('%',#{searchValue},'%')
+            or code like concat('%',#{searchValue},'%')
+            or contact_number like concat('%',#{searchValue},'%')
+            or contact like concat('%',#{searchValue},'%')
+            or payment_method like concat('%',#{searchValue},'%')
+            or currency_name like concat('%',#{searchValue},'%')
+            or rtrim(cast(collection_amount as VARCHAR ),'0')  like concat('%',#{searchValue},'%')
+            or state like concat('%',#{searchValue},'%')
+            or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+            )
+        </if>
+        order by bookindate desc
+        limit #{pageSize} offset #{startNum}
+    </select>
+
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Long">
+        select count(*)
+        from smf_collection_confirm where 1=1
+
+        <if test="code != null and code !=''">
+            and code like concat('%',#{code},'%')
+        </if>
+        <if test="enterprise_payment_name != null and enterprise_payment_name !=''">
+            and enterprise_payment_name like concat('%',#{enterprise_payment_name},'%')
+        </if>
+        <if test="beginAmount != null">
+            and collection_amount &gt;= #{beginAmount}
+        </if>
+        <if test="endAmount !=null">
+            and collection_amount &lt;= #{endAmount}
+        </if>
+        <if test="beginDate != null">
+            and busi_date &gt;= #{beginDate}
+        </if>
+        <if test="endDate !=null">
+            and busi_date &lt; #{endDate}
+        </if>
+        <if test="state == null">
+            and state != '已作废'
+        </if>
+        <if test="enterpriseid != null">
+            and enterpriseid = #{enterpriseid}
+        </if>
+        <if test="searchValue != null and searchValue !=''">
+            and (enterprise_payment_name like concat('%',#{searchValue},'%')
+            or code like concat('%',#{searchValue},'%')
+            or contact_number like concat('%',#{searchValue},'%')
+            or contact like concat('%',#{searchValue},'%')
+            or payment_method like concat('%',#{searchValue},'%')
+            or currency_name like concat('%',#{searchValue},'%')
+            or rtrim(cast(collection_amount as VARCHAR ),'0')  like concat('%',#{searchValue},'%')
+            or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+            or state like concat('%',#{searchValue},'%')
+            )
+        </if>
+    </select>
+
+    <insert id="add" parameterType="com.suneee.smf.smf.model.CollectionConfirmDO" useGeneratedKeys="true" keyProperty="pk_collection_confirm">
+     insert into smf_collection_confirm (code, pk_enterprise_payment,
+      enterprise_payment_name, contact, contact_number,
+      payment_method, payment_billno, payment_account,
+      payment_bank, collection_amount, pk_currency,
+      currency_name, busi_date, sourcebilltype,
+      sourcebillid, state, inputmanid,
+      inputmanname, bookindate, enterpriseid,
+      time_stamp,repayment_principal,repayment_interest,
+      logistics_cost,supervision_cost,overflow_amount,booked_flag)
+    values ( #{code,jdbcType=VARCHAR}, #{pk_enterprise_payment,jdbcType=INTEGER},
+      #{enterprise_payment_name,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, #{contact_number,jdbcType=VARCHAR},
+      #{payment_method,jdbcType=VARCHAR}, #{payment_billno,jdbcType=VARCHAR}, #{payment_account,jdbcType=VARCHAR},
+      #{payment_bank,jdbcType=VARCHAR}, #{collection_amount,jdbcType=NUMERIC}, #{pk_currency,jdbcType=INTEGER},
+      #{currency_name,jdbcType=VARCHAR}, #{busi_date,jdbcType=TIMESTAMP}, #{sourcebilltype,jdbcType=VARCHAR},
+      #{sourcebillid,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{inputmanid,jdbcType=INTEGER},
+      #{inputmanname,jdbcType=VARCHAR}, #{bookindate,jdbcType=TIMESTAMP},  #{enterpriseid,jdbcType=INTEGER},
+      current_timestamp(3),#{repayment_principal,jdbcType=NUMERIC},#{repayment_interest,jdbcType=NUMERIC},
+      #{logistics_cost,jdbcType=NUMERIC},#{supervision_cost,jdbcType=NUMERIC},#{overflow_amount,jdbcType=NUMERIC},
+      #{booked_flag,jdbcType=NUMERIC} )
+    </insert>
+
+    <select id="getRestByPrimaryKey" resultType="com.suneee.smf.smf.model.CollectionConfirmVO" parameterType="com.suneee.smf.smf.model.CollectionConfirmVO">
+        select * from smf_collection_confirm where pk_collection_confirm = #{pk_collection_confirm} and enterpriseid = #{enterpriseid}
+    </select>
+
+    <update id="modify" parameterType="com.suneee.smf.smf.model.CollectionConfirmDO">
+    	 update smf_collection_confirm
+      set code = #{code,jdbcType=VARCHAR},
+      pk_enterprise_payment = #{pk_enterprise_payment,jdbcType=INTEGER},
+      enterprise_payment_name = #{enterprise_payment_name,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      contact_number = #{contact_number,jdbcType=VARCHAR},
+      payment_method = #{payment_method,jdbcType=VARCHAR},
+      payment_billno = #{payment_billno,jdbcType=VARCHAR},
+      payment_account = #{payment_account,jdbcType=VARCHAR},
+      payment_bank = #{payment_bank,jdbcType=VARCHAR},
+      collection_amount = #{collection_amount,jdbcType=NUMERIC},
+      pk_currency = #{pk_currency,jdbcType=INTEGER},
+      currency_name = #{currency_name,jdbcType=VARCHAR},
+      busi_date = #{busi_date,jdbcType=TIMESTAMP},
+      sourcebilltype = #{sourcebilltype,jdbcType=VARCHAR},
+      sourcebillid = #{sourcebillid,jdbcType=INTEGER},
+      state = #{state,jdbcType=VARCHAR},
+      modiferid = #{modiferid,jdbcType=INTEGER},
+      modifername = #{modifername,jdbcType=VARCHAR},
+      modefydate = #{modefydate,jdbcType=TIMESTAMP},
+      enterpriseid = #{enterpriseid,jdbcType=INTEGER},
+      time_stamp = current_timestamp(3),
+      repayment_principal = #{repayment_principal,jdbcType=NUMERIC},
+      repayment_interest = #{repayment_interest,jdbcType=NUMERIC},
+      logistics_cost = #{logistics_cost,jdbcType=NUMERIC},
+      supervision_cost = #{supervision_cost,jdbcType=NUMERIC},
+      overflow_amount = #{overflow_amount,jdbcType=NUMERIC},
+      booked_flag = #{booked_flag,jdbcType=NUMERIC}
+    where pk_collection_confirm = #{pk_collection_confirm,jdbcType=NUMERIC}
+    and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+
+    <update id="delete" parameterType="com.suneee.smf.smf.model.CollectionConfirmDO">
+    	UPDATE smf_collection_confirm SET
+    		state = #{state},cancelname = #{cancelname}, canceldate = #{canceldate},cancelid=#{cancelid},time_stamp = current_timestamp(3)
+    	 where pk_collection_confirm = #{pk_collection_confirm} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+
+    <update id="approveCollectionConfirmDO" parameterType="com.suneee.smf.smf.model.CollectionConfirmDO">
+        UPDATE smf_collection_confirm
+        SET state = #{state},time_stamp = current_timestamp(3)
+        where pk_collection_confirm = #{pk_collection_confirm} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+
+
+
+    <select id="countByCode" parameterType="com.suneee.smf.smf.model.CollectionConfirmDO" resultType="java.lang.Long">
+        select count(*) from smf_collection_confirm where code = #{code} and enterpriseid = #{enterpriseid} and state != '已作废'
+        <if test="pk_collection_confirm != null">
+            and pk_collection_confirm != #{pk_collection_confirm}
+        </if>
+    </select> 
+    
+     <select id="checkCollectionConfirmTimeStamp" parameterType="com.suneee.smf.smf.model.CollectionConfirmDO" resultType="java.lang.Long" >
+        select 
+         count(0)
+        from smf_collection_confirm where pk_collection_confirm = #{pk_collection_confirm} and enterpriseid = #{enterpriseid}
+        and time_stamp = #{time_stamp}
+    </select>
+
+    <select id="checkCode" parameterType="java.util.Map" resultType="java.lang.Long">
+        select count(*) from smf_collection_confirm where code = #{code}
+        <if test="pk_collection_confirm != null and pk_collection_confirm != ''">
+            and pk_collection_confirm != #{pk_collection_confirm}
+        </if>
+    </select>
+
+    <update id="submitModel" parameterType="com.suneee.smf.smf.model.CollectionConfirmDO">
+        UPDATE smf_collection_confirm SET state = #{state},time_stamp = CURRENT_TIMESTAMP(3) where pk_collection_confirm = #{pk_collection_confirm} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+
+    <select id="queryCollectionBySource" resultMap="BaseResultMap">
+      select * from  smf_collection_confirm where sourcebillid = #{sourcebillid} and enterpriseid = #{enterpriseid} and sourcebilltype=#{sourcebilltype} and (state = '已审核' or state = '已结算')
+   </select>
+   
+   <select id="queryUnsettleCollectionBySaleApplication"  parameterType="com.suneee.smf.smf.model.CollectionConfirmDO" resultMap="BaseResultMap">
+        SELECT scc.*
+        FROM smf_collection_confirm scc
+        LEFT JOIN
+        smf_sale_application ssa
+        ON ssa.pk_sale_application = scc.sourcebillid
+        WHERE ssa.enterpriseid = #{enterpriseid} AND ssa.pk_enterprise_application = #{pk_enterprise_application} AND sourcebilltype=#{sourcebilltype} AND scc.state = '已审核'
+        ORDER BY scc.busi_date ASC
+   </select>
+
+    <select id="selectForBalance" parameterType="java.util.Map" resultMap="BaseResultMap">
+    	select * from smf_collection_confirm where booked_flag = #{booked_flag}
+    </select>
+    <update id="updateForBalance" parameterType="com.suneee.smf.smf.model.CollectionConfirmDO">
+        UPDATE smf_collection_confirm
+        SET booked_flag = #{booked_flag},time_stamp = current_timestamp(3)
+        where pk_collection_confirm = #{pk_collection_confirm} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+    
+    <update id="updateCollectionUseFor" parameterType="com.suneee.smf.smf.model.CollectionConfirmVO">
+        UPDATE smf_collection_confirm
+        SET 
+        	state = '已结算',
+        	repayment_interest = #{repayment_interest},
+        	repayment_principal = #{repayment_principal},
+        	logistics_cost = #{logistics_cost},
+        	supervision_cost = #{supervision_cost},
+        	overflow_amount = #{overflow_amount},
+        	modefydate = #{modefydate},
+        	time_stamp = current_timestamp(3)
+        WHERE pk_collection_confirm = #{pk_collection_confirm} AND enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+    
+</mapper>

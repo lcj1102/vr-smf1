@@ -1,0 +1,1761 @@
+<html>
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>资金退出结算</title>
+      <style>
+       th{
+	text-align:center;
+}
+
+td select{
+	width:100%;
+}
+th select{
+	width:100%;
+}
+
+
+th select{
+	text-align:center;
+}
+
+#pubcapitalSettlement .input-group{
+	width:100%;
+} 
+
+#alertProductModel{
+	height: 26px !important;
+    vertical-align: middle;
+}
+#pk_product_model + input{
+	 vertical-align: middle;
+} 
+
+.approved{
+	text-align:left;
+    padding-left:61px;
+    margin-bottom:10px;
+}
+
+.approvedBox{
+	padding-top:10px;
+	margin-bottom:20px;
+}
+
+.approvedLayer  input{
+	margin:0 5px;
+}
+.textareaBox{
+	width:75%;
+}
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="level-manage-table"></div>
+    </div>
+</div>
+ 
+     
+<script id="addcapitalSettlement" type="text/html">
+    <div id="addcapitalSettlementDlg" class="from_table_con">
+        <form method="post" role="form" id="pubcapitalSettlement">
+			
+            <table cellpadding="0" cellspacing="0" class="from_table">
+                <tr>
+					<td>退出结算单号<label class="required">*</label></td>
+                    <td><input type="text" class="form-control" id="code" name="code" readonly="readonly"
+                               value="{{if code!=undefined}}{{code}}{{/if}}" title="{{if code!=undefined}}{{code}}{{/if}}"/></td>
+						<input type="hidden" id="pk_capital_settlement" name="pk_capital_settlement" 
+							   value="{{if pk_capital_settlement!=undefined}}{{pk_capital_settlement}}{{/if}}"/>
+					<td>资金注入合同号<label class="required">*</label></td>
+                    <td>
+						<input type="text" name="capital_injection_code" id="capital_injection_code" class="form-control capitalSettlement_serInfo_entry"
+                               autocomplete="off" value="{{if capital_injection_code!=undefined}}{{capital_injection_code}}{{/if}}" title="{{if capital_injection_code!=undefined}}{{capital_injection_code}}{{/if}}" />
+                    </td>
+					<td>退资日期<label class="required">*</label></td>
+                    <td>
+						<div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" id="busi_date" name="busi_date" value="{{if busi_date!=undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}" title="{{if busi_date!=undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+                        </div>
+					</td>
+                </tr>
+				<tr>
+					<td>结算金额(万元)</td>
+                    <td><input type="number" class="form-control" id="settlement_amount" name="settlement_amount" readonly="readonly"  
+                               value="{{if settlement_amount!=undefined}}{{settlement_amount}}{{/if}}"
+							   title="{{if settlement_amount!=undefined}}{{settlement_amount}}{{/if}}"/></td>
+                    <td>撤资企业名称<label class="required">*</label></td>
+                    <td><input type="hidden" id="pk_enterprise" name="pk_enterprise"
+                               value="{{if pk_enterprise!=undefined}}{{pk_enterprise}}{{/if}}"/>
+						<input type="text" class="form-control" id="enterprise_name" name="enterprise_name" readonly="readonly"
+                               value="{{if enterprise_name!=undefined}}{{enterprise_name}}{{/if}}"
+							   title="{{if enterprise_name!=undefined}}{{enterprise_name}}{{/if}}"/></td>
+					<td>原注资金额(万元)<label class="required">*</label></td>
+                    <td><input type="number" class="form-control" id="amount" name="amount" readonly="readonly" 
+                               value="{{if amount!=undefined}}{{amount}}{{/if}}"
+							   title="{{if amount!=undefined}}{{amount}}{{/if}}"/></td>
+
+				</tr>
+				<tr>
+					<td>注资日期<label class="required">*</label></td>
+                    <td>
+                            <input type="text" class="form-control" id="injection_date" name="injection_date" readonly="readonly" 
+								value="{{if injection_date!=undefined}}{{injection_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"
+								title="{{if injection_date!=undefined}}{{injection_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+					</td>
+					<td>注资企业注册地址</td>
+                    <td><input type="text" class="form-control" id="address" name="address" readonly="readonly" 
+                               value="{{if address!=undefined}}{{address}}{{/if}}"  title="{{if address!=undefined}}{{address}}{{/if}}"/></td>
+					<td>注资企业统一社会信用代码</td>
+                    <td><input type="text" class="form-control" id="credit_code" name="credit_code" readonly="readonly" 
+                               value="{{if credit_code!=undefined}}{{credit_code}}{{/if}}" title="{{if credit_code!=undefined}}{{credit_code}}{{/if}}"/></td>
+				</tr>
+				<tr>
+					<td>注资企业联系人</td>
+                    <td><input type="text" class="form-control" id="contact" name="contact" readonly="readonly" 
+                               value="{{if contact!=undefined}}{{contact}}{{/if}}" title="{{if contact!=undefined}}{{contact}}{{/if}}"/></td>
+					<td>注资企业联系电话</td>
+                    <td><input type="text" class="form-control" id="contact_number" name="contact_number" readonly="readonly" 
+                               value="{{if contact_number!=undefined}}{{contact_number}}{{/if}}" title="{{if contact_number!=undefined}}{{contact_number}}{{/if}}"/></td>
+					<td>状态</td>
+                    <td><input type="text" class="form-control" id="state" name="state" readonly="readonly"
+                               value="{{if state!=undefined}}{{state}}{{/if}}" title="{{if state!=undefined}}{{state}}{{/if}}"/></td>
+				</tr>
+				<tr>
+					<td>币种名称</td>
+                    <td><input type="text" class="form-control" id="currency_name" name="currency_name" readonly="readonly"
+                               value="{{if currency_name!=undefined}}{{currency_name}}{{/if}}" title="{{if currency_name!=undefined}}{{currency_name}}{{/if}}"/></td>
+					<td>年化利率(%)</td>
+                    <td><input type="number" class="form-control" id="interest_rate" name="interest_rate" readonly="readonly"
+                               value="{{if interest_rate!=undefined}}{{interest_rate}}{{/if}}" title="{{if interest_rate!=undefined}}{{interest_rate}}{{/if}}"/></td>
+					<td></td>
+                    <td></td>
+				</tr>
+				<tr>
+					<td>登记人</td>
+                    <td><input type="text" class="form-control" id="inputmanname" name="inputmanname"
+                               value="{{if inputmanname!=undefined}}{{inputmanname}}{{/if}}" title="{{if inputmanname!=undefined}}{{inputmanname}}{{/if}}" readonly="readonly"/></td>
+					<td>修改人</td>
+                    <td><input type="text" class="form-control" id="modifername" 
+                               value="{{if modifername!=undefined}}{{modifername}}{{/if}}" title="{{if modifername!=undefined}}{{modifername}}{{/if}}" readonly="readonly"/></td>
+					<td>作废人</td>
+                    <td><input type="text" class="form-control" id="cancelname" 
+                               value="{{if cancelname!=undefined}}{{cancelname}}{{/if}}" title="{{if cancelname!=undefined}}{{cancelname}}{{/if}}" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td>登记日期</td>
+                    <td>
+                            <input type="text" class="form-control" readonly="readonly"
+                               value="{{if bookindate!=undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}" title="{{if bookindate!=undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/>
+					</td>
+					<td>修改日期</td>
+                    <td>
+                            <input type="text" class="form-control" readonly="readonly"  
+                               value="{{if modefydate!=undefined}}{{modefydate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}" title="{{if modefydate!=undefined}}{{modefydate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/>
+					</td>
+					<td>作废日期</td>
+                    <td>
+                            <input type="text" class="form-control" readonly="readonly" 
+                               value="{{if canceldate!=undefined}}{{canceldate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}" title="{{if canceldate!=undefined}}{{canceldate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/>
+							<input type="hidden" id="time_stamp" name="time_stamp"
+                               value="{{if time_stamp!=undefined}}{{time_stamp}}{{/if}}"/>
+					</td>
+				</tr>
+				
+            </table>
+            <hr style=" height:2px;border:none;border-top:2px ridge #185598;"/>
+            <div class="form-group" align="center">
+                <input type="button" id="savebtn" value="保存" class="btn btn-primary" style="margin-left: 6px;margin-right: 6px;"/>
+                <input type="button" id="submitbtn" value="保存并提交" class="btn btn-primary" style="margin-left: 6px;margin-right: 6px;"/>
+				<input type="button" id="printbtn" value="打印" class="btn btn-primary" style="margin-left: 6px;margin-right: 6px;"/>
+            </div>
+        </form>
+    </div>
+
+</script>
+<script id="capitalSettlementFileListTempl" type="text/html">
+	<div style="padding-top: 10px;padding-left: 10px;padding-right: 10px;">
+		<div class="table-options clearfix">
+			<input type="hidden" id="capitalSettlementId" />
+			<div class=" btn-group btn-group-sm  options_btn sebtn-group" id="addFileBtn">
+				<a href="javascript:void(0)" class="btn btn-primary btn-sm" data-toggle="tooltip" title="新增" id="addFile">新增</a>
+			</div>
+			<div class=" btn-group btn-group-sm  options_btn sebtn-group" id="delFileBtn">
+				<a href="javascript:void(0)" class="btn btn-primary btn-sm" data-toggle="tooltip" title="删除" id="deleteFile">删除</a>
+			</div>
+		</div>
+        <table cellpadding="0" cellspacing="0" class="table table-striped table-vcenter table-bordered table-condensed table-hover  real-table dataTable no-footer">
+			<thead>
+				<tr>
+					<th></th>
+					<th>附件编号</th>
+					<th>附件名称</th>  
+					<th>附件类型</th>
+					<th>文件大小</th>
+				</tr>
+			</thead>
+			<tbody id="fileListTbody">
+			</tbody>	
+		</table>
+    </div>
+</script>
+<script id="addCapitalSettlementFileTemp" type="text/html">
+	<div id="addCapitalSettlementFileDlg" class="from_table_con">
+        <form method="post" role="form" id="pubCapitalSettlementFile">
+            <table cellpadding="0" cellspacing="0" class="from_table">
+				<tr>
+					<td>附件编号<label class="required">*</label></td>
+					<td>
+						<input type="hidden" id="pk_attachments" name="pk_attachments" value="{{if pk_attachments!=undefined}}{{pk_attachments}}{{/if}}" />
+						<input type="hidden" id="sourcebillid" name="sourcebillid" value="{{if sourcebillid!=undefined}}{{sourcebillid}}{{/if}}" />
+						<input type="text" id="code" name="code" value="{{if code!=undefined}}{{code}}{{/if}}"/>
+					</td>
+					<td>附件名称</td>
+					<td>
+						<input type="text" id="name" name="name" value="{{if name!=undefined}}{{name}}{{/if}}"/>
+					</td>
+					<td>附件类型</td>
+					<td>
+						<input type="text" id="type" name="type" value="{{if type!=undefined}}{{type}}{{/if}}"/>
+						<input type="hidden" id="size" name="size" value="{{if size!=undefined}}{{size}}{{/if}}"/>
+						<input type="hidden" id="url" name="url" value="{{if url!=undefined}}{{url}}{{/if}}"/>
+					</td>
+				</tr>
+            </table>
+            <hr style=" height:2px;border:none;border-top:2px ridge #185598;"/>
+            <div class="form-group" align="center">
+                <input type="button" id="fileupload" value="上传文件" class="btn btn-primary"/>
+
+                <input type="button" id="savefilebtn" value="保存" class="btn btn-primary"/>
+            </div>
+        </form>
+		<div class="progress" id="progressDiv" hidden>
+		    <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+        		0%
+      		</div>
+    	</div>
+    </div>
+</script>
+<script id="stateSearchTemp" type="text/html">
+<div>
+	<div class="form-group">
+	  	  <!--左边标题占比为 3 -->
+    	<label class="col-xs-1 control-label">
+
+   	 	</label>
+      	  <!--右边内容占比 9-->
+    	<div class="col-xs-10">
+     	   <!--以下就是自定义内容 提交服务器查询的时候,框架会根据input 的name属性获取值并传回服务器-->
+      	  	<div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+        	  	  <input type="text" id="beginDate" name="beginDate" class="form-control text-center" placeholder="开始日期">
+        	  	  <span class="input-group-addon"><=退资日期<=</span>
+        			<input type="text" id="endDate" name="endDate" class="form-control text-center" placeholder="结束日期">
+    	 	</div>
+   		</div>
+	</div>
+	<div>
+		<div class="form-group">
+			<label class="col-xs-3 control-label" style="margin-top: -5px;">
+				状态：
+			</label>
+			<div class="col-xs-9">
+				<input style="width:30px;position:relative;top:2px;" type="checkbox" name="state" />包含已作废
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+
+<script id="approveCapitalSettlementTemp" type="text/html">
+<!--<div>
+	<div class="form-group" align="center">
+		<label class="col-xs-3 control-label">
+			审批意见：
+		</label>
+		<div class="col-xs-9">
+	    	<textarea id="approveOption" rows='5' style="width: 100%;"></textarea>
+		</div>
+	</div>
+
+	<div class="form-group" align="center">
+		<div class="col-xs-12">
+		<input type="button" id="capitalSettlementagreebtn" value="审核通过" class="btn btn-primary"/>
+    	<input type="button" id="capitalSettlementdisagreebtn" value="退回" class="btn btn-primary"/>
+    	<input type="button" id="capitalSettlementrejectbtn" value="审核驳回" class="btn btn-primary"/>
+    	<input type="button" id="capitalSettlementendbtn" value="流程终止" class="btn btn-primary"/>
+		</div>
+   	</div>
+</div>-->
+
+
+	<div class="approvedLayer">
+		<div class="form-group approvedBox" align="center">
+			<div class="approved">审批意见：</div>	
+			<div class="textareaBox">
+				<textarea id="approveOption" rows='5' style="width:100%;resize:none;"></textarea>
+			</div>
+		</div>
+		<div class="form-group" align="center">
+			<div class="col-xs-12">
+			<input type="button" id="capitalSettlementagreebtn" value="审核通过" class="btn btn-primary"/>
+    		<input type="button" id="capitalSettlementdisagreebtn" value="退回" class="btn btn-primary"/>
+    		<input type="button" id="capitalSettlementrejectbtn" value="审核驳回" class="btn btn-primary"/>
+    		<input type="button" id="capitalSettlementendbtn" value="流程终止" class="btn btn-primary"/>
+			</div>
+		</div>
+	</div>
+</script>
+<script type="text/javascript">
+    /* var product_smf_domain  = "http://my.chint.weilian.cn:35017/"; */
+    var workflowUrl = "http://test.flw.scn.weilian.cn:81/web-basic/";
+    $(function () {
+    	var clickCapitalSettlementFlag = true;
+        //表格的属性对象，用于初始化表格的设置
+        var option = {
+            // "新增窗口"的配置
+            plusBtn: [{
+                id: "level_edit", // 按钮的id
+                text: "编辑", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }, {
+                id: "level_delete", // 按钮的id
+                text: "删除", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }, {
+                id: "level_submit", // 按钮的id
+                text: "提交", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }, {
+                id: "level_approve", // 按钮的id
+                text: "审核", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }, {
+                id: "level_file", // 按钮的id
+                text: "附件", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }, {
+                id: "level_approvelog", // 按钮的id
+                text: "流程进度", // 显示的文字
+                clazz: "btn btn-primary btn-sm",// 按钮的class
+            }],
+            onInit: function () {
+                $("#level_edit").on("click", function () {
+                	if (clickCapitalSettlementFlag) {
+                		clickCapitalSettlementFlag = false;
+	                    editstable(table);
+                	}
+                });
+				$("#level_file").on("click", function() {
+					if (clickCapitalSettlementFlag) {
+						clickCapitalSettlementFlag = false;
+						filetable(table);
+					}
+				});
+                $("#level_delete").on("click", function () {
+                	if (clickCapitalSettlementFlag) {
+                		clickCapitalSettlementFlag = false;
+                    	deletetable(table);
+                	}
+                });
+                $("#level_approve").on("click", function () {
+                	if (clickCapitalSettlementFlag) {
+                		clickCapitalSettlementFlag = false;
+                		approvetable(table);
+                	}
+                });
+                $("#level_submit").on("click", function () {
+                	if (clickCapitalSettlementFlag) {
+                		clickCapitalSettlementFlag = false;
+                		submittable(table);
+                	}
+                });
+                $("#level_approvelog").on("click", function () {
+                	if (clickCapitalSettlementFlag) {
+                		clickCapitalSettlementFlag = false;
+	                	approvelogtable(table);
+                	}
+                }); 
+            },
+            add: {
+                title: "资金退出结算",//窗口标题
+                id: "addcapitalSettlementDlg",//窗口的ID,这里不能自己写，要跟窗口div的id相同
+                height: "500px",
+                width: "950px",
+                templId: "addcapitalSettlement",//窗口内容的ID
+                //url : "http://my.chint.weilian.cn:40881/vipLevel/insert",//点保存跳转的地址，框架默认是POST请求，无需自己配置
+                openCallback: function () {//点击事件，比如提交，关闭窗口等
+                    /* $("#addbtn").show();
+                     $("#savebtn").remove();*/
+                     $(".layui-layer-content").css({"height":"500px"});
+                     $("#printbtn").remove();
+                     $('.input-datepicker, .input-daterange').datepicker({
+                         weekStart: 1,
+                         language: "zh-CN"
+                     });
+                     
+                    calcMon();
+                    clearText();
+                     
+                    //数字输入框禁用滚轮方法
+                    disableWheelcapitalSettlement();
+                	//企业
+                	enterpriseAutoComplete();
+                	enterpriseAutoCompleteValidate();
+                    //去除输入框中的首尾空格
+                    $(".form-control").on("blur",function(event) {
+                		$(this).val($(this).val().trim());
+                	});
+                   	//解禁保存按钮
+   					$('#savebtn').attr("disabled",false);
+                     
+   					$("#savebtn").on("click", function () {
+                    	//解禁保存按钮
+       					$('#savebtn').attr("disabled",true); 
+       					$('#submitbtn').attr("disabled",true);
+                        addData(table,"save");
+                    });
+                    $("#submitbtn").on("click", function () {
+       					$('#savebtn').attr("disabled",true);
+       					$('#submitbtn').attr("disabled",true);
+                        addData(table,"submit");
+                    });
+                    
+                
+                },
+                btn: false
+            },
+            detail: true,
+            edit: true,
+            del: true,
+            handleCol: true,
+            seniorSearch: { // 高级搜索配置
+                formList: [{
+                    filed: "撤资企业名称",
+                    name: "enterprise_name"
+                },{
+                    filed: "资金退出结算单号",
+                    name: "code"
+                }],
+                plusFiled:template("stateSearchTemp",{})
+            },
+            search: true,
+            tools: {
+            	
+            },
+
+            // 表格的头部，有多少列，就写多少
+            columns: [{
+                filed: "资金退出结算单主键",
+                name: "pk_capital_settlement"
+            },{
+                filed: "时间戳",
+                name: "time_stamp"
+            },{
+                filed: "退出结算单号",
+                name: "code"
+            }, {
+                filed: "资金注入合同号",
+                name: "capital_injection_code"
+            }, {
+                filed: "撤资企业名称",
+                name: "enterprise_name"
+            }, {
+                filed: "退资日期",
+                name: "busi_date"
+            }, {
+                filed: "注资金额(万元)",
+                name: "amount"
+            },{
+                filed: "年化利率(%)",
+                name: "interest_rate"
+            },{
+                filed: "结算金额(万元)",
+                name: "settlement_amount"
+            },{
+                filed: "状态",
+                name: "state"
+            }],
+            //渲染列信息
+            columnDefs : [{
+                render : function(data, type, row) { // 格式化 列
+                	 var showDate = getFormatTimehhmmssFun(data);
+                     return showDate;
+                },
+                targets : [7]
+                // 第几列
+            },{
+				render : function(data, type, row) { // 格式化 列
+					// 格式化编码列
+					var showDate = getFormatCode(data);
+					return showDate;
+				},
+				targets : [4]
+				// 第几列
+			},{
+				render : function(data, type, row) { // 格式化 列
+					// 格式化状态列
+					var showDate = getFormatState(data);
+					return showDate;
+				},
+				targets : [11]
+				// 第几列
+			}, { //隐藏列,序号+
+                "targets" : [2,3],
+                "visible" : false
+            }],detail: { // 详情的配置
+                onclick:function (index,row) {
+                	if(clickCapitalSettlementFlag){
+               			clickCapitalSettlementFlag = false;
+               			edits(row,table,"detail");
+                	}
+                }
+            } ,del: { // 详情的配置
+                onclick:function (index,row) {
+                	if(clickCapitalSettlementFlag){
+               			clickCapitalSettlementFlag = false;
+                		deletetabletest(row,table);
+                	}
+           		}
+        	}, edit: { // 详情的配置
+                onclick:function (index,row) {
+                	if(clickCapitalSettlementFlag){
+                		clickCapitalSettlementFlag = false;
+                		edits(row,table,"edit");
+                	}
+            	}
+        	},
+
+            // 表格获取信息的后台服务器地址
+            url: domaindata.product_smf_domain  + "capitalSettlement/capitalSettlementList",
+            ajax: function (data, callback, settings) {
+                //ajax配置为function,手动调用异步查询
+                $.ajax({
+                    type: "GET",
+                    url: "/capitalSettlement/capitalSettlementList",
+                    data: {},
+                    dataType: "json",
+                    success: function (result) {
+                        layer.msg("接口调用成功");
+                        var finalData = result.data[0];
+                        //封装返回数据
+                        var returnData = {};
+                        returnData.draw = data.draw;//自行返回draw参数,最好由后台返回
+                        returnData.recordsTotal = finalData.totalCount;
+                        returnData.recordsFiltered = finalData.pageSize;
+                        returnData.data = finalData.results;
+                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+
+                        callback(returnData);
+                    },
+                    error: function (XMLHttpRequest, textStatus,
+                                     errorThrown) {
+                        layer.msg("查询失败");
+                    }
+                });
+               
+
+            }
+        };
+        var table = suneeeUI.seTable("level-manage-table", option);
+      
+
+        //时间格式化yyyy-mm-dd hh:mm:ss
+        function getFormatTimehhmmssFun(time) {
+        	
+            if (time == undefined || time == "" ) {
+                return "";
+            } else {
+                return new Date(time).Format("yyyy-MM-dd");
+            }
+        }
+      //格式化编码列的方法
+		function getFormatCode(data) {
+			if (data == undefined || data == "") {
+				return "";
+			} else {
+				return '<a class="capitalSettlement_code" style="cursor:pointer">'+data+'</a>';
+			}
+		}
+		//格式化状态列的方法
+		function getFormatState(data) {
+			var state = data;
+			if (state == undefined || state == "") 
+	        {
+	            return "";
+	        }
+	    	var clazz = "";
+	        var changedData = "";
+	       	if("新建" == state || "审核中" == state)
+	       	{
+	       		clazz = "'label label-danger'";
+	       	}else if("已作废" == state || "审核拒绝" == state)
+	       	{
+	       		clazz = "'label label-default'";
+	       	}else
+	       	{
+	       		clazz = "'label label-primary'";
+	       	}
+	       	changedData = "<div align='center'><label style='display:inline-block;width:60px' class=" 
+	       				+ clazz + " >" + state + "</label></div>";
+	       	return changedData;
+		}
+        
+  
+  	 //自定义注资金额校验
+       jQuery.validator.addMethod("settlement_amountIsLegal", function(value, element) { 
+        
+         var str = value.toString();
+         var flag = true;
+		  if (str.indexOf("\.") != -1) {
+			  var len = str.length - str.indexOf("\.") - 1;
+			  if (len > 6) {
+				  flag = false;
+			  }
+		  }
+		   return value > 0 && flag; 
+		}); 
+        //数据校验
+        function dataValidate(fromID) {
+            var validate = $("#" + fromID).validate({
+                rules: {//校验规则
+                	//控制公司编码最大输入数
+                   code: {
+                        required: false,
+                    }, 
+                  
+                    capital_injection_code:{
+                    	required: true,
+                    },
+                    
+                    busi_date:{
+                    	required: true,
+                    },
+
+                    settlement_amount:{
+                    	required: true,
+                    	settlement_amountIsLegal : false,
+                    },
+                    enterprise_name:{
+                    	required: true,
+                    },
+
+                    amount:{
+                    	required: true,
+                    	settlement_amountIsLegal : false,
+                    },
+                    injection_date:{
+                    	required: true,
+                    },
+                    
+                    currency_name:{
+                    	required: true,
+                    },
+                    interest_rate:{
+                    	required: true,
+                    	min: 0
+                    }
+                },
+                messages: {//校验提示信息
+                	
+                   code: {
+                        required: "退出结算单号不能为空",
+                    },
+                    
+                    capital_injection_code: {
+                        required: "资金注入合同号不能为空",
+                    },
+                    busi_date: {
+                        required: "退资日期不能为空",
+                    },
+
+                   settlement_amount: {
+                        required: "结算金额不能为空",
+                        settlement_amountIsLegal : "结算金额不能为0，或者为负",
+                    }, 
+                    enterprise_name: {
+                         required: "注资企业名称不能为空",
+                     },
+                    amount: {
+                         required: "原注资金额不能为空",
+                         settlement_amountIsLegal : "原注资金额不能为0，或者为负",
+                    },
+                    injection_date: {
+                        required: "注资日期不能为空",
+                    },
+
+                    currency_name: {
+                        required: "币种名称不能为空",
+                    },
+                    interest_rate : {
+						required : "年利率不能为空",
+						min: "利息率不能为负数"
+					}
+                }
+            });
+          
+            console.log(validate);
+            console.log(validate.form());
+            return validate.form();
+        }
+
+        //新增数据事件
+        function addData(tableObj,type) {
+            //验证数据
+            if (!dataValidate("pubcapitalSettlement")) {
+            	//解禁保存按钮
+				$('#savebtn').attr("disabled",false);
+				$('#submitbtn').attr("disabled",false);
+                return;
+            }
+            //设置数据
+            var data = {
+                'capitalSettlementDOList': getTbodyJsonDataById("pubcapitalSettlement")
+            };
+            data.saveType = type;
+            console.log(JSON.stringify(data));//JSON.stringify()
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify(data),
+                url: domaindata.product_smf_domain  + "capitalSettlement/insert",
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                async: true,
+                success: function (data) {
+                    layer.msg(data.msg);
+                    if (data.code == '1') {
+	                    tableObj.reload();
+	                    // 关闭窗口
+	                    layer.closeAll();
+	                    layer.close(layer.index);
+	
+                    }else{
+                    	//解禁保存按钮
+       					$('#savebtn').attr("disabled",false);
+       					$('#submitbtn').attr("disabled",false);
+                    }
+	                layer.msg(data.msg);
+                },
+                error: function (data) {
+                	layer.msg(data.msg);
+                    console.log(e);
+                    //设置表单状态为可提交
+                    $('#savebtn').attr("disabled",false);
+                    $('#submitbtn').attr("disabled",false);
+               	}
+            });
+            //执行新增后清空页面数据
+            //$("#pubcapitalSettlement input[name]").val("");
+        }
+
+		//点击编码查询详情
+		$("#level-manage-table table.real-table").on("click",".capitalSettlement_code",function () {
+			if (clickCapitalSettlementFlag) {
+				clickCapitalSettlementFlag = false;
+				var index = $(".capitalSettlement_code").index(this);
+				var rowData =  table.option.data[index];
+				edits(rowData,table,"detail");
+			}
+			return false;
+		});
+
+        
+        //编辑按钮
+        function editstable(tableObj) {
+            row = tableObj.getSelectRow();
+            if (row.length == 1) {
+                console.log(row[0].data);
+                /* if(row[0].data.state == "已作废" || row[0].data.state == "已审核"){
+                	layer.msg(row[0].data.state+"数据不能编辑");
+                	return;
+                } */
+                edits(row[0].data, tableObj,"edit");
+            } else {
+            	clickCapitalSettlementFlag = true;
+                layer.alert("请选择1条记录！");
+            }
+        }
+
+        //编辑
+        function edits(row, table,type) {
+            $.ajax({
+                type: "GET",
+                url: domaindata.product_smf_domain  + "capitalSettlement/byid",
+                data: {
+                    "id": row.pk_capital_settlement
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    console.log(data.data[0]);
+                    var editTempl = template("addcapitalSettlement", data.data[0]);
+                    var index = layer.open({
+                        type: 1,
+                        title: "编辑",
+                        area: ['950px', '500px'], //宽高
+                        content: editTempl,
+                        success: function () {
+                        	if(type == "edit"){
+                        		$(".layui-layer-content").css({"height":"500px"});
+	                        	clickCapitalSettlementFlag = true;
+	                        	if (data.data[0].state != '新建') {
+	                        		$('#pubcapitalSettlement input').attr("readonly","readonly");
+	                        		$('#pubcapitalSettlement select').attr("disabled","disabled");
+	                        		$('#pubcapitalSettlement textarea').attr("readonly","readonly");
+	                                $("#savebtn").remove();
+	                        		$("#submitbtn").remove();
+	                        	} else {
+	                        		$('.input-datepicker, .input-daterange').datepicker({
+	                                    weekStart: 1,
+	                                    language: "zh-CN"
+	                                });
+	                                calcMon();
+	                        		clearText();
+	                             	//企业
+	                            	enterpriseAutoComplete();
+	                            	enterpriseAutoCompleteValidate();
+	                        		//去除输入框中的首尾空格
+	                                $(".form-control").on("blur",function(event) {
+	                            		$(this).val($(this).val().trim());
+	                            	});
+	                        		 
+		                            $("#printbtn").remove();
+	                        	}
+	                        	
+	                        	//数字输入框禁用滚轮方法
+	                            disableWheelcapitalSettlement();
+	                        	
+	                        	//设置表单状态为可提交
+	           					$('#savebtn').attr("disabled",false);
+	           					$('#submitbtn').attr("disabled",false);
+	                        	
+	           				 $("#savebtn").on("click", function () {
+	                             //设置表单状态为可提交
+	                             $('#savebtn').attr("disabled",true);
+	                             $('#submitbtn').attr("disabled",true);
+	                             save(table,"save");
+	                            
+	                         });
+	                         $("#submitbtn").on("click", function () {
+	                             $('#savebtn').attr("disabled",true);
+	                         	 $('#submitbtn').attr("disabled",true);
+	                             save(table,"submit");
+	                         });
+                           }else{
+                        	   clickCapitalSettlementFlag = true;
+								$('#pubcapitalSettlement input').attr("readonly","readonly");
+	           					$('#pubcapitalSettlement select').attr("disabled","disabled");
+								$('#pubcapitalSettlement textarea').attr("readonly","readonly");
+					        	$("#savebtn").remove();
+					        	$("#submitbtn").remove();
+                           } 
+                        	$("#printbtn").on("click", function(){
+                                var sdf=$("#addcapitalSettlementDlg");
+                                var temp = $("#addcapitalSettlementDlg").clone();
+                                winname = window.open('', "_blank",'');
+                                winname.document.body.innerHTML=sdf["0"].innerHTML;;
+                                winname.print();
+                                winname.close();
+                    		});
+                        },
+                       /*  yes: function () {
+                            layer.close(index);
+                        } */
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                	clickCapitalSettlementFlag = true;
+                }
+            });
+        }
+        
+		//附件按钮
+		function filetable(tableObj) {
+			row = tableObj.getSelectRow();
+			if (row.length == 1) {
+				console.log(row[0].data);
+				fileList(row[0].data, tableObj);
+			} else {
+				clickCapitalSettlementFlag = true;
+				layer.alert("请选择1条记录！");
+			}
+		}
+		//附件
+		function fileList(row, table) {
+			$.ajax({
+				type : "GET",
+				url : domaindata.product_smf_domain + "capitalSettlement/fileListById",
+				data : {
+					"capitalSettlementId" : row.pk_capital_settlement
+				},
+				dataType : "json",
+				async : true,
+				success : function(data) {
+					debugger
+					var editTempl;
+					if (data.data[0] == null) {
+						editTempl = template("capitalSettlementFileListTempl", {});
+					} else {
+						editTempl = template("capitalSettlementFileListTempl",data.data[0]);
+					}
+					var index = layer.open({
+						type : 1,
+						title : "附件列表",
+						area : [ '900px', '500px' ], //宽高
+						content : editTempl,
+						success : function() {
+							clickCapitalSettlementFlag = true;
+							$("#addFile").on("click", addFile);
+							$("#deleteFile").on("click", deleteFile);
+							if (row.state!='新建' ) {
+								$("#addFileBtn").remove();
+								$("#delFileBtn").remove();
+							}
+							$("#capitalSettlementId").val(row.pk_capital_settlement);
+							var html = '';
+							$.each(data.data,function(index, obj) {
+								html = html + '<tr>';
+								html = html + '<td><input type="checkbox" data-pk="'+obj.pk_attachments+'" data-time="'+obj.time_stamp+'"/></td>';
+								html = html + '<td>' + obj.code + '</td>';
+								html = html + '<td><a href="javascript:void(0)" class="contract_file_download" data="' + obj.url + '" target="_blank">' + obj.name + '</a></td>';
+								html = html + '<td>' + obj.type + '</td>';
+								html = html + '<td>' + obj.size + '</td>';
+								html = html + '</tr>';
+							});
+							$("#fileListTbody").html(html);
+							
+							$(".contract_file_download").on("click",function(e){
+								downloadFile($(e.target).attr("data"));											;    
+							});
+						},
+						yes : function() {
+							layer.close(index);
+						}
+					});
+				}
+			});
+		}
+		function addFile() {
+			var addFileTemp = template("addCapitalSettlementFileTemp", {});
+			//$("#contractId").val();
+			var index = layer.open({
+				type : 1,
+				title : "新增附件",
+				area : [ '700px', '400px' ], //宽高
+				content : addFileTemp,
+				success : function() {
+					capitalSettlementfileupload();
+					$("#sourcebillid").val($("#capitalSettlementId").val());
+					$("#savefilebtn").on("click", function() {
+						addFileData(index);
+					});
+				},
+				yes : function() {
+					layer.close(index);
+				}
+			});
+		}		
+		function addFileData(index) {
+			//设置数据
+			var data = {
+				'file' : getFileTbodyJsonDataById("pubCapitalSettlementFile")
+			};
+			if (data.file[0].code == null || data.file[0].code == '') {
+				layer.msg("附件编码不能为空");
+				return;
+			}
+			if (data.file[0].url == null || data.file[0].url == '') {
+				layer.msg("请上传文件！");
+				return;
+			}
+			console.log(JSON.stringify(data));//JSON.stringify()
+			$.ajax({
+				type : "POST",
+				data : JSON.stringify(data),
+				url : domaindata.product_smf_domain + "capitalSettlement/insertFile",
+				dataType : "json",
+				contentType : "application/json;charset=utf-8",
+				async : true,
+				success : function(data) {
+
+					layer.msg(data.msg);
+					//刷新列表 tableObj.reload();
+					reloadFileList();
+					// 关闭窗口
+					layer.close(index);
+
+					layer.msg(data.msg);
+				}
+			});
+		}
+		function reloadFileList() {
+			$.ajax({
+				type : "GET",
+				url : domaindata.product_smf_domain + "capitalSettlement/fileListById",
+				data : {
+					"capitalSettlementId" : $("#capitalSettlementId").val()
+				},
+				dataType : "json",
+				async : true,
+				success : function(data) {
+					var html = '';
+					$.each(data.data,function(index, obj) {
+						html = html + '<tr>';
+						html = html + '<td><input type="checkbox" data-pk="'+obj.pk_attachments+'" data-time="'+obj.time_stamp+'"/></td>';
+						html = html + '<td>' + obj.code + '</td>';
+						html = html + '<td><a href="javascript:void(0)" class="contract_file_download" data="' + obj.url + '" target="_blank">' + obj.name + '</a></td>';
+						html = html + '<td>' + obj.type + '</td>';
+						html = html + '<td>' + obj.size + '</td>';
+						html = html + '</tr>';
+					});
+					$("#fileListTbody").html(html);
+					
+					$(".contract_file_download").on("click",function(e){
+						downloadFile($(e.target).attr("data"));											;    
+					});
+				}
+			});
+		}
+		
+		var activeImg = null;
+		function capitalSettlementfileupload() {
+			$("#fileupload").dropzone({
+				//url: domaindata.product_smf_domain+"/contract/fileupload",
+				url : "http://files.scn.weilian.cn/upload",
+				addRemoveLinks : true,
+				dictRemoveLinks : "x",
+				dictCancelUpload : "x",
+				uploadMultiple : false,
+				maxFiles : 1,
+				maxFilesize : 100,
+				acceptedFiles : ".gif,.jpg,.jpeg,.bmp,.png,.doc,.docx,.pdf,.PDF",
+				init : function() {
+					this.on("uploadprogress", function(file) {
+						//上传文件时触发的事件 进度条
+						$("#progressDiv").show();
+						$("#progressBar").attr("style","width:" + file.upload.progress + "%;")
+						$("#progressBar").html(file.upload.progress.toFixed(2) + "%");
+						//layer.msg(file.upload.progress);
+					});
+					this.on("success", function(file) {
+						$("#progressDiv").hide();
+						var resString = file.xhr.response
+						var res = JSON.parse(resString)
+						activeImg = res.downloadPath //visitPath
+						if (activeImg) {
+							layer.msg('上传成功', {
+								icon : 1
+							})
+							$('#url').val(activeImg);
+							$('#size').val(file.size);
+							$('#name').val(file.name);
+							//$('#attachments_type').val(file.type);
+						}
+					});
+					this.on("removedfile", function(file) {
+						layer.msg('删除成功', {
+							icon : 1
+						})
+						$('#url').val('');
+						$('#size').val('');
+						$('#name').val('');
+					});
+				}
+			});
+		}
+		
+		function deleteFile() {
+			var arr = [];
+			var data = {};
+			$("#fileListTbody input[type=checkbox]:checked").each(function() {
+				data = {};
+				data["pk_attachments"] = $(this).attr("data-pk");
+				data["time_stamp"] = $(this).attr("data-time");
+				arr.push(data);
+			});
+			if (arr.length > 0) {
+				layer.confirm('你确定删除所选的文件吗？', {
+					btn : [ '确定', '取消' ]
+				//按钮
+				}, function() {
+					var delData = {
+						'file' : arr
+					};
+					$.ajax({
+						type : "POST",
+						data : JSON.stringify(delData),
+						url : domaindata.product_smf_domain + "capitalSettlement/deleteFile",
+						dataType : "json",
+						contentType : "application/json;charset=utf-8",
+						async : true,
+						success : function(data) {
+							layer.msg(data.msg);
+							//刷新列表 
+							reloadFileList();
+							// 关闭窗口
+							layer.msg(data.msg);
+						}
+					});
+				}, function() {
+	
+				});
+			} else {
+				layer.alert("请选择附件记录！");
+			}
+		}
+		function downloadFile(url) {
+			window.open(url);
+		}
+		
+        //设置data格式
+		function getFileTbodyJsonDataById(id) 
+		{
+			var arr = [];
+			var data = {};
+			var name = "";
+			var value = "";
+			$("#" + id).children().each(
+				function() {
+					data = {};
+					$(this).find("input[name]").each(function() {
+						name = $(this).attr('name');
+						value = $(this).val();
+						data[name] = value;
+					})
+					
+					$(this).find("hidden[name]").each(function() {
+						name = $(this).attr('name');
+						value = $(this).text();
+						data[name] = value;
+					})
+					
+					$(this).find("select[name]").each(function() {
+						name = $(this).attr('name');
+						value = $(this).val();
+						data[name] = value;
+					})
+					
+					if(!isEmptyObject(data))
+					{
+						arr.push(data);
+					}
+				})
+			return arr;
+		}
+		function getItemTbodyJsonDataById(id) 
+		{
+			var arr = [];
+			var data = {};
+			var name = "";
+			var value = "";
+			$("#" + id).children().each(function() {
+				data = {};
+				$(this).find("input[data]").each(function() {
+					name = $(this).attr('data');
+					value = $(this).val();
+					data[name] = value;
+				})
+				
+				if(!isEmptyObject(data))
+				{
+					arr.push(data);
+				}
+			})
+			return arr;
+		}
+		
+		//操作按钮单个删除
+        function deletetabletest(row,tableObj) {
+  		  if(row.state != "新建"){
+  			  clickCapitalSettlementFlag = true;
+  			  layer.msg(row.state+"数据不能删除");
+          	  return;
+  		  }
+  		  clickCapitalSettlementFlag = true;
+  		  layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', {
+                  btn: ['确定', '取消']
+              //按钮
+          },function(){
+		  	var arr = [];
+        	var metadata = {};
+            metadata["pk_capital_settlement"] = row.pk_capital_settlement;
+            metadata["time_stamp"] = row.time_stamp;
+            if(row.state == "新建"){
+                arr.push(metadata);
+    		}
+            console.log(arr);
+            var data = {
+                'capitalSettlementDOList': arr
+            };
+            $.ajax({
+                type: "POST",
+                url: domaindata.product_smf_domain  + "capitalSettlement/deleteSelect",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                async: true,
+                success: function (data) {
+                	clickCapitalSettlementFlag = true;
+                    if (data.code == '1'){
+                        tableObj.reload();
+                        layer.msg(data.msg);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                },
+                error:function () {
+                	clickCapitalSettlementFlag = true;
+                }
+            });
+		  });
+          
+        }
+        //删除
+        function deletetable(tableObj) {
+            row = tableObj.getSelectRow();
+            if (row.length > 0) {
+            	for (var i = 0; i < row.length; i++) {
+            		if(row[i].data.state != "新建"){
+            			clickCapitalSettlementFlag = true;
+                        layer.msg(row[i].data.state + "数据不能删除，请重新选择！");
+            			return;
+            		}
+            	}
+            	/*if(flag){
+                	layer.msg("数据已审核或已作废不能删除");
+                	return;
+                }*/
+                clickCapitalSettlementFlag = true;
+                layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', {
+                    btn: ['确定', '取消']
+                    //按钮
+                }, function () {
+                    console.log(row[0].data);
+                    deleteSelect(row, tableObj);
+                }, function () {
+
+                });
+            } else {
+            	clickCapitalSettlementFlag = true;
+                layer.alert("请选择删除数据！");
+            }
+        }
+
+        //批量删除
+        function deleteSelect(row, tableObj) {
+            var arr = [];
+            var metadata = {};
+            for (var i = 0; i < row.length; i++) {
+                metadata = {};
+                metadata["pk_capital_settlement"] = row[i].data.pk_capital_settlement;
+                metadata["time_stamp"] = row[i].data.time_stamp;
+                if(row[i].data.state == "新建"){
+	                arr.push(metadata);
+        		}
+            }
+            console.log(arr);
+            var data = {
+                'capitalSettlementDOList': arr
+            };
+            $.ajax({
+                type: "POST",
+                url: domaindata.product_smf_domain  + "capitalSettlement/deleteSelect",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                async: true,
+                success: function (data) {
+                	clickCapitalSettlementFlag = true;
+                    if (data.code == '1'){
+                        tableObj.reload();
+                        layer.msg(data.msg);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                },
+                error:function () {
+                	clickCapitalSettlementFlag = true;
+                }
+            });
+        }
+
+        function submittable(tableObj) {
+        	 row = tableObj.getSelectRow();
+             if (row.length == 1) {
+             	if(row[0].data.state != "新建"){
+             		clickCapitalSettlementFlag = true;
+                 	layer.msg(row[0].data.state+"数据不能提交");
+                 	return;
+                 }
+             	//判断当前登录人是否有改数据的审批权限
+            	$.ajax({
+	                type: "POST",
+	                url: domaindata.product_smf_domain + "capitalSettlement/submitModel",
+	                data:JSON.stringify(row[0].data),
+	                dataType: "json",
+	                contentType: "application/json;charset=utf-8",
+	                async: true,
+	                success: function (data) {
+	                	clickCapitalSettlementFlag = true;
+	                	if (data.code == '1') {
+	                		tableObj.reload();
+	                        layer.msg(data.msg);
+	                	} else {
+	                		layer.msg(data.msg);
+	                	}
+	                },
+                    error : function () {
+                    	clickCapitalSettlementFlag = true;
+                    }
+            	});
+             } else {
+            	 clickCapitalSettlementFlag = true;
+                 layer.alert("请选择1条数据！");
+             }
+        }
+      //审核
+        function approvetable(tableObj) {
+            row = tableObj.getSelectRow();
+            if (row.length == 1) {
+            	if(row[0].data.state != "审核中"){
+            		clickCapitalSettlementFlag = true;
+                	layer.msg(row[0].data.state+"数据不能审核");
+                	return;
+                }
+            	row[0].data.type = "";
+            	row[0].data.option = "";
+            	console.log(JSON.stringify(row[0].data));
+            	 
+            	//判断当前登录人是否有改数据的审批权限
+            	$.ajax({
+	                type: "POST",
+	                url: domaindata.product_smf_domain + "capitalSettlement/checkApproveById",
+	                data:JSON.stringify(row[0].data),
+	                dataType: "json",
+	                contentType: "application/json;charset=utf-8",
+	                async: true,
+	                success: function (data) {
+            			 
+                        clickCapitalSettlementFlag = true;
+	                	if (data.code == '1') {
+	                		var approveTempl = template("approveCapitalSettlementTemp", {});
+	                        var index = layer.open({
+	                            type: 1,
+	                            title: "审核",
+	                            area: ['500px', '260px'], //宽高
+	                            content: approveTempl,
+	                            success: function () {
+	                            	$('#capitalSettlementagreebtn').attr("disabled",false);
+                            		$('#capitalSettlementdisagreebtn').attr("disabled",false);
+                            		$('#capitalSettlementrejectbtn').attr("disabled",false);
+                            		$('#capitalSettlementendbtn').attr("disabled",false);
+                            		
+	                            	$("#capitalSettlementagreebtn").on("click", function () {
+	                            		$('#capitalSettlementagreebtn').attr("disabled",true);
+	                            		$('#capitalSettlementdisagreebtn').attr("disabled",true);
+	                            		$('#capitalSettlementrejectbtn').attr("disabled",true);
+	                            		$('#capitalSettlementendbtn').attr("disabled",true);
+	                            		approveSelect(row,"agree",tableObj);
+	                                });
+	                            	$("#capitalSettlementdisagreebtn").on("click", function () {
+	                            		$('#capitalSettlementagreebtn').attr("disabled",true);
+	                            		$('#capitalSettlementdisagreebtn').attr("disabled",true);
+	                            		$('#capitalSettlementrejectbtn').attr("disabled",true);
+	                            		$('#capitalSettlementendbtn').attr("disabled",true);
+	                            		approveSelect(row,"disagree",tableObj);
+	                                });
+	                            	$("#capitalSettlementrejectbtn").on("click", function () {
+	                            		$('#capitalSettlementagreebtn').attr("disabled",true);
+	                            		$('#capitalSettlementdisagreebtn').attr("disabled",true);
+	                            		$('#capitalSettlementrejectbtn').attr("disabled",true);
+	                            		$('#capitalSettlementendbtn').attr("disabled",true);
+	                            		approveSelect(row,"reject",tableObj);
+	                                });
+	                            	$("#capitalSettlementendbtn").on("click", function () {
+	                            		$('#capitalSettlementagreebtn').attr("disabled",true);
+	                            		$('#capitalSettlementdisagreebtn').attr("disabled",true);
+	                            		$('#capitalSettlementrejectbtn').attr("disabled",true);
+	                            		$('#capitalSettlementendbtn').attr("disabled",true);
+	                            		approveSelect(row,"end",tableObj);
+	                                });
+	                            },
+	                            yes: function () {
+	                                layer.close(index);
+	                            }
+	                        });
+	                	} else {
+	                		clickCapitalSettlementFlag = true;
+	                		layer.msg(data.msg);
+	                	}
+	                },
+                    error : function () {
+                    	clickCapitalSettlementFlag = true;
+                    }
+            	});
+            	
+            } else {
+            	clickCapitalSettlementFlag = true;
+                layer.alert("请选择1条审核数据！");
+            }
+        }
+
+        //批量审核
+        function approveSelect(row,type, tableObj) {
+            row[0].data.type = type;
+        	row[0].data.option = $("#approveOption").val();
+            $.ajax({
+                type: "POST",
+                url: domaindata.product_smf_domain  + "capitalSettlement/approveSelect",
+                data: JSON.stringify(row[0].data),
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                async: true,
+                success: function (data) {
+                    if (data.code == '1'){
+                    	layer.closeAll();
+                        tableObj.reload();
+                        layer.msg(data.msg);
+                    } else {
+
+                    	$('#capitalSettlementagreebtn').attr("disabled",false);
+                		$('#capitalSettlementdisagreebtn').attr("disabled",false);
+                		$('#capitalSettlementrejectbtn').attr("disabled",false);
+                		$('#capitalSettlementendbtn').attr("disabled",false);
+                		
+                        layer.msg(data.msg);
+                    }
+                }
+            });
+        }
+        //查看流程进度
+        function approvelogtable(tableObj) {
+            row = tableObj.getSelectRow();
+            if (row.length == 1) {
+                if(row[0].data.state == "新建"){
+                    clickCapitalSettlementFlag = true;
+                    layer.msg(row[0].data.state+"数据没有审核进度");
+                    return;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: domaindata.product_smf_domain + "capitalSettlement/approveLog",
+                    data: JSON.stringify(row[0].data),
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    async: true,
+                    success: function (data) {
+                        clickCapitalSettlementFlag = true;
+                        if (data.code == '1') {
+                            var url = workflowUrl + "workflowmanager/workdetail?initid=" + data.data[0].initid
+                                    + "&processDefinitionId=" + data.data[0].processDefinitionId+"&showreturn="+data.data[0].showreturn;
+                            window.open(url);
+                        } else {
+                            layer.msg(data.msg);
+                        }
+                    }
+                });
+            } else {
+                clickCapitalSettlementFlag = true;
+                layer.alert("请选择1条数据！");
+            }
+        }
+        
+        //确认保存方法
+        function save(tableObj,type) {
+            if (!dataValidate("pubcapitalSettlement")) {
+            	//解禁保存按钮
+				$('#savebtn').attr("disabled",false);
+				$('#submitbtn').attr("disabled",false);
+                return;
+            }
+            var data = {
+                'capitalSettlementDOList': getTbodyJsonDataById("pubcapitalSettlement")
+            };
+            data.saveType = type;
+            console.log(JSON.stringify(data));//JSON.stringify()
+            $.ajax({
+                type: "POST",
+                url: domaindata.product_smf_domain  + "capitalSettlement/update",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json;charset=utf-8",
+                async: true,
+                success: function (data) {
+                	if(data.code == '1'){
+	                    tableObj.reload();
+	                    // 关闭窗口
+	                    layer.closeAll();
+	                    layer.close(layer.index);
+	
+                	}else {
+                		//设置表单状态为可提交
+       					$('#savebtn').attr("disabled",false);
+       					$('#submitbtn').attr("disabled",false);
+                	}
+	                layer.msg(data.msg);
+                }, error: function (data) {
+                	layer.msg(data.msg);
+                    console.log(e);
+                    //设置表单状态为可提交
+   					$('#savebtn').attr("disabled",false);
+
+   				  $('#submitbtn').attr("disabled",false);
+               	}
+            });
+
+            //layer.closeAll();
+        }
+
+        //设置data格式
+        function getTbodyJsonDataById(id) {
+            var arr = [];
+            var data = {};
+            var name = "";
+            var value = "";
+            $("#" + id)
+                    .children()
+                    .each(
+                            function () {
+                                data = {};
+                                $(this).find("input[name]").each(function() {
+                                    name = $(this).attr('name');
+                                    value = $(this).val();
+                                    data[name] = value;
+                                })
+                                $(this).find("hidden[name]").each(function () {
+                                    name = $(this).attr('name');
+                                    value = $(this).text();
+                                    data[name] = value;
+                                })
+                                $(this).find("select[name]").each(function () {
+                                    name = $(this).attr('name');
+                                    value = $(this).val();
+                                    data[name] = value;
+                                })
+                                
+                                $(this).find("textarea[name]").each(function () {
+                                    name = $(this).attr('name');
+                                    value = $(this).val();
+                                    data[name] = value;
+                                })
+                                if (!isEmptyObject(data)) {
+                                    arr.push(data);
+                                }
+                            })
+            return arr;
+        }
+
+        //判断对象是否为空。
+        function isEmptyObject(obj) {
+            for (var key in obj) {
+                return false;
+            }
+            return true;
+        }
+    
+
+  //数字输入框禁用滚轮方法
+    function disableWheelcapitalSettlement(){
+	    
+	    $("input[type='number']").each(function(){
+	    	var that = this;
+	    	if(that.addEventListener){ //兼容firefox
+	         	that.addEventListener('DOMMouseScroll',MouseWheelcapitalSettlement,false); 
+	          }//W3C 
+	          that.onmousewheel=MouseWheelcapitalSettlement;//IE/Opera/Chrome 
+	     });
+	}   
+    function MouseWheelcapitalSettlement(event) {
+        event = event || window.event;
+        event.preventDefault();
+    }
+    
+	// 日期选择
+	$('#beginTime ,.input-datepicker, .input-daterange')
+			.datepicker({
+				weekStart : 1,
+				language : "zh-CN"
+			});
+
+	$('#endTime ,.input-datepicker, .input-daterange').datepicker({
+		weekStart : 1,
+		language : "zh-CN"
+	});
+	
+	function enterpriseAutoComplete () {
+		if($("input").hasClass("capitalSettlement_serInfo_entry")){
+			var test = $(".capitalSettlement_serInfo_entry").bigAutocomplete({
+				width:'auto',
+	     	 	id:['code','enterprise_name','amount','name'],
+	     	 	highlight: false,
+	     	 	minChars: 0,
+	     	 	mustMatch:true,
+	     	 	matchContains:true,
+	     	 	autoFill:true,
+	     		ajax:{
+	     			url: domaindata.product_smf_domain+'capitalInjection/getCapitalInjectionByName',				
+	     			type : "GET",
+	     			success: function(data){
+	     				if(data.returnCode==0){
+	     					layer.msg(data.msg);
+	     				}
+	     				$("#pk_enterprise").val(""); 
+	    				var result = data;
+	    				var Str = result.data;
+	    				var datas = [];
+	    				if (Str != null) {
+    	    				for (var i = 0; i < Str.length; i++) {
+    	    					datas[i] = [];
+    	    					datas[i].push(Str[i].code);
+    	    					datas[i].push(Str[i].enterprise_name);
+    	    					datas[i].push(Str[i].amount);
+    	    					datas[i].push(Str[i].name);
+    	     		        }
+	    				}
+	     				test.setData(datas,true); // 设置显示的内容，并更新
+	     				test.setTitle(['资金注入合同号','注资企业名称','注资金额(万元)','资金注入合同名称']); // 设置标题
+	     				 $("#bigAutocompleteContent").scrollTop(0);
+	     			},
+	     			error: function (msg) {
+	     				layer.alert("查询企业信息异常");
+	     	        }
+	     		},callback: function (data) {
+	     			$("#name").val(data[0]); 
+	     			$.ajax({
+		                type: "get",
+		                url: domaindata.product_smf_domain + "capitalInjection/getCapitalInjectionByCode",
+		                data: {"code":data[0]},
+		                async: false,
+		                dataType: "json",
+		                error: function () {
+		                },
+		                success: function (result) {
+		                	debugger
+		                	$('#pk_enterprise').val(result.data[0].pk_enterprise);
+		                    $('#enterprise_name').val(result.data[0].enterprise_name);
+		                    $('#enterprise_name').attr("title",result.data[0].enterprise_name);
+		                    $('#capital_injection_code').val(result.data[0].code);
+		                    $('#capital_injection_code').attr("title",result.data[0].code);
+		                    $('#amount').val(result.data[0].amount);
+		                    $('#amount').attr("title",result.data[0].amount);
+		                    $('#injection_date').val(getFormatTimehhmmssFun(result.data[0].busi_date));
+		                    $('#injection_date').attr("title",getFormatTimehhmmssFun(result.data[0].busi_date));
+		                    
+		                    $('#contact').val(result.data[0].contact);
+		                    $('#contact').attr("title",result.data[0].contact);
+		                    $('#contact_number').val(result.data[0].contact_number);
+		                    $('#contact_number').attr("title",result.data[0].contact_number);
+		                    $('#currency_name').val(result.data[0].currency_name);
+		                    $('#currency_name').attr("title",result.data[0].currency_name);
+		                    $('#interest_rate').val(result.data[0].interest_rate);
+		                    $('#interest_rate').attr("title",result.data[0].interest_rate);
+		                    $('#address').val(result.data[0].address);
+		                    $('#address').attr("title",result.data[0].address);
+		                    $('#credit_code').val(result.data[0].credit_code);
+		                    $('#credit_code').attr("title",result.data[0].credit_code);
+		                    $('#busi_date').val(getFormatTimehhmmssFun(new Date()));
+		                    $('#busi_date').attr("title",getFormatTimehhmmssFun(new Date()));
+		                    calcMoney();
+		                }
+		         	});
+		     	}
+			});
+		}
+	}
+
+	function enterpriseAutoCompleteValidate() {
+		$("#enterprise_name").change(function() {
+			$("#pk_enterprise").val("");
+		});
+		
+		$("#enterprise_name").on("blur",function() {
+			debugger
+			if ($("#enterprise_name").val() != null
+					&& $("#enterprise_name").val() != '') {
+				if ($("#pk_enterprise").val() == null
+						|| $("#pk_enterprise").val() == '') {
+					$("#enterprise_name").val("");
+				}
+			} else {
+				$("#pk_enterprise").val("");
+			}
+		});
+	}
+	//计算天数差的结算金额  
+   function calcMoney() {  
+
+			  var injection_date = document.getElementById("injection_date").value;  
+		       var busi_date = document.getElementById("busi_date").value;
+		       if(busi_date<injection_date){
+		    	   $('#busi_date').val("");
+		    	   return;
+		       }
+		       var rate = document.getElementById("interest_rate").value;
+		       var amount = document.getElementById("amount").value;
+		       var money = DateDiff(injection_date,busi_date)*(rate/100/360)*amount;
+		       var totalMoney = -(-amount)+money;
+		       debugger;
+		       
+		       $('#settlement_amount').val(parseFloat(totalMoney).toFixed(6)); 
+     
+   } 
+	//退出资金时间改变时计算天数差的结算金额  
+   function calcMon() {  
+		$("#busi_date").on('change',function(){
+			debugger;
+			  var injection_date = document.getElementById("injection_date").value;  
+		       var busi_date = document.getElementById("busi_date").value; 
+		       if(busi_date<injection_date){
+		    	   $('#busi_date').val("");
+		    	   $('#settlement_amount').val('');
+		    	   layer.alert("退资日期不得早于注资日期！");
+		    	   return;
+		       }
+		       var rate = document.getElementById("interest_rate").value;
+		       var amount = document.getElementById("amount").value;
+		       var money = DateDiff(injection_date,busi_date)*(rate/100/360)*amount;
+		       var totalMoney = -(-amount)+money;
+		       debugger;
+		       
+		       $('#settlement_amount').val(parseFloat(totalMoney).toFixed(6)); 
+		});
+     
+   }  
+   //计算天数差的函数，通用  
+   function  DateDiff(sDate1,  sDate2){    //sDate1和sDate2是2006-12-18格式  
+       var  aDate,  oDate1,  oDate2,  iDays  
+       aDate  =  sDate1.split("-")  
+       oDate1  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])    //转换为12-18-2006格式  
+       aDate  =  sDate2.split("-")  
+       oDate2  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])  
+       iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24)    //把相差的毫秒数转换为天数  
+       return  iDays  
+   }
+   //合同号改变清空其他文本框内容
+   function clearText() {
+    	$("#capital_injection_code").on('input propertychange',function() {
+			debugger;
+			$('#pk_enterprise').val("");
+		    $('#enterprise_name').val("");
+		   /*  $('#capital_injection_code').val(""); */
+		    $('#busi_date').val("");
+		    $('#settlement_amount').val("");
+		    $('#amount').val("");
+		    $('#injection_date').val("");
+		    $('#contact').val("");
+		    $('#contact_number').val("");
+		    $('#currency_name').val("");
+		    $('#interest_rate').val("");
+		    $('#address').val("");
+		    $('#credit_code').val("");
+		});
+   }
+	
+});
+</script>
+
+</body>
+</html>

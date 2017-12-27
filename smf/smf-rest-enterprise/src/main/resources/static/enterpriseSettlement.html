@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>企业结算</title>
+<style type="text/css">
+th {
+	text-align: center;
+}
+
+td select {
+	width: 100%;
+}
+
+th select {
+	width: 100%;
+}
+
+th select {
+	text-align: center;
+}
+
+#alertProductModel {
+	height: 26px !important;
+	vertical-align: middle;
+}
+
+#pk_product_model+input {
+	vertical-align: middle;
+}
+
+input[type='number'] {
+    text-align: right;
+}
+.text-right{
+    text-align: right;
+}
+</style>
+</head>
+<body>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="level-enterprise-settlement-table"></div>
+		</div>
+	</div>
+</body>
+
+<script id="enterpriseSettlementSearchTemp" type="text/html">
+<div class="form-group">
+    <label class="col-xs-3 control-label">结算企业名称</label>
+    <div class="col-xs-8">
+        <input type="text" class="form-control" name="enterprise_name" id="enterprise_name" placeholder="请输入结算企业名称" autocomplete="off">
+    </div>
+</div>
+<div class="form-group">
+    <!--左边标题占比为 3 -->
+    <label class="col-xs-1 control-label"></label>
+    <!--右边内容占比 9-->
+    <div class="col-xs-10">
+        <!--以下就是自定义内容 提交服务器查询的时候,框架会根据input 的name属性获取值并传回服务器-->
+        <div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+            <input type="text" id="beginDate" name="beginDate" class="form-control text-center" placeholder="开始日期">
+            <span class="input-group-addon"><=结息日期<=</span>
+            <input type="text" id="endDate" name="endDate" class="form-control text-center" placeholder="结束日期">
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-xs-1 control-label"></label>
+    <div class="col-xs-10">
+        <div class="input-group">
+            <input type="number" id="minAmount" min="0" name="minAmount" class="form-control text-center" placeholder="起始金额">
+            <span class="input-group-addon">&lt;=借贷金额&lt;=</span>
+            <input type="number" id="maxAmount" min="0" name="maxAmount" class="form-control text-center" placeholder="截止金额">
+        </div>
+    </div>
+</div>
+</script>
+<script id="enterpriseSettlementDetailTemp" type="text/html">
+<div id = "enterpriseSettlementDetail">
+	<table cellpadding="0" cellspacing="0" class="from_table">
+		<tr>
+			<td>企业结算单号<label class="required">*</label></td>
+			<td><input type="text" class="form-control" readonly="readonly"
+				id="code" name="code" {{if code!=undefined}}title="{{code}}"{{/if}} value="{{if code!=undefined}}{{code}}{{/if}}" />
+			</td>
+			<td>结算企业名称<label class="required">*</label></td>
+			<td><input type="text" class="form-control" readonly="readonly"
+				id="enterprise_name" name="enterprise_name" {{if enterprise_name!=undefined}} title="{{enterprise_name}}"{{/if}}
+				value="{{if enterprise_name!=undefined}}{{enterprise_name}}{{/if}}" />
+			</td>
+			<td>结算日期<label class="required">*</label></td>
+			<td><input type="text" class="form-control" readonly="readonly"
+				id="busi_date" name="busi_date" {{if busi_date!=undefined}} title="{{busi_date | dateFormat 'yyyy-MM-dd'}}"{{/if}}
+				value="{{if busi_date!=undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}" /></td>
+		</tr>
+	
+		<tr>
+			<td>借贷金额<label class="required">*</label></td>
+			<td><input type="number" class="form-control" readonly="readonly"
+				id="amount" name="amount" {{if amount!=undefined}} title="{{amount}}"{{/if}}
+				value="{{if amount!=undefined}}{{amount}}{{/if}}" /></td>
+			<td>物流费用</td>
+			<td><input type="number" class="form-control" readonly="readonly"
+				id="logistics_cost" name="logistics_cost" {{if logistics_cost!=undefined}} title="{{logistics_cost}}"{{/if}}
+				value="{{if logistics_cost!=undefined}}{{logistics_cost}}{{/if}}" />
+			</td>
+            <td>结算时间</td>
+            <td><input type="text" class="form-control" readonly="readonly"
+                id="time_stamp" name="time_stamp" {{if time_stamp!=undefined}} title="{{time_stamp | dateFormat 'yyyy-MM-dd hh:mm:ss'}}"{{/if}}
+                value="{{if time_stamp!=undefined}}{{time_stamp | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}" />
+            </td>
+		</tr>
+		<tr>
+			<td>监管费用</td>
+			<td><input type="number" class="form-control" readonly="readonly"
+				id="supervision_cost" name="supervision_cost" {{if supervision_cost!=undefined}} title="{{supervision_cost}}"{{/if}}
+				value="{{if supervision_cost!=undefined}}{{supervision_cost}}{{/if}}" />
+			</td>
+			<td>币种<label class="required">*</label></td>
+			<td><input type="text" class="form-control" readonly="readonly"
+				id="currency_name" name="currency_name" {{if currency_name!=undefined}} title="{{currency_name}}"{{/if}}
+				value="{{if currency_name!=undefined}}{{currency_name}}{{/if}}" />
+			</td>
+			<td>企业注册地址</td>
+			<td><input type="text" class="form-control" readonly="readonly"
+				id="address" name="address" {{if address!=undefined}} title="{{address}}"{{/if}}
+				value="{{if address!=undefined}}{{address}}{{/if}}" /></td>
+		</tr>
+		<tr>
+			<td>企业联系人</td>
+			<td><input type="text" class="form-control" readonly="readonly"
+				id="contact" name="contact" {{if contact!=undefined}} title="{{contact}}"{{/if}}
+				value="{{if contact!=undefined}}{{contact}}{{/if}}" /></td>
+			<td>企业联系电话</td>
+			<td><input type="text" class="form-control" readonly="readonly"
+				id="contact_number" name="contact_number" {{if contact_number!=undefined}} title="{{contact_number}}"{{/if}}
+				value="{{if contact_number!=undefined}}{{contact_number}}{{/if}}" />
+			</td>
+            <td>企业社会信用代码</td>
+            <td><input type="text" class="form-control" readonly="readonly"
+                id="credit_code" name="credit_code" {{if credit_code!=undefined}} title="{{credit_code}}"{{/if}}
+                value="{{if credit_code!=undefined}}{{credit_code}}{{/if}}" /></td>
+        </tr>
+		<tr>
+			<td>登记人</td>
+			<td><input type="text" class="form-control" readonly="readonly"
+				id="inputmanname" name="inputmanname" {{if inputmanname!=undefined}} title="{{inputmanname}}"{{/if}}
+				value="{{if inputmanname!=undefined}}{{inputmanname}}{{/if}}" /></td>
+			<td>登记时间</td>
+			<td><input type="text" class="form-control" readonly="readonly"
+				id="bookindate" name="bookindate" {{if bookindate!=undefined}} title="{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}"{{/if}}
+				value="{{if bookindate!=undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}" />
+			</td>
+            
+
+		</tr>
+	</table>
+    <hr style=" height:2px;border:none;border-top:2px ridge #185598;"/>
+    <div class="form-group" align="center">
+        <input type="button" id="printbtn" value="打印" class="btn btn-primary"/>
+    </div>
+</div>
+</script>
+
+
+<script type="text/javascript">
+	$(function() {
+		var clickEnterpriseSettlementFlag = true; //按钮可点击标志
+		var option = {
+			search : true,
+			seniorSearch : { // 高级搜索配置
+				plusFiled : template("enterpriseSettlementSearchTemp", {})
+			},
+			handleCol : false,
+			tools : {},
+			//列头
+			columns : [ {
+				filed : '结算企业名称',
+				name : 'enterprise_name'
+			}, {
+				filed : '开始结算日期',
+				name : 'busi_date'
+			}, {
+				filed : '借贷金额',
+				name : 'amount'
+			}, {
+				filed : '物流费用',
+				name : 'logistics_cost'
+			}, {
+				filed : '监管费用',
+				name : 'supervision_cost'
+			}, {
+				filed : '注资企业注册地址',
+				name : 'address'
+			}, {
+				filed : '企业结息ID',
+				name : 'pk_enterprise_settlement'
+			} ],
+			columnDefs : [ {
+				targets : [ 2 ], //列
+				render : function(data, type, row) { // 修饰企业名称
+					var name = renderEnterpriseSettlementName(data);
+					return name;
+				}
+			}, {
+				targets : [ 3 ], //列
+				render : function(data, type, row) { // 格式化日期
+					var showDate = getyyyyMMddFun(data);
+					return showDate;
+				}
+			},{
+                targets : [ 4, 5, 6 ], //列
+                render : function(data, type, row) { // 格式金额字段靠右
+                    var value = renderMoneyRight(data);
+                    return value;
+                }
+            }, { //隐藏列,序号+
+				"targets" : [ 8 ],
+				"visible" : false
+			} ],
+			onInit : function() {
+				// 日期选择
+				$('#beginDate ,.input-datepicker, .input-daterange')
+						.datepicker({
+							weekStart : 1,
+							language : "zh-CN"
+						});
+				$('#beginDate').on('focus', function() {
+					$('.datepicker').css({
+						'zIndex' : '1301'
+					});
+				});
+				$('#endDate ,.input-datepicker, .input-daterange').datepicker({
+					weekStart : 1,
+					language : "zh-CN"
+				});
+				$('#endDate').on('focus', function() {
+					$('.datepicker').css({
+						'zIndex' : '1301'
+					});
+				});
+			},
+			url : domaindata.product_smf_domain + "enterpriseSettlement/list", //获取数据的地址
+			ajax : function(data, callback, settings) {
+				$.ajax({
+					type : "GET",
+					url : domaindata.product_smf_domain
+							+ "enterpriseSettlement/list",
+					data : {},
+					dataType : "json",
+					success : function(result) {
+						layer.msg("接口调用成功");
+						var finalData = result.data[0];
+						//封装返回数据
+						var returnData = {};
+						returnData.draw = data.draw;//自行返回draw参数,最好由后台返回1
+						returnData.recordsTotal = finalData.totalCount;
+						returnData.recordsFiltered = finalData.pageSize;
+						returnData.data = finalData.results;
+						//调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+						//此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+						callback(returnData);
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						layer.msg("查询失败");
+					}
+				});
+			}
+		};
+
+		var table = suneeeUI.seTable("level-enterprise-settlement-table",
+				option);
+
+		$("#level-enterprise-settlement-table table.real-table").on("click",
+				".lading_enterprise_settlement_name", function() {
+					if (clickEnterpriseSettlementFlag) {
+						console.info("查看企业结息详情......");
+						clickEnterpriseSettlementFlag = false;
+						var index = $(".lading_enterprise_settlement_name").index(this);
+						openDetail(table, index);
+					}
+					return false;
+				});
+		
+		//时间格式化yyyy-mm-dd
+		function getyyyyMMddFun(time) {
+			if (time == undefined || time == "") {
+				return "";
+			} else {
+				return new Date(time).Format("yyyy-MM-dd");
+			}
+		}
+
+		//美化状态列
+		function beautifyStateColumn(state) {
+			if (state == undefined || state == "") {
+				return "";
+			}
+
+			var clazz = "";
+			if ("未结算" == state) {
+				clazz = "'label label-danger'";
+			} else {
+				clazz = "'label label-primary'";
+			}
+			var changedData = "<div align='center'><label style='display:inline-block;width:60px' class="
+                + clazz + " >"
+					+ state + "</label></div>";
+			return changedData;
+		}
+
+		//渲染企业名称
+		function renderEnterpriseSettlementName(name) {
+			if (name == undefined || name == "") {
+				return "";
+			} else {
+				return '<a class="lading_enterprise_settlement_name" style="cursor:pointer">'
+						+ name + '</a>';
+			}
+		}
+		
+		function renderMoneyRight(val){
+			if (val == undefined || val == "") {
+               val = 0;
+            } 
+			return '<div class = "text-right">' + val + '</div>';
+		}
+
+		//查看企业结息详情
+		function openDetail(tbl, index) {
+			var rowData = tbl.option.data[index];
+			console.info(rowData);
+			var data = { id : rowData.pk_enterprise_settlement };
+			$.ajax({
+				url : domaindata.product_smf_domain
+						+ "enterpriseSettlement/get",
+				method : "GET",
+				async: true,
+				data : data,
+				dataType : "json",
+				success : function(result) {
+				    console.info(result);
+				    if(!!result.msg){
+				    	layer.msg(result.msg);
+				    	clickEnterpriseSettlementFlag = true;
+				    	return; 
+				    }
+				    openDetailPage(result.data[0], "detail");
+				    
+				},
+				error : function() {
+					clickEnterpriseSettlementFlag = true;
+				},
+				yes: function() {
+                    layer.close(index);
+                }
+			});
+			//
+		}
+		function openDetailPage(data, op){
+			if("detail" == op){
+				var enterpriseSettlementDetailTemp = template("enterpriseSettlementDetailTemp", data);
+				layer.open({
+                    type : 1,
+                    title : "详情",
+                    area : [ '850px', '350px' ], //宽高
+                    content : enterpriseSettlementDetailTemp,
+                    success : function() {
+                        $("#btnConfirm").on("click", function(){
+                            layer.closeAll();
+                            layer.close(layer.index);
+                        });
+                        
+                        $("#printbtn").on("click", function(){
+                            var sdf=$("#enterpriseSettlementDetail");
+                            var temp = $("#enterpriseSettlementDetail").clone();
+                            winname = window.open('', "_blank",'');
+                            winname.document.body.innerHTML=sdf["0"].innerHTML;;
+                            winname.print();
+                            winname.close();
+                        });
+                    	clickEnterpriseSettlementFlag = true;
+                    },
+                    error : function() {
+                    	clickEnterpriseSettlementFlag = true;
+                    }
+                });
+				return false;
+			}
+		}
+	});
+</script>
+</html>

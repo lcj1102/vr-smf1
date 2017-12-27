@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.apache.poi:com.springsource.org.apache.poi:3.9.0.FINAL">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/org/apache/poi/com.springsource.org.apache.poi/3.9.0.FINAL/com.springsource.org.apache.poi-3.9.0.FINAL.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/org/apache/poi/com.springsource.org.apache.poi/3.9.0.FINAL/com.springsource.org.apache.poi-3.9.0.FINAL-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/org/apache/poi/com.springsource.org.apache.poi/3.9.0.FINAL/com.springsource.org.apache.poi-3.9.0.FINAL-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

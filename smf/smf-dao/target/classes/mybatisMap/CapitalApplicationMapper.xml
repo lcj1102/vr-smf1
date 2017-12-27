@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.CapitalApplicationDao" >
+	<resultMap id="BaseResultMap" type="com.suneee.smf.smf.model.CapitalApplicationVO" >
+	    <id column="pk_capital_application" property="pk_capital_application" />
+		<result column="code" property="code" />
+		<result column="name" property="name" />
+		<result column="pk_enterprise" property="pk_enterprise" />
+		<result column="enterprise_name" property="enterprise_name" />
+		<result column="busi_date" property="busi_date" />
+		<result column="amount" property="amount" />
+		<result column="pk_currency" property="pk_currency" />
+		<result column="currency_name" property="currency_name" />
+		<result column="address" property="address" />
+		<result column="credit_code" property="credit_code" />
+		<result column="contact" property="contact" />
+		<result column="contact_number" property="contact_number" />
+		<result column="state" property="state" />
+		<result column="inputmanid" property="inputmanid" />
+		<result column="inputmanname" property="inputmanname" />
+		<result column="bookindate" property="bookindate" />
+		<result column="modiferid" property="modiferid" />
+		<result column="modifername" property="modifername" />
+		<result column="modefydate" property="modefydate" />
+		<result column="cancelid" property="cancelid" />
+		<result column="cancelname" property="cancelname" />
+		<result column="canceldate" property="canceldate" />
+		<result column="enterpriseid" property="enterpriseid" />
+		<result column="time_stamp" property="time_stamp" />
+	</resultMap>
+	<resultMap id="ItemBaseResultMap" type="com.suneee.smf.smf.model.CapitalApplicationItemVO" >
+	    <id column="pk_capitalapplication_item" property="pk_capitalapplication_item" />
+		<result column="pk_capital_application" property="pk_capital_application" />
+		<result column="rownumber" property="rownumber" />
+		<result column="goods_name" property="goods_name" />
+		<result column="spec" property="spec" />
+		<result column="producing_area" property="producing_area" />
+		<result column="quality" property="quality" />
+		<result column="packing" property="packing" />
+		<result column="pk_measurement" property="pk_measurement" />
+		<result column="measurement_name" property="measurement_name" />
+		<result column="inputmanid" property="inputmanid" />
+		<result column="inputmanname" property="inputmanname" />
+		<result column="bookindate" property="bookindate" />
+		<result column="modiferid" property="modiferid" />
+		<result column="modifername" property="modifername" />
+		<result column="modefydate" property="modefydate" />
+		<result column="cancelid" property="cancelid" />
+		<result column="cancelname" property="cancelname" />
+		<result column="canceldate" property="canceldate" />
+		<result column="number" property="number" />
+		<result column="price" property="price" />
+		<result column="money" property="money" />
+		<result column="batch_number" property="batch_number" />
+		<result column="enterpriseid" property="enterpriseid" />
+	</resultMap>
+	
+   <select id="selectByExample1" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        *
+        from smf_capital_application where 1=1
+        <if test="name != null and name !=''">
+            and name like concat('%',#{name},'%')
+        </if>
+        <if test="enterprise_name != null and enterprise_name !=''">
+            and enterprise_name like concat('%',#{enterprise_name},'%')
+        </if>
+        <if test="code != null and code !=''">
+            and code like concat('%',#{code},'%')
+        </if>
+        <if test="beginDate != null">
+        	and busi_date &gt;= #{beginDate}
+	    </if>
+	    <if test="endDate !=null">
+	        and busi_date &lt; #{endDate}
+	    </if>
+        <if test="searchValue != null and searchValue !=''">
+            and (code like concat('%',#{searchValue},'%')
+            or name like concat('%',#{searchValue},'%')
+            or enterprise_name like concat('%',#{searchValue},'%')
+            or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+            or rtrim(CAST(amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+            or currency_name like concat('%',#{searchValue},'%')
+            or address like concat('%',#{searchValue},'%')
+            or credit_code like concat('%',#{searchValue},'%')
+            or contact like concat('%',#{searchValue},'%')
+            or contact_number like concat('%',#{searchValue},'%')
+            or state like concat('%',#{searchValue},'%'))
+        </if>
+        <if test="state == null">
+            and state != '已作废'
+        </if>
+        <if test="enterpriseid != null">
+        	and enterpriseid = #{enterpriseid}
+        </if>
+        order by bookindate desc
+        limit #{pageSize} offset #{startNum}
+    </select>
+    
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Long">
+        select
+        count(*)
+        from smf_capital_application where 1=1
+        <if test="name != null and name !=''">
+            and name like concat('%',#{name},'%')
+        </if>
+        <if test="enterprise_name != null and enterprise_name !=''">
+            and enterprise_name like concat('%',#{enterprise_name},'%')
+        </if>
+        <if test="code != null and code !=''">
+            and code like concat('%',#{code},'%')
+        </if>
+        <if test="beginDate != null">
+        	and busi_date &gt;= #{beginDate}
+	    </if>
+	    <if test="endDate !=null">
+	        and busi_date &lt; #{endDate}
+	    </if>
+        <if test="searchValue != null and searchValue !=''">
+            and (code like concat('%',#{searchValue},'%')
+            or name like concat('%',#{searchValue},'%')
+            or enterprise_name like concat('%',#{searchValue},'%')
+            or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+            or rtrim(CAST(amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+            or currency_name like concat('%',#{searchValue},'%')
+            or address like concat('%',#{searchValue},'%')
+            or credit_code like concat('%',#{searchValue},'%')
+            or contact like concat('%',#{searchValue},'%')
+            or contact_number like concat('%',#{searchValue},'%')
+            or state like concat('%',#{searchValue},'%'))
+        </if>
+        <if test="state == null">
+            and state != '已作废'
+        </if>
+        <if test="enterpriseid != null">
+        	and enterpriseid = #{enterpriseid}
+        </if>
+    </select>
+    
+    <insert id="addCapitalApplication" parameterType="com.suneee.smf.smf.model.CapitalApplicationDO" useGeneratedKeys="true" keyProperty="pk_capital_application">
+    	INSERT INTO smf_capital_application (
+			code,name,pk_enterprise,enterprise_name,busi_date,amount,pk_currency,
+			currency_name,address,credit_code,contact,contact_number,state,inputmanid,
+			inputmanname,bookindate,enterpriseid,sale_flag,time_stamp
+    	) VALUES (
+    		#{code},#{name},#{pk_enterprise},#{enterprise_name},#{busi_date},#{amount},#{pk_currency},
+    		#{currency_name},#{address},#{credit_code},#{contact},#{contact_number},#{state},#{inputmanid},
+    		#{inputmanname},#{bookindate},#{enterpriseid},#{sale_flag},CURRENT_TIMESTAMP(3)
+    	)
+    </insert>
+    
+    <insert id="addCapitalApplicationItem" parameterType="com.suneee.smf.smf.model.CapitalApplicationItemDO" useGeneratedKeys="true" keyProperty="pk_capitalapplication_item">
+    	INSERT INTO smf_capitalapplication_item (
+			pk_capital_application,rownumber,goods_name,spec,producing_area,quality,
+			packing,pk_measurement,measurement_name,inputmanid,inputmanname,bookindate,
+			number,price,money,batch_number,enterpriseid
+    	) VALUES (
+    		#{pk_capital_application},#{rownumber},#{goods_name},#{spec},#{producing_area},#{quality},
+    		#{packing},#{pk_measurement},#{measurement_name},#{inputmanid},#{inputmanname},#{bookindate},
+    		#{number},#{price},#{money},#{batch_number},#{enterpriseid}
+    	)
+    </insert>
+    
+    <select id="getRestByPrimaryKey" parameterType="com.suneee.smf.smf.model.CapitalApplicationVO" resultType="com.suneee.smf.smf.model.CapitalApplicationVO">
+    	select * from smf_capital_application where pk_capital_application = #{pk_capital_application}
+    	<if test="enterpriseid != null and enterpriseid != ''">
+	    	 and enterpriseid = #{enterpriseid}
+    	</if>
+    </select>
+    <select id="selectItemListById" parameterType="com.suneee.smf.smf.model.CapitalApplicationVO" resultType="com.suneee.smf.smf.model.CapitalApplicationItemDO">
+    	select * from smf_capitalapplication_item where pk_capital_application = #{pk_capital_application}
+    	<if test="enterpriseid != null and enterpriseid != ''">
+    		and enterpriseid = #{enterpriseid} 
+    	</if>
+    	 and cancelid is null
+    </select>
+    
+	 <!-- 获取细单中的数量为可发货最大数量 -->
+    <select id="getItemListById" parameterType="com.suneee.smf.smf.model.CapitalApplicationVO" resultType="com.suneee.smf.smf.model.CapitalApplicationItemVO">
+		SELECT
+			*, (smf_capitalapplication_item.number - (
+				SELECT
+					COALESCE (SUM(ssi. number), 0)
+				FROM
+					smf_saleapplication_item ssi
+				LEFT JOIN smf_sale_application ssa ON ssi.pk_sale_application = ssa.pk_sale_application
+				WHERE
+					ssi.sourcebillitemid = smf_capitalapplication_item.pk_capitalapplication_item
+				AND ssa."state" != '已作废'
+				AND ssa."state" != '审核拒绝'
+				AND ssi.enterpriseid = smf_capitalapplication_item.enterpriseid
+			)) AS maxNumber
+		FROM
+			smf_capitalapplication_item
+		WHERE
+			pk_capital_application = #{pk_capital_application}
+		AND enterpriseid = #{enterpriseid}
+    </select>
+    
+    <!-- 修改时判断最大发货量 -->
+    <select id="getItemMaxById" parameterType="java.util.Map" resultType="com.suneee.smf.smf.model.CapitalApplicationItemVO">
+		SELECT
+			*, (smf_capitalapplication_item.number - (
+				SELECT
+					COALESCE (SUM(ssi. number), 0)
+				FROM
+					smf_saleapplication_item ssi
+				LEFT JOIN smf_sale_application ssa ON ssi.pk_sale_application = ssa.pk_sale_application
+				WHERE
+					ssi.sourcebillitemid = smf_capitalapplication_item.pk_capitalapplication_item
+				<if test="pk_sale_application != null">
+					AND ssa.pk_sale_application != #{pk_sale_application}
+				</if>
+				AND ssa."state" != '已作废'
+				AND ssa."state" != '审核拒绝'
+				AND ssi.enterpriseid = smf_capitalapplication_item.enterpriseid
+			)) AS maxNumber
+		FROM
+			smf_capitalapplication_item
+		WHERE
+			pk_capital_application = #{pk_capital_application}
+		AND enterpriseid = #{enterpriseid}
+    </select>
+    
+    <update id="updateCapitalApplication" parameterType="com.suneee.smf.smf.model.CapitalApplicationDO">
+    	UPDATE smf_capital_application SET 
+    		code = #{code},
+    		name = #{name},
+    		pk_enterprise = #{pk_enterprise},
+    		enterprise_name = #{enterprise_name},
+    		busi_date = #{busi_date},
+    		amount = #{amount},
+    		pk_currency = #{pk_currency},
+			currency_name = #{currency_name},
+			address = #{address},
+			credit_code = #{credit_code},
+			contact = #{contact},
+			contact_number = #{contact_number},
+			state = #{state},
+			modiferid = #{modiferid},
+			modifername = #{modifername},
+			modefydate = #{modefydate},
+	    	time_stamp = CURRENT_TIMESTAMP(3)
+    	 WHERE pk_capital_application = #{pk_capital_application} AND time_stamp = #{time_stamp} AND enterpriseid = #{enterpriseid}
+    </update>
+    <update id="updateCapitalApplicationItem" parameterType="com.suneee.smf.smf.model.CapitalApplicationItemDO">
+    	UPDATE smf_capitalapplication_item SET 
+    		rownumber = #{rownumber},
+    		goods_name = #{goods_name},
+    		spec = #{spec},
+    		producing_area = #{producing_area},
+    		quality = #{quality},
+			packing = #{packing},
+			pk_measurement = #{pk_measurement},
+			measurement_name = #{measurement_name},
+			number = #{number},
+			price = #{price},
+			money = #{money},
+			batch_number = #{batch_number},
+			modiferid = #{modiferid},
+			modifername = #{modifername},
+			modefydate = #{modefydate}
+    	 WHERE pk_capitalapplication_item = #{pk_capitalapplication_item} AND enterpriseid = #{enterpriseid}
+    </update>
+    <update id="deleteCapitalApplicationItem" parameterType="com.suneee.smf.smf.model.CapitalApplicationItemDO">
+    	UPDATE smf_capitalapplication_item SET 
+			cancelid = #{cancelid},
+			cancelname = #{cancelname},
+			canceldate = #{canceldate}
+    	 WHERE pk_capitalapplication_item = #{pk_capitalapplication_item} and enterpriseid = #{enterpriseid}
+    </update>
+    <update id="deleteCapitalApplication" parameterType="com.suneee.smf.smf.model.CapitalApplicationDO">
+    	UPDATE smf_capital_application SET 
+			cancelid = #{cancelid},
+			cancelname = #{cancelname},
+			canceldate = #{canceldate},
+			state = #{state},
+			time_stamp = CURRENT_TIMESTAMP(3)
+    	 WHERE pk_capital_application = #{pk_capital_application} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+    <update id="deleteCapitalApplicationItemById" parameterType="com.suneee.smf.smf.model.CapitalApplicationDO">
+    	UPDATE smf_capitalapplication_item SET 
+			cancelid = #{cancelid},
+			cancelname = #{cancelname},
+			canceldate = #{canceldate}
+    	 WHERE pk_capital_application = #{pk_capital_application} and enterpriseid = #{enterpriseid}
+    </update>
+    <update id="approve" parameterType="com.suneee.smf.smf.model.CapitalApplicationDO">
+    	UPDATE smf_capital_application SET 
+			state = #{state},
+			time_stamp = CURRENT_TIMESTAMP(3)
+    	 WHERE pk_capital_application = #{pk_capital_application} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+    <select id="checkCode" parameterType="java.util.Map" resultType="java.lang.Long">
+    	select count(*) from smf_capital_application where code = #{code}
+    	<if test="pk_capital_application != null and pk_capital_application != ''">
+    		and pk_capital_application != #{pk_capital_application} and enterpriseid = #{enterpriseid}
+    	</if>
+    </select>
+    <update id="submitModel" parameterType="com.suneee.smf.smf.model.CapitalApplicationDO">
+    	UPDATE smf_capital_application SET 
+			state = #{state},
+			time_stamp = CURRENT_TIMESTAMP(3)
+    	 WHERE pk_capital_application = #{pk_capital_application} and enterpriseid = #{enterpriseid}
+    </update>
+    <select id="getAllList" parameterType="com.suneee.smf.smf.model.CapitalApplicationDO" resultMap="BaseResultMap">
+    	select * from smf_capital_application where code like concat('%',#{code},'%') and enterpriseid = #{enterpriseid} and state = #{state}
+    	<if test="pk_enterprise != null">
+    		and pk_enterprise = #{pk_enterprise}
+    	</if>
+    </select>
+    <select id="getCapitalApplicationByCode" parameterType="com.suneee.smf.smf.model.CapitalApplicationDO" resultType="com.suneee.smf.smf.model.CapitalApplicationVO">
+    	select * from smf_capital_application where code = #{code} and enterpriseid = #{enterpriseid}
+    </select>
+    <select id="checkCapital" parameterType="java.util.Map" resultType="java.lang.Double">
+    	select (COALESCE((select COALESCE(smf_capital_balance_now.amount,0) from smf_capital_balance_now where enterpriseid = #{enterpriseid} LIMIT 1) + 
+			(select COALESCE(SUM(smf_collection_confirm.collection_amount),0) from smf_collection_confirm where smf_collection_confirm.booked_flag = '未记账' and enterpriseid = #{enterpriseid}) -
+			(select COALESCE(SUM(smf_advance_confirm.advances_amount),0) from smf_advance_confirm where smf_advance_confirm.booked_flag = '未记账' and enterpriseid = #{enterpriseid}) - 
+			(select COALESCE(SUM(smf_capital_application.amount),0) from smf_capital_application where smf_capital_application.state != '已作废' and smf_capital_application.state != '已审核' and smf_capital_application.state != '审核拒绝' and enterpriseid = #{enterpriseid}),0))
+    </select>
+    
+    
+    <select id="sumApplicationItemsNumber"  resultType="java.lang.Double">
+    	select sum(number) from smf_capitalapplication_item where pk_capital_application = #{pk_capital_application} and enterpriseid = #{enterpriseid} and cancelid is null
+    </select>
+    
+     <update id="updateCapitalApplicationSaleFlag" parameterType="com.suneee.smf.smf.model.CapitalApplicationDO">
+    	UPDATE smf_capital_application SET 
+			sale_flag = #{sale_flag},
+			time_stamp = CURRENT_TIMESTAMP(3)
+    	 WHERE pk_capital_application = #{pk_capital_application} and enterpriseid = #{enterpriseid}
+    </update>
+    
+</mapper>

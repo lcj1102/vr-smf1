@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.CapitalSettlementDao" >
+	<resultMap id="BaseResultMap" type="com.suneee.smf.smf.model.CapitalSettlementVO" >
+	  <id column="pk_capital_settlement" property="pk_capital_settlement"/>
+	  <result column="code" property="code"/>
+	  <result column="capital_injection_code" property="capital_injection_code"/>
+	  <result column="pk_enterprise" property="pk_enterprise"/>
+	  <result column="enterprise_name" property="enterprise_name"/>
+	  <result column="injection_date" property="injection_date"/>
+	  <result column="busi_date" property="busi_date"/>
+	  <result column="amount" property="amount"/>
+	  <result column="settlement_amount" property="settlement_amount"/>
+	  <result column="pk_currency" property="pk_currency"/>
+	  <result column="currency_name" property="currency_name"/>
+	  <result column="interest_rate" property="interest_rate"/>
+	  <result column="address" property="address"/>
+	  <result column="credit_code" property="credit_code"/>
+	  <result column="contact" property="contact"/>
+	  <result column="contact_number" property="contact_number"/>
+	  <result column="state" property="state"/>
+	  <result column="inputmanid" property="inputmanid"/>
+	  <result column="inputmanname" property="inputmanname"/>
+	  <result column="bookindate" property="bookindate"/>
+	  <result column="modiferid" property="modiferid"/>
+	  <result column="modifername" property="modifername"/>
+	  <result column="modefydate" property="modefydate"/>
+	  <result column="cancelid" property="cancelid"/>
+	  <result column="cancelname" property="cancelname"/>
+	  <result column="canceldate" property="canceldate"/>
+	  <result column="enterpriseid" property="enterpriseid"/>
+	  <result column="time_stamp" property="time_stamp"/>
+	</resultMap>
+    <select id="selectByExample" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        *
+        from smf_capital_settlement where 1=1
+        <if test="searchValue != null and searchValue !=''">
+			and (code like concat('%',#{searchValue},'%')
+			or capital_injection_code like concat('%',#{searchValue},'%')
+			or enterprise_name like concat('%',#{searchValue},'%')
+			or to_char(busi_date,'yyyy-MM-dd') like concat('%',#{searchValue},'%')
+			or rtrim(CAST(amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+			or rtrim(CAST(settlement_amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+			or rtrim(CAST(interest_rate as VARCHAR),'0') like concat('%',#{searchValue},'%')
+			or state like concat('%',#{searchValue},'%'))
+		</if>
+		<if test="enterprise_name != null and enterprise_name !=''">
+            and enterprise_name like concat('%',#{enterprise_name},'%')
+        </if>
+        <if test="code != null and code !=''">
+            and code like concat('%',#{code},'%')
+        </if>
+        <if test="credit_code != null and credit_code !=''">
+            and credit_code like concat('%',#{credit_code},'%')
+        </if>
+        <if test="beginDate != null">
+            and busi_date &gt;= #{beginDate}
+        </if>
+        <if test="endDate !=null">
+            and busi_date &lt; #{endDate}
+        </if>
+		<if test="state == null">
+            and state != '已作废'
+        </if>
+        <if test="enterpriseid != null">
+        	and enterpriseid = #{enterpriseid}
+        </if>
+        order by bookindate desc
+        limit #{pageSize} offset #{startNum}
+    </select>
+    
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Long">
+        select
+        count(*)
+        from smf_capital_settlement where 1=1
+        <if test="searchValue != null and searchValue !=''">
+			and (code like concat('%',#{searchValue},'%')
+			or capital_injection_code like concat('%',#{searchValue},'%')
+			or enterprise_name like concat('%',#{searchValue},'%')
+			or to_char(busi_date,'yyyy-MM-dd') like concat('%',#{searchValue},'%')
+			or rtrim(CAST(amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+			or rtrim(CAST(settlement_amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+			or rtrim(CAST(interest_rate as VARCHAR),'0') like concat('%',#{searchValue},'%')
+			or state like concat('%',#{searchValue},'%'))
+		</if>
+		<if test="enterprise_name != null and enterprise_name !=''">
+            and enterprise_name like concat('%',#{enterprise_name},'%')
+        </if>
+        <if test="code != null and code !=''">
+            and code like concat('%',#{code},'%')
+        </if>
+        <if test="credit_code != null and credit_code !=''">
+            and credit_code like concat('%',#{credit_code},'%')
+        </if>
+        <if test="beginDate != null">
+            and busi_date &gt;= #{beginDate}
+        </if>
+        <if test="endDate !=null">
+            and busi_date &lt; #{endDate}
+        </if>
+		<if test="state == null">
+            and state != '已作废'
+        </if>
+        <if test="enterpriseid != null">
+        	and enterpriseid = #{enterpriseid}
+        </if>
+    </select>
+    
+    <select id="selectCountByName" parameterType="com.suneee.smf.smf.model.CapitalSettlementDO" resultType="java.lang.Long">
+        select count(1) from smf_capital_settlement where capital_injection_code = #{capital_injection_code} and enterpriseid = #{enterpriseid} and state != '已作废' 
+        <if test="pk_enterprise != null">
+        	and pk_enterprise != #{pk_enterprise}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.suneee.smf.smf.model.CapitalSettlementDO" useGeneratedKeys="true" keyProperty="pk_capital_settlement">
+    	INSERT INTO smf_capital_settlement (
+    		code,capital_injection_code,pk_enterprise,enterprise_name,injection_date,busi_date,amount,
+			settlement_amount,interest_rate,credit_code,currency_name,address,contact,contact_number,
+			state,inputmanid,inputmanname,bookindate,enterpriseid,time_stamp
+    	) VALUES (
+    		#{code},#{capital_injection_code},#{pk_enterprise},#{enterprise_name},#{injection_date},#{busi_date},#{amount},
+			#{settlement_amount},#{interest_rate},#{credit_code},#{currency_name},#{address},#{contact},#{contact_number},
+			#{state},#{inputmanid},#{inputmanname},#{bookindate},#{enterpriseid},CURRENT_TIMESTAMP(3)
+    	)
+    </insert>
+    <select id="selectOneByPrimaryKey" parameterType="com.suneee.smf.smf.model.CapitalSettlementVO" resultType="com.suneee.smf.smf.model.CapitalSettlementVO">
+        select * from smf_capital_settlement where pk_capital_settlement = #{pk_capital_settlement}
+        <if test="enterpriseid != null">
+        	and enterpriseid = #{enterpriseid}
+        </if>
+    </select>
+    <update id="deleteCapitalSettlementDO" parameterType="com.suneee.smf.smf.model.CapitalSettlementDO">
+    	UPDATE smf_capital_settlement SET state = #{state},cancelname = #{cancelname}, canceldate = #{canceldate},time_stamp = CURRENT_TIMESTAMP(3) where pk_capital_settlement = #{pk_capital_settlement} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+    <update id="modifyCapitalSettlement" parameterType="com.suneee.smf.smf.model.CapitalSettlementDO">
+    	UPDATE smf_capital_settlement SET 
+	    	code=#{code},capital_injection_code = #{capital_injection_code},enterprise_name = #{enterprise_name},injection_date = #{injection_date},
+	    	busi_date = #{busi_date},amount = #{amount},
+	    	settlement_amount = #{settlement_amount},interest_rate = #{interest_rate},
+	    	credit_code = #{credit_code},state = #{state},
+	    	modifername = #{modifername},modefydate = #{modefydate},
+	    	time_stamp = CURRENT_TIMESTAMP(3)
+    	 where pk_capital_settlement = #{pk_capital_settlement} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+    <update id="approve" parameterType="com.suneee.smf.smf.model.CapitalSettlementDO">
+    	UPDATE smf_capital_settlement SET state = #{state},time_stamp = CURRENT_TIMESTAMP(3) where pk_capital_settlement = #{pk_capital_settlement} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+    <update id="submitModel" parameterType="com.suneee.smf.smf.model.CapitalSettlementDO">
+    	UPDATE smf_capital_settlement SET state = #{state},time_stamp = CURRENT_TIMESTAMP(3) where pk_capital_settlement = #{pk_capital_settlement} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+    <update id="updateCapitalSettlementState" parameterType="com.suneee.smf.smf.model.CapitalSettlementDO">
+    	UPDATE smf_capital_settlement SET state = #{state} where pk_capital_settlement = #{pk_capital_settlement} and enterpriseid = #{enterpriseid}
+    </update>
+    <select id="selectCapitalSettlementByStatus" parameterType="com.suneee.smf.smf.model.CapitalSettlementDO" resultType="com.suneee.smf.smf.model.CapitalSettlementDO">
+        select * from smf_capital_settlement where capital_injection_code=#{capital_injection_code} and enterpriseid = #{enterpriseid} and state != '已作废'
+    </select>
+</mapper>

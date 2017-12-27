@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>发货通知</title>
+<style>
+	
+	th {
+		text-align:center;
+	}
+	
+	td select {
+		width:100%;
+	}
+	
+	th select {
+		width:100%;
+	}
+	
+	th select {
+		text-align:center;
+	}
+	
+	#alertProductModel {
+		height: 26px !important;
+	    vertical-align: middle;
+	}
+	
+	#pk_product_model + input {
+		 vertical-align: middle;
+	}
+</style>
+
+</head>
+<body>
+	<div class="col-xs-12">
+		<div id="delivery-advice-table"></div>
+	</div>
+
+	<!-- 新增、编辑页面 -->
+	<script id="addDeliveryAdviceSunWin" type="text/html">
+		<div id="addDeliveryAdviceDlg" class="from_table_con">
+			<form id="deliveryAdviceForm" method="post" role="form">
+				<table cellpadding="0" cellspacing="0" class="from_table">
+					<tr>
+						<td>发货通知单号</td>
+						<td>
+							<!-- 隐藏域：主键 --> 
+							<input type="hidden" class="form-control"
+									id="pk_delivery_advice" name="pk_delivery_advice"
+									value="{{if pk_delivery_advice != undefined}}{{pk_delivery_advice}}{{/if}}" />
+								   
+							<!-- 单号 --> 
+							<input type="text" class="form-control" readonly="readonly"
+									id="code" name="code"
+									value="{{if code != undefined}}{{code}}{{/if}}" 
+									title="{{if code != undefined}}{{code}}{{/if}}"/>
+						</td>
+						<td>发货通知单名称</td>
+						<td>
+							<input type="text" class="form-control" 
+									id="name" name="name"
+	                        		value="{{if name != undefined}}{{name}}{{/if}}"
+	                        		title="{{if name != undefined}}{{name}}{{/if}}"/>
+						</td>
+						<td>发货企业名称<label class="required">*</label></td>
+						<td>
+							<input type="text" class="form-control"
+									id="enterprise_name" name="enterprise_name"
+	                        		value="{{if enterprise_name != undefined}}{{enterprise_name}}{{/if}}"
+	                        		title="{{if enterprise_name != undefined}}{{enterprise_name}}{{/if}}"/>
+						</td>
+					</tr>
+					<tr>
+						<td>申请金额</td>
+						<td>
+							<input type="number" class="form-control" 
+									id="application_amount" name="application_amount"
+	                        		value="{{if application_amount != undefined}}{{application_amount}}{{/if}}"
+	                        		title="{{if application_amount != undefined}}{{application_amount}}{{/if}}"/>
+						</td>
+						<td>支付货款金额<label class="required">*</label></td>
+						<td>
+							<input type="number" class="form-control" 
+									id="amount" name="amount"
+	                        		value="{{if amount != undefined}}{{amount}}{{/if}}"
+	                        		title="{{if amount != undefined}}{{amount}}{{/if}}"/>
+						</td>
+						<td>币种名称<label class="required">*</label></td>
+						<td>
+							<input type="text" class="form-control" 
+									id="currency_name" name="currency_name"
+	                        		value="{{if currency_name != undefined}}{{currency_name}}{{/if}}"
+	                        		title="{{if currency_name != undefined}}{{currency_name}}{{/if}}"/>
+						</td>
+					</tr>
+					<tr>
+						<td>发货企业联系人</td>
+						<td>
+							<input type="text" class="form-control" 
+									id="contact" name="contact"
+	                        		value="{{if contact != undefined}}{{contact}}{{/if}}"
+	                        		title="{{if contact != undefined}}{{contact}}{{/if}}"/>
+						</td>
+						<td>发货企业联系电话</td>
+						<td>
+							<input type="text" class="form-control" 
+									id="contact_number" name="contact_number"
+	                        		value="{{if contact_number != undefined}}{{contact_number}}{{/if}}"
+	                        		title="{{if contact_number != undefined}}{{contact_number}}{{/if}}"/>
+						</td>
+						<td>发货通知日期<label class="required">*</label></td>
+						<td>
+							<input type="text" class="form-control" readonly="readonly" 
+									id="busi_date" name="busi_date"
+	                        		value="{{if busi_date != undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"
+	                        		title="{{if busi_date != undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+						</td>
+					</tr>
+					<tr>
+						<td>登记人姓名</td>
+						<td>
+							<input type="text" class="form-control" readonly="readonly" 
+									id="inputmanname" name="inputmanname"
+	                        		value="{{if inputmanname != undefined}}{{inputmanname}}{{/if}}"
+	                        		title="{{if inputmanname != undefined}}{{inputmanname}}{{/if}}"/>
+						</td>
+						<td>登记日期</td>
+						<td>
+							
+							<input type="text" class="form-control" readonly="readonly" 
+									id="bookindate" name="bookindate"
+	                        		value="{{if bookindate != undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"
+	                        		title="{{if bookindate != undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/>
+	                        
+						</td>
+						<td>状态</td>
+						<td>
+							<input type="text" class="form-control" readonly="readonly" 
+									id="state" name="state"
+	                        		value="{{if state != undefined}}{{state}}{{/if}}"
+	                        		title="{{if state != undefined}}{{state}}{{/if}}"/>
+						</td>
+					</tr>
+					<tr hidden="true">
+						<td>
+							<input type="hidden" 
+									id="time_stamp" name="time_stamp"
+	                        		value="{{if time_stamp != undefined}}{{time_stamp}}{{/if}}"/>
+						</td>
+					</tr>
+				</table>
+				
+				<hr style=" height:2px;border:none;border-top:2px ridge #185598;"/>
+				
+				<div id="goodsInfo-div1" style="overflow-y: auto;">
+					<div id="goodsInfo-div2" class="form-group" style="overflow:auto;width:1400px">
+		            	<table id="goodsInfo-table" class="table table-bordered">
+		                	<thead>
+		                		<tr class="trPadding">
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px;"><span>行号</span></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px;width:100px;"><span>货物名称</span><label class="required">*</label></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px;width:100px;"><span>货物规格</span></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px;width:200px;"><span>产地</span></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px"><span>品质</span></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px;width:100px;"><span>包装形态</span></td>
+									<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px" hidden="true"><span>计量单位主键</span></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px;width:110px;"><span>计量单位名称</span></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px;width:100px;"><span>发货数量</span><label class="required">*</label></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px"><span>单价</span><label class="required">*</label></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px;width:120px;"><span>金额</span><label class="required">*</label></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px"><span>批号</span></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px;width:100px;"><span>存储区域</span></td>
+		                    		<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px;width:110px;"><span>来源单据类型</span></td>
+									<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px" hidden="true"><span>发货通知单主表主键</span></td>
+									<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px" hidden="true"><span>发货通知单子表主键</span></td>
+									<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px" hidden="true"><span>来源单据主表主键</span></td>
+									<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px" hidden="true"><span>来源单据子表主键</span></td>
+									<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px" hidden="true"><span>业务组织主键</span></td>
+	                				<td class="sorting_disabled" style="background:#b5d1f5;padding:3px 8px" hidden="true"><span>修改标识</span></td>
+		                		</tr>
+		                	</thead>
+							<tbody id="goodsInfoTbody"></tbody>
+		            	</table>
+				    </div>
+				</div>
+	    
+			    <hr style=" height:2px;border:none;border-top:2px ridge #185598;"/>
+			    
+			    <div class="form-group" align="center">
+			     	<input type="button" id="addLine" value="增加行" class="btn btn-primary" style="margin-left:6px;margin-right:6px"/>
+			        <input type="button" id="deleteLine" value="删除行" class="btn btn-primary" style="margin-left:6px;margin-right:6px"/>
+			        <input type="button" id="saveBtn" value="保存" class="btn btn-primary" style="margin-left:6px;margin-right:6px"/>
+			        <input type="button" id="saveAndSubmitBtn" value="保存并提交" class="btn btn-primary" style="margin-left:6px;margin-right:6px"/>
+			        <input type="button" id="printBtn" value="打印" class="btn btn-primary" style="margin-left:6px;margin-right:6px"/>
+			    </div>
+			     
+			</form>
+		</div>
+	</script>
+	
+	<!-- 状态查询条件 -->
+	<script id="conditionSettings" type="text/html">
+		<div class="form-group">
+			<label class="col-xs-1 control-label"></label>
+			<div class="col-xs-10">
+   				<div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+        			<input type="text" id="starttime" name="starttime" class="form-control text-center" placeholder="开始日期">
+        			<span class="input-group-addon">&lt;=业务日期&lt;=</span>
+        			<input type="text" id="endtime" name="endtime" class="form-control text-center" placeholder="结束日期">
+    			</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-xs-3 control-label" style="margin-top: -5px;">状态：</label>
+			<div class="col-xs-9">
+				<input style="width:30px;position:relative;top:2px;" type="checkbox" name="state" />&nbsp;包含已作废
+			</div>
+		</div>
+	</script>
+	
+	<script id="approveDeliveryAdviceTemplate" type="text/html">
+		<div>
+			<div class="form-group" align="center">
+				<label class="col-xs-3 control-label">
+					审批意见：
+				</label>
+				<div class="col-xs-9">
+			    	<textarea id="deliveryAdviceOpinion" rows='5' style="width: 100%;"></textarea>
+				</div>
+			</div>
+		
+			<div class="form-group" align="center">
+				<div class="col-xs-12">
+					<input type="button" id="deliveryAdviceAgreeBtn" value="审核通过" class="btn btn-primary"/>
+		    		<input type="button" id="deliveryAdviceDisagreeBtn" value="退回" class="btn btn-primary"/>
+		    		<input type="button" id="deliveryAdviceRejectBtn" value="审核驳回" class="btn btn-primary"/>
+		    		<input type="button" id="deliveryAdviceEndBtn" value="流程终止" class="btn btn-primary"/>
+				</div>
+		   	</div>
+		</div>
+	</script>
+	
+	<script type="text/javascript">
+	
+		var workflowUrl = "http://test.flw.scn.weilian.cn:81/web-basic/";
+		
+		$(function(){			
+			var checkDeliveryAdviceFlag = true;
+			
+			//******************************首页table列表加载 start********************************************
+			var tableOptions = {
+					//工具按钮
+					plusBtn: [/* {
+						 id: "editBtn",
+			             text: "编辑",
+			             clazz: "btn btn-primary btn-sm",
+					 },{
+						 id: "deleteBtn",
+			             text: "删除",
+			             clazz: "btn btn-primary btn-sm",
+					 } ,{
+			             id: "submitPBtn",
+			             text: "提交",
+			             clazz: "btn btn-primary btn-sm",
+			         } ,{
+						 id: "approveBtn",
+			             text: "审核",
+			             clazz: "btn btn-primary btn-sm",
+					 } ,{
+			             id: "processBtn",
+			             text: "流程进度",
+			             clazz: "btn btn-primary btn-sm",
+			         } */ ],
+					 
+					 /* add: {
+			                title: "发货通知",//窗口标题
+			                id: "addDeliveryAdviceDlg",//窗口的ID,这里不能自己写，要跟窗口div的id相同
+			                height: "600px",
+			                width: "1000px",
+			                templId: "addDeliveryAdviceSunWin",//窗口内容的ID(即script标签的ID)
+			                openCallback: function () {//点击事件，比如提交，关闭窗口等
+			                     $('.input-datepicker, .input-daterange').datepicker({
+			                         weekStart: 1,
+			                         language: "zh-CN"
+			                     });
+			                
+			                    $("#printBtn").hide();
+			                    //enterpriseAutoComplete();
+			                    //autoCompleteValidate();
+			                	
+			                	//数字输入框禁用滚轮方法
+			                    disableWheelDeliveryAdvice();
+
+								//去除输入框中的首尾空格
+			                    $(".form-control").on("blur",function(event) {
+			                		$(this).val($(this).val().trim());
+			                	});
+								
+			                  	//隐藏保存、保存并提交两个按钮
+                    			$("#saveBtn").show();
+                    			$("#saveAndSubmitBtn").show();
+								
+			                    $("#addLine").on("click",function(){
+				                    addLineTb();
+				                });
+				                   
+				                $("#deleteLine").on("click",deleteLineTb);
+				                
+				                $("input[data]").on("change",changeEvent);
+			                	
+			                    $("#saveBtn").on("click", function () {
+			       					$('#saveBtn').attr("disabled",true);
+			       					$('#saveAndSubmitBtn').attr("disabled",true);
+			                        doSave(deliveryAdviceTable, "insert");
+			                    });
+			                    
+			                    $("#saveAndSubmitBtn").on("click", function () {
+			       					$('#saveBtn').attr("disabled",true);
+			       					$('#saveAndSubmitBtn').attr("disabled",true);
+			                        doSave(deliveryAdviceTable, "insertAndSubmit");
+			                    });
+			                },
+			                btn: false
+			            }, */
+					 
+					 //初始化按钮响应事件
+					 onInit: function (){
+						 	/* $("#editBtn").on("click", function () {
+						 		if (checkDeliveryAdviceFlag) 
+						 		{
+						 			checkDeliveryAdviceFlag = false;
+				                    doEditOrShowDetail(deliveryAdviceTable);
+						 		}
+			                });
+						 	
+			                $("#deleteBtn").on("click", function () {
+			                	if (checkDeliveryAdviceFlag) 
+			                	{
+			                		checkDeliveryAdviceFlag = false;
+			                		doDelete(deliveryAdviceTable, null, null);
+			                	}
+			                });
+			                
+			                $("#submitPBtn").on("click", function () {
+			                	if (checkDeliveryAdviceFlag) 
+			                	{
+			                		checkDeliveryAdviceFlag = false;
+			                		doSubmit(deliveryAdviceTable);
+			                	}
+			                });
+			                			                
+			                $("#approveBtn").on("click", function () {
+			                	if (checkDeliveryAdviceFlag) 
+			                	{
+			                		checkDeliveryAdviceFlag = false;
+				                	doApprove(deliveryAdviceTable);
+			                	}
+			                });                
+			                
+			                $("#processBtn").on("click", function () {
+			                	if (checkDeliveryAdviceFlag) 
+			                	{
+			                		checkDeliveryAdviceFlag = false;
+				                	doViewProcess(deliveryAdviceTable);
+			                	}
+			                }); */
+			              			                
+			                // 日期选择
+			                $('#starttime,.input-datepicker, .input-daterange').datepicker({
+			                    weekStart: 1,
+			                    language: "zh-CN"
+			                });
+			                
+			                $('#endtime,.input-datepicker, .input-daterange').datepicker({
+			                    weekStart: 1,
+			                    language: "zh-CN"
+			                });
+					 },
+					 
+					 // 表格标题行（列出所有字段）
+		             columns: [{
+		                filed: "发货通知单主键",       //隐藏
+		                name: "pk_delivery_advice",
+		                column: 2
+		             },{
+		                filed: "发货通知单号",
+		                name: "code",
+		                column: 3
+		             },{
+		                filed: "发货通知单名称",
+		                name: "name",
+		                column: 4
+		             },{
+		                filed: "发货企业主键",        //隐藏
+		                name: "pk_enterprise",
+		                column: 5
+		             },{
+		                filed: "发货企业名称",
+		                name: "enterprise_name",
+		                column: 6
+		             },{
+		                filed: "申请金额",
+		                name: "application_amount",
+		                column: 7
+		             },{
+		                filed: "支付货款金额",
+		                name: "amount",
+		                column: 8
+		             },{
+		                filed: "币种主键",          //隐藏
+		                name: "pk_currency",
+		                column: 9
+		             },{
+		                filed: "币种名称",
+		                name: "currency_name",
+		                column: 10
+		             },{
+		                filed: "发货企业联系人",
+		                name: "contact",
+		                column: 11
+		             },{
+		                filed: "发货企业联系电话",
+		                name: "contact_number",
+		                column: 12
+		             },{
+		                filed: "发货通知日期",
+		                name: "busi_date",
+		                column: 13
+		             },{
+		                filed: "状态",
+		                name: "state",
+		                column: 14
+		             },{
+		            	filed: "登记人主键",         //隐藏
+		                name: "inputmanid",      
+		                column: 15
+		             },{
+		            	filed: "登记人姓名",
+		                name: "inputmanname",
+		                column: 16
+		             },{
+						 filed: "登记日期",
+						 name: "bookindate",
+						 column: 17
+					 },{
+						 filed: "修改人主键",        //隐藏
+						 name: "modiferid",
+						 column: 18
+					 },{
+						 filed: "修改人姓名",        //隐藏
+						 name: "modifername",
+						 column: 19
+					 },{
+						 filed: "最后修改日期",       //隐藏
+						 name: "modefydate",
+						 column: 20
+					 },{
+						 filed: "作废人主键",        //隐藏
+						 name: "cancelid",
+						 column: 21
+					 },{
+						 filed: "作废人姓名",        //隐藏
+						 name: "cancelname",
+						 column: 22
+					 },{
+						 filed: "作废日期",         //隐藏
+						 name: "canceldate",
+						 column: 23
+					 },{
+						 filed: "业务组织主键",	    //隐藏
+						 name: "enterpriseid",
+						 column: 24
+					 },{
+						 filed: "时间戳",	        //隐藏
+						 name: "time_stamp",
+						 column: 25
+					 }],
+					 
+					 //格式转换
+					 columnDefs : [{ 
+			                "targets" : [2,5,9,15,16,17,18,19,20,21,22,23,24,25],
+			                "visible" : false
+			             },{
+			                render : function(data, type, row){ 
+			                	 var showDate = getFormatTimehhmmssFun(data);
+			                     return showDate;
+			                },
+			                targets : [13,17]
+			                
+			             },{
+			                 render : function(data, type, row) {
+			                 	var changedData = beautifyStateColumn(data);
+			                 	return changedData;
+			                },
+			                targets : [14]
+			                
+			            },{
+							render : function(data, type, row) {
+								var showCode = getFormatCode(data);
+								return showCode;
+							},
+							targets : [3]
+					 }],
+						
+					//高级搜索
+					seniorSearch: {
+			        	 formList: [{
+			                    filed: "通知单号",
+			                    name: "code"
+			                },{
+			                    filed: "通知名称",
+			                    name: "name"
+			                },{
+			                    filed: "企业名称",
+			                    name: "enterprise_name"
+			                }],
+			                plusFiled:template("conditionSettings",{})
+			         },
+			      
+			         handleCol: true,
+			         
+			         search: true,
+			         
+			         tools: true,
+			         
+		             detail: {
+		                onclick:function (index,row) {
+		                	if(checkDeliveryAdviceFlag)
+		                	{
+		                		checkDeliveryAdviceFlag = false;
+		                		showDetail(deliveryAdviceTable, row, "columnShowDetail");
+		                	}
+		                }
+		             },
+		             
+		            /*  edit: {
+			                onclick:function (index,row) {
+			                	if(checkDeliveryAdviceFlag)
+			                	{
+			                		checkDeliveryAdviceFlag = false;
+			                		if(row.state != "新建")
+			                		{
+			                			showDetail(deliveryAdviceTable, row, "columnShowDetail");
+			                		}else
+			                		{
+				                		edit(deliveryAdviceTable, row, "columnDoEdit");
+			                		}
+			                	}
+			            	}
+			         },
+		             
+		             del: {
+			                onclick:function (index,row) {
+			                	if(checkDeliveryAdviceFlag)
+			                	{
+			                		checkDeliveryAdviceFlag = false;
+			                		doDelete(deliveryAdviceTable, row, "columnDelete");
+			                	}
+			            	}
+			         }, */
+			         
+			      	// 表格获取信息的后台服务器地址
+		          	url: domaindata.product_smf_domain + "deliveryAdvice/queryDeliveryAdvice",
+		          	onSelectRow:function(index, row){}
+			};
+			
+			var deliveryAdviceTable = suneeeUI.seTable("delivery-advice-table", tableOptions);
+			//******************************首页table列表加载end **********************************************
+			
+			//点击编码查询详情
+			$("#delivery-advice-table table.real-table").on("click", ".deliveryAdviceCode", function () {
+				if (checkDeliveryAdviceFlag) 
+				{
+					checkDeliveryAdviceFlag = false;
+					var index = $(".deliveryAdviceCode").index(this);
+					var deliveryAdviceData = deliveryAdviceTable.option.data[index];
+					showDetail(deliveryAdviceTable, deliveryAdviceData, "columnShowDetail");
+				}
+				return false;
+			});
+			
+		    //**************************** 按钮响应事件 *************************************
+		    
+		    //首页编辑按钮响应事件
+		    function doEditOrShowDetail(tableObj)
+		    {
+				debugger;
+		    	var rows = tableObj.getSelectRow();
+		    	if(rows.length == 0)
+		    	{
+		    		checkDeliveryAdviceFlag = true;
+		        	layer.alert("请选择一条记录！");
+		    	}
+		    	
+		    	if (rows.length > 1) 
+			    {
+		    		checkDeliveryAdviceFlag = true;
+			        layer.alert("每次只能编辑一条记录！");
+			    }
+		    	
+		    	if (rows.length == 1)
+		    	{
+		    		if(rows[0].data.state != '新建')
+		    		{
+		    			showDetail(tableObj, null, null);
+		    		}else
+		    		{
+		    			edit(tableObj, null, null);
+		    		}
+		    	}
+		    }
+		    
+		    //查看详情
+		    function showDetail(tableObj, defaultRow, flag)
+		    {
+		    	debugger;
+		    	var row;
+		    	if("columnShowDetail" == flag)
+		    	{  
+		    		row = defaultRow
+		    	}else
+		    	{
+		    		var rows = tableObj.getSelectRow();
+		    		row = rows[0].data;
+		    	}
+		    			    	
+		    	$.ajax({
+		    		type: "GET",
+		            url: domaindata.product_smf_domain + "deliveryAdvice/queryDeliveryAdviceByID",
+		            data: {"id": row.pk_delivery_advice},
+		            dataType: "json",
+		            async: true,
+		            success: function(ResultMsg){
+		            	checkDeliveryAdviceFlag = true;
+		            	var detailSubWin = template("addDeliveryAdviceSunWin", row);
+		            	var index = layer.open({
+		            		type: 1,
+		                    title: "详情",
+		                    area: ['1000px', '600px'],
+		                    content: detailSubWin,
+		                    success: function(){
+		                    	checkDeliveryAdviceFlag = true;
+		                    	$('.input-datepicker, .input-daterange').datepicker({
+		                            weekStart: 1,
+		                            language: "zh-CN"
+		                        });
+		                    	//去除输入框中的首尾空格
+	                            $(".form-control").on("blur",function(event) {
+	                        		$(this).val($(this).val().trim());
+	                        	});
+	                         									
+								//加载货物信息
+								var returndata = ResultMsg.data[0];
+								showGoodsItems(returndata.deliveryItemList);
+	                         	
+	                         	//文本框设置为只读
+                    			$("#code").attr("readonly", "readonly");
+                    			$("#name").attr("readonly", "readonly");
+                    			$("#enterprise_name").attr("readonly", "readonly");
+                    			$("#application_amount").attr("readonly", "readonly");
+                    			$("#amount").attr("readonly", "readonly");
+                    			$("#currency_name").attr("readonly", "readonly");
+                    			$("#contact").attr("readonly", "readonly");
+                    			$("#contact_number").attr("readonly", "readonly");
+                    			$("#busi_date").attr("readonly", "readonly");
+                    			
+                    			$("#goodsInfoTbody input").each(function(){
+                    				$(this).attr("readonly", "readonly");
+                    			});
+                    			
+                    			$("#saveBtn").remove();
+                    			$("#saveAndSubmitBtn").remove();
+                    			$("#addLine").remove();
+                    		  	$("#deleteLine").remove();
+                    		  	
+                    		  	//----------明细表样式----------------
+                    		  	styleChange({
+                                	needHideBox:$("#addDeliveryAdviceDlg table").eq(0),	//收缩盒子【必填】
+                                	scrollBox:$("#goodsInfo-div1"), 					//滚动盒子【必填】
+                                	layerHieght:'602px',								//弹出框高度
+                                	layerContentHieght:"570px",							//弹出框内容高度
+                                	scrollBoxBigHeight:"415px"							//滚动盒子变大后的高度  【默认420px】
+                                });
+                    			
+                    			$("#printBtn").on("click", function(){
+    	                            var sdf = $("#addDeliveryAdviceDlg");
+    	                            var temp = $("#addDeliveryAdviceDlg").clone();
+    	                            winname = window.open('', "_blank",'');
+    	                            winname.document.body.innerHTML = sdf["0"].innerHTML;
+    	                            var body = $(winname.document.body);
+	    	               			body.find("#deliveryAdviceForm").css({"width":"100%"});
+	    	               			body.find("#deliveryAdviceForm table").css({"width":"100%"});
+	    	               			body.find("#goodsInfo-div1").css({"width":"100%"});
+	    	               			body.find("#goodsInfo-div2").css({"width":"100%"});
+	    	               			body.find(".sorting_disabled").css({"width":"","text-align":"center"});
+	    	               			/* body.find("#goodsInfoTbody td").css({"text-align":"center"});	
+	    	               			body.find("#goodsInfoTbody td input").css({"text-align":"center","font-size":"100%"}); */
+	    	               		 	body.find('hr').css({"margin":"20px 0px"});
+	    	        			 	body.find('#clover').hide();
+	    	        			 	body.find('#Triangle').hide();
+	    	        			 	body.find('#goodsInfo-div2').css({"overflow":"","height":""});
+	    	        				body.find('#goodsInfo-div2 tr').eq(0).css({"transform":"","-ms-transform":"","-moz-transform":"","-webkit-transform":"","-o-transform":""});
+    	                            winname.print();
+    	                            winname.close();
+    	                        });
+		                    }
+		            	})
+		            }
+		    	});
+		    }
+		    
+		  	//编辑
+		    function edit(tableObj, defaultRow, flag)
+		    {
+		  		debugger;
+		    	var row;
+		    	if("columnDoEdit" == flag)
+		    	{
+		    		row = defaultRow
+		    	}else
+		    	{
+		    		var rows = tableObj.getSelectRow();
+		    		row = rows[0].data;
+		    	}
+		    	
+		    	$.ajax({
+		    		type: "GET",
+		            url: domaindata.product_smf_domain + "deliveryAdvice/queryDeliveryAdviceByID",
+		            data: {"id": row.pk_delivery_advice},
+		            dataType: "json",
+		            async: true,
+		            success: function(ResultMsg){
+		            	checkDeliveryAdviceFlag = true;
+		            	var detailSubWin = template("addDeliveryAdviceSunWin", row);
+		            	var index = layer.open({
+		            		type: 1,
+		                    title: "编辑",
+		                    area: ['1000px', '600px'],
+		                    content: detailSubWin,
+		                    success: function(){
+		                    	checkDeliveryAdviceFlag = true;
+		                    	$('.input-datepicker, .input-daterange').datepicker({
+		                            weekStart: 1,
+		                            language: "zh-CN"
+		                        });
+		                    	//去除输入框中的首尾空格
+	                            $(".form-control").on("blur",function(event) {
+	                        		$(this).val($(this).val().trim());
+	                        	});
+								
+		                    	debugger;
+								//加载货物信息
+								var returndata = ResultMsg.data[0];
+								showGoodsItems(returndata.deliveryItemList);
+                    			
+                    			$("#addLine").on("click",function(){
+				                    addLineTb();
+				                });
+                    			
+                    			$("input[data]").on("change",changeEvent);
+				                   
+				                $("#deleteLine").on("click",deleteLineTb);
+                    			
+    	                        $("#saveBtn").on("click", function (){
+    	                        	$('#saveBtn').attr("disabled",true);
+			       					$('#saveAndSubmitBtn').attr("disabled",true);
+    	                        	doSave(tableObj,"save");
+    	                        });
+    	                        
+    	                        $("#saveAndSubmitBtn").on("click", function () {
+    	                        	$('#saveBtn').attr("disabled",true);
+			       					$('#saveAndSubmitBtn').attr("disabled",true);
+    	                        	doSave(tableObj,"saveAndSubmit");
+    	                        });
+                    			
+                    			$("#printBtn").on("click", function(){
+    	                            var sdf = $("#addDeliveryAdviceDlg");
+    	                            var temp = $("#addDeliveryAdviceDlg").clone();
+    	                            winname = window.open('', "_blank",'');
+    	                            winname.document.body.innerHTML = sdf["0"].innerHTML;
+    	                            winname.print();
+    	                            winname.close();
+    	                        });
+		                    }
+		            	})
+		            }
+		    	});
+		    }
+		  	
+		  	
+		  	//弹出子窗体保存按钮、保存并提交按钮响应事件
+		  	function doSave(tableObj,requestMethod)
+		  	{
+		  		debugger;
+		  		//获取表单（主表、子表）数据
+		    	var formDataArray = getTbodyJsonDataById("deliveryAdviceForm");
+		  		
+		  		//校验主表单数据 
+		  		if (!validateMainData("deliveryAdviceForm"))
+		        {
+					$('#saveBtn').attr("disabled",false);
+					$('#saveAndSubmitBtn').attr("disabled",false);
+		            return;
+		        }
+		  		
+		  		//校验子表数据
+		  		if(!validateGoodsData(formDataArray[0].deliveryItemList))
+		    	{
+		  			$('#saveBtn').attr("disabled",false);
+					$('#saveAndSubmitBtn').attr("disabled",false);
+		            return;
+		    	}
+		  		
+		  		var data = {"deliveryAdviceList" : formDataArray, "delIds" : delIds};
+		  		
+		    	$.ajax({
+		            type: "POST",
+		            url: domaindata.product_smf_domain + "deliveryAdvice/" + requestMethod,
+		            data: JSON.stringify(data),
+		            dataType: "json",
+		            contentType: "application/json;charset=utf-8",
+		            async: true,
+		            success: function (ResultMsg) 
+		            {
+		            	debugger;
+		            	if(ResultMsg.code == '1')
+		            	{
+		            		tableObj.reload();
+			                layer.closeAll();
+			                layer.close(layer.index);
+		            	}else 
+		            	{
+							$('#saveBtn').attr("disabled",false);
+							$('#saveAndSubmitBtn').attr("disabled",false);
+		            	}
+		            	layer.msg(ResultMsg.msg);
+		            }, 
+		            error: function (e)
+		            {
+		            	layer.msg("保存异常！！");
+		            	console.log(e.responseText);
+						$('#saveBtn').attr("disabled",false);
+						$('#saveAndSubmitBtn').attr("disabled",false);
+		            }
+		        });
+		  	}
+		  	
+		    
+		  	//首页删除按钮响应事件
+		    function doDelete(tableObj, defaultRow, flag)
+		    {
+		    	if("columnDelete" == flag)
+		    	{
+		    		if(defaultRow.state != '新建')
+		    		{
+		    			checkDeliveryAdviceFlag = true;
+		    			layer.alert(defaultRow.state + "数据不能删除，请重新选择！");
+		    			return;
+		    		}
+		    		checkDeliveryAdviceFlag = true;
+		        	layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', 
+		        			{ btn: ['确定', '取消'] }, 
+		        			function () { deleteSelected(tableObj, defaultRow, flag); }, 
+		        			function (){ });
+		    	}else
+		    	{
+		    		var rows = tableObj.getSelectRow();
+		            if (rows.length > 0) 
+		            {
+		            	for (var i = 0; i < rows.length; i++)
+		            	{
+		            		if(rows[i].data.state != '新建')
+		            		{
+		            			checkDeliveryAdviceFlag = true;
+		            			layer.alert(rows[i].data.state + "数据不能删除，请重新选择！");
+		            			return;
+		            		}
+		            	}
+		            	checkDeliveryAdviceFlag = true;
+		            	layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', 
+		            			{ btn: ['确定', '取消'] }, 
+		            			function () { deleteSelected(tableObj, rows, flag); }, 
+		            			function (){ });
+		            } else 
+		            {
+		            	checkDeliveryAdviceFlag = true;
+		                layer.alert("请选择删除数据！");
+		            }
+		    	}
+		    }
+		  	
+			function deleteSelected(tableObj, rows, flag)
+		  	{
+				debugger;
+		        var arr = [];
+		        var metadata = {};
+		        if("columnDelete" == flag)
+		        {
+		            metadata["pk_delivery_advice"] = rows.pk_delivery_advice;
+		            metadata["time_stamp"] = rows.time_stamp;
+		            arr.push(metadata);
+		        }else
+		        {
+		        	for (var i = 0; i < rows.length; i++)
+		            {
+		                metadata = {};
+		                metadata["pk_delivery_advice"] = rows[i].data.pk_delivery_advice;
+		                metadata["time_stamp"] = rows[i].data.time_stamp;
+		                arr.push(metadata);
+		            }
+		        }
+		        
+		        console.log(arr);
+		        var deleteData = {"deliveryAdviceList" : arr};
+		        $.ajax({
+		            type: "POST",
+		            url: domaindata.product_smf_domain + "deliveryAdvice/deleteSelected",
+		            data: JSON.stringify(deleteData),
+		            dataType: "json",
+		            contentType: "application/json;charset=utf-8",
+		            async: true,
+		            success: function (data) 
+		            {
+		            	checkDeliveryAdviceFlag = true;
+		            	if(data.code == '1')
+		            	{
+		            		tableObj.reload();
+		                    layer.msg(data.msg);
+		            	}else
+		            	{
+		            		layer.msg(data.msg);
+		            	}
+		            }
+		        });
+		  	}
+		    
+			
+		  	//首页提交进入流程按钮响应事件
+		    function doSubmit(tableObj)
+		    {
+		    	var rows = tableObj.getSelectRow();
+		    	
+		    	if(rows.length == 0)
+		        {
+		        	checkDeliveryAdviceFlag = true;
+		            layer.alert("请选择提交数据！");
+		            return;
+		        }
+		        
+		        if (rows.length > 1)
+		        {
+		        	checkDeliveryAdviceFlag = true;
+		        	layer.alert("每次只能提交一条记录！");
+		        	return;
+		        }
+		        
+		        if (rows.length == 1) 
+		        {
+		        	if(rows[0].data.state != "新建")
+		        	{
+		        		checkDeliveryAdviceFlag = true;
+		            	layer.alert(rows[0].data.state + "数据不能提交！");
+		            	return;
+		        	}
+		        	
+			        //判断当前登录人是否有改数据的审批权限
+			       	$.ajax({
+			       		type: "POST",
+			            url: domaindata.product_smf_domain + "deliveryAdvice/submitModel",
+			            data:JSON.stringify(rows[0].data),
+			            dataType: "json",
+			            contentType: "application/json;charset=utf-8",
+			            async: true,
+			            success: function (data) {
+			            	checkDeliveryAdviceFlag = true;
+			               	if (data.code == '1') 
+			               	{
+			               		tableObj.reload();
+			                    layer.msg(data.msg);
+			               	} else 
+			               	{
+			               		layer.msg(data.msg);
+			               	}
+			            },
+		               	error : function () {
+		            	   checkDeliveryAdviceFlag = true;
+		               	}
+			       	});
+		        } else 
+		        {
+		        	checkDeliveryAdviceFlag = true;
+		            layer.alert("请选择一条数据！");
+		        }
+		    }
+		  			    
+		  	//首页审核按钮响应事件
+		    function doApprove(tableObj)
+		    {
+		    	var rows = tableObj.getSelectRow();
+		        
+		        if(rows.length == 0)
+		        {
+		        	checkDeliveryAdviceFlag = true;
+		            layer.alert("请选择审核数据！");
+		            return;
+		        }
+		        
+		        if (rows.length > 1)
+		        {
+		        	checkDeliveryAdviceFlag = true;
+		        	layer.alert("每次只能审核一条记录！");
+		        	return;
+		        }
+		        
+		        if(rows.length == 1)
+		        {
+		        	var selectedRow = rows[0].data;
+		        	if(selectedRow.state != "审核中")
+		        	{
+		        		checkDeliveryAdviceFlag = true;
+		            	layer.alert(selectedRow.state + "数据不能审核！");
+		            	return;
+		            }
+		        	
+		        	$.ajax({
+		        		type: "POST",
+		                url: domaindata.product_smf_domain + "deliveryAdvice/checkApproveById",
+		                data:JSON.stringify(selectedRow),
+		                dataType: "json",
+		                contentType: "application/json;charset=utf-8",
+		                async: true,
+		                success: function (ResultMsg) {
+		                	checkDeliveryAdviceFlag = true;
+		                	if (ResultMsg.code == '1')
+		                	{
+		                		var approveTemplate = template("approveDeliveryAdviceTemplate", {});
+		                		 var index = layer.open({
+		                			 type: 1,
+			                         title: "审核",
+			                         area: ['400px', '300px'], //宽高
+			                         content: approveTemplate,
+			                         success:function(){
+			                        		$('#deliveryAdviceAgreeBtn').attr("disabled",false);
+		                            		$('#deliveryAdviceDisagreeBtn').attr("disabled",false);
+		                            		$('#deliveryAdviceRejectBtn').attr("disabled",false);
+		                            		$('#deliveryAdviceEndBtn').attr("disabled",false);
+		                            		
+		                            		//审核通过
+			                            	$("#deliveryAdviceAgreeBtn").on("click", function () {
+			                            		$('#deliveryAdviceAgreeBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceDisagreeBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceRejectBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceEndBtn').attr("disabled",true);
+			                            		approveSelected(tableObj, selectedRow, "agree");
+			                                });
+		                            		
+			                            	//审核退回
+			                            	$("#deliveryAdviceDisagreeBtn").on("click", function () {
+			                            		$('#deliveryAdviceAgreeBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceDisagreeBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceRejectBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceEndBtn').attr("disabled",true);
+			                            		approveSelected(tableObj, selectedRow,"disagree");
+			                                });
+			                            	
+			                            	//审核驳回
+			                            	$("#deliveryAdviceRejectBtn").on("click", function () {
+			                            		$('#deliveryAdviceAgreeBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceDisagreeBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceRejectBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceEndBtn').attr("disabled",true);
+			                            		approveSelected(tableObj, selectedRow, "reject");
+			                                });
+			                            	
+			                            	//审核终止
+			                            	$("#deliveryAdviceEndBtn").on("click", function () {
+			                            		$('#deliveryAdviceAgreeBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceDisagreeBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceRejectBtn').attr("disabled",true);
+			                            		$('#deliveryAdviceEndBtn').attr("disabled",true);
+			                            		approveSelected(tableObj, selectedRow, "end");
+			                                });
+			                         },
+			                         yes: function () {
+			                             layer.close(index);
+			                         }
+		                		 })
+		                	}else
+		                	{
+		                		layer.msg(ResultMsg.msg);
+		                	}
+		                }
+		        	});
+		        }
+		    }
+		  	
+		  	function approveSelected(tableObj, selectedRow, type)
+		  	{
+		  		debugger;
+		        selectedRow.type = type;
+		        selectedRow.option = $("#deliveryAdviceOpinion").val();
+		    	console.log(selectedRow);
+		    	
+		    	var arr = [];
+		    	arr.push(selectedRow);
+		    	
+		    	var approveData = {"deliveryAdviceList" : arr};
+		    			    	
+		        $.ajax({
+		            type: "POST",
+		            url: domaindata.product_smf_domain + "deliveryAdvice/approveSelected",
+		            data: JSON.stringify(approveData),
+		            dataType: "json",
+		            contentType: "application/json;charset=utf-8",
+		            async: true,
+		            success: function (ResultMsg)
+		            {
+		            	if(ResultMsg.code == '1')
+		            	{
+		            		layer.closeAll();
+		            		tableObj.reload();
+		            	}else
+		            	{
+		            		$('#deliveryAdviceAgreeBtn').attr("disabled",false);
+		            		$('#deliveryAdviceDisagreeBtn').attr("disabled",false);
+		            		$('#deliveryAdviceRejectBtn').attr("disabled",false);
+		            		$('#deliveryAdviceEndBtn').attr("disabled",false);
+		            	}
+		            	layer.msg(ResultMsg.msg);
+		            }
+		        });
+		  	}
+		  	
+		    
+		  	//首页查看流程进度按钮响应事件
+		    function doViewProcess(tableObj)
+		    {
+		    	debugger;
+				var rows = tableObj.getSelectRow();
+				
+				if(rows.length == 1)
+				{
+					var selectedRow = rows[0].data;
+					var state = selectedRow.state;
+					if(state == '新建')
+					{
+						checkDeliveryAdviceFlag = true;
+						layer.alert("新建状态无流程进度！！");
+					}else
+					{					
+						$.ajax({
+			                type: "POST",
+			                url: domaindata.product_smf_domain + "deliveryAdvice/viewProcess",
+			                data: JSON.stringify(selectedRow),
+			                dataType: "json",
+			                contentType: "application/json;charset=utf-8",
+			                async: true,
+			                success: function (ResultMsg) {
+			                	checkDeliveryAdviceFlag = true;
+			                	if (ResultMsg.code == '1') 
+			                	{
+			                		var arg1 = ResultMsg.data[0].initid;
+			                		var arg2 = ResultMsg.data[0].processDefinitionId;
+			                		var arg3 = ResultMsg.data[0].showreturn;
+			                		var url = workflowUrl + "workflowmanager/workdetail?initid=" + arg1
+			    						+ "&processDefinitionId=" + arg2 +"&showreturn=" + arg3;
+			    					window.open(url);
+			                	} else 
+			                	{
+			                		layer.msg(ResultMsg.msg);
+			                	}
+			                },
+			                error:function(){
+			                	checkDeliveryAdviceFlag = true;
+			                	layer.msg("查询流程进度出错 ！！");
+			                }
+			        	});
+					}
+				}else
+				{
+					checkDeliveryAdviceFlag = true;
+					layer.alert("请选择一条记录！")
+				}
+		    }
+
+		  	
+		  	function changeEvent()
+		  	{
+				$(this).parents('tr').find('td').eq(20).find('input').val("update");
+			}
+		  	
+		  	//根据单价、发货数量自动计算金额
+			function calculateAmount()
+			{
+		  		debugger;
+		  		var price;
+		  		var number;
+				$("#goodsInfoTbody tr").each(function(){
+					var currentTr = $(this);
+					currentTr.find("td").find("input[data=number]").on("change",function(){
+						number = Number($(this).val());
+						price = Number(currentTr.find("td").find("input[data=price]").val());
+						
+						if(number == "" || number == null)
+						{
+							layer.alert("发货数量为不能为空！");
+							return;
+						}
+						
+						if((number != "" && number != null) && (price != "" && price != null))
+						{
+							try
+							{
+								currentTr.find("td").find("input[data=money]").val((number * price).toFixed(2));
+							}catch(e)
+							{
+								layer.alert("计算金额异常！");
+							}
+						}
+					})
+					
+					currentTr.find("td").find("input[data=price]").on("change",function(){
+						price = Number($(this).val());
+						number = Number(currentTr.find("td").find("input[data=number]").val());
+						
+						if(price == "" || price == null)
+						{
+							layer.alert("单价不能为空！");
+							return false;
+						}
+						
+						if((number != "" && number != null) && (price != "" && price != null))
+						{
+							try
+							{
+								currentTr.find("td").find("input[data=money]").val((number * price).toFixed(2));
+							}catch(e)
+							{
+								layer.alert("计算金额异常！");
+							}
+						}
+					})
+				})
+			}
+		  	
+			//显示货物信息
+		    function showGoodsItems(goodsItems)
+			{
+				var html = '';
+		   		$.each(goodsItems, function (index, obj) {
+			   	 	html += '<tr>';
+			   	 	
+			      	//html = html + '<td><input type="checkbox" style="width:100%;"/></td>';
+			      	
+			      	//明细行号
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.rownumber
+			      				+ '" data="rownumber" style="width:30px;;border-style:none" readonly="readonly"/></td>';
+			      	//商品名称		
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.goods_name
+			      				+ '" data="goods_name" style="width:100%;border-style:none;"/></td>';
+			      	//规格			
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.spec
+			      				+ '" data="spec" style="width:100%;border-style:none;"/></td>';
+			      	//产地			
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.producing_area
+			      				+ '" data="producing_area" style="width:100%;border-style:none;"/></td>';
+			      	//品质			
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.quality
+			      				+ '" data="quality" style="width:100%;border-style:none;"/></td>';
+			      	//包装形态			
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.packing
+			      				+ '" data="packing" style="width:100%;border-style:none;"/></td>';
+			      				
+	      			//计量单位主键			
+				    html = html + '<td hidden="true"><input type="textarea" value="' 
+				      			+ obj.pk_measurement
+				      			+ '" data="measurement_name" style="width:100%;border-style:none;"/></td>';
+			      	//计量单位名称			
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.measurement_name
+			      				+ '" data="measurement_name" style="width:100%;border-style:none;"/></td>';
+			      	//发货数量			
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.number
+			      				+ '" data="number" style="width:100%;border-style:none;"/></td>';
+			      	//单价			
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.price
+			      				+ '" data="price" style="width:100%;border-style:none;"/></td>';
+					//金额			
+			      	html = html + '<td><input type="textarea" readonly="readonly" value="' 
+			      				+ obj.money
+			      				+ '" data="money" style="width:100%;border-style:none;"/></td>';
+					//批号			
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.batch_number
+			      				+ '" data="batch_number" style="width:100%;border-style:none;"/></td>';
+					//存储区域			
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.storage_location
+			      				+ '" data="storage_location" style="width:100%;border-style:none;"/></td>';
+			      	//来源单据类型					
+			      	html = html + '<td><input type="textarea" value="' 
+			      				+ obj.sourcebilltype
+			      				+ '" data="sourcebilltype" style="width:100%;border-style:none;"/></td>';
+			      	
+			      	//主键
+			      	if(obj.pk_delivery_advice != null)
+			      	{
+			      		html = html + '<td hidden="true"><input type="textarea" value="'
+			      					+ obj.pk_delivery_advice
+			      					+ '" data="pk_delivery_advice" readonly="readonly" style="width:100%;"/></td>';
+			      	}else
+			      	{
+			      		html = html + '<td hidden="true"><input type="textarea" value="" data="pk_delivery_advice" style="width:100%;border-style:none;"/></td>';
+			      	}
+			      	//外键
+			      	if(obj.pk_delivery_item != null)
+			      	{
+			      		html = html + '<td hidden="true"><input type="textarea" value="'
+			      					+ obj.pk_delivery_item
+			      					+ '" data="pk_delivery_item" readonly="readonly" style="width:100%;"/></td>';
+			      	}else
+			      	{
+			      		html = html + '<td hidden="true"><input type="textarea" value="" data="pk_delivery_item" style="width:100%;border-style:none;"/></td>';
+			      	}
+			      	
+			      	//来源单据主表主键
+			      	if(obj.sourcebillid != null)
+			      	{
+			      		html = html + '<td hidden="true"><input type="number" value="'
+			      					+ obj.sourcebillid
+			      					+ '" data="sourcebillid" style="width:100%;"/></td>';
+			      	}else
+			      	{
+			      		html = html + '<td hidden="true"><input type="number" value="" data="sourcebillid" style="width:100%;"/></td>';
+			      	}
+			      	
+			      	//来源单据子表主键
+			      	if(obj.sourcebillitemid != null)
+			      	{
+			      		html = html + '<td hidden="true"><input type="number" value="'
+			      					+ obj.sourcebillitemid
+			      					+ '" data="sourcebillitemid" style="width:100%;"/></td>';
+			      	}else
+			      	{
+			      		html = html + '<td hidden="true"><input type="number" value="" data="sourcebillitemid" style="width:100%;"/></td>';
+			      	}
+			      	
+			      	//业务组织主键
+			      	if(obj.enterpriseid != null)
+			      	{
+			      		html = html + '<td hidden="true"><input type="number" value="'
+			      					+ obj.enterpriseid
+			      					+ '" data="enterpriseid" style="width:100%;"/></td>';
+			      	}else
+			      	{
+			      		html = html + '<td hidden="true"><input type="number" class="enterpriseid" value="" data="enterpriseid" style="width:100%;"/></td>';
+			      	}
+			      	
+			      	html = html + '<td hidden="true"><input type="text" data="updateFlag" style="width:100%;border:none;"/></td>';
+			      	
+			      	html += '</tr>';
+		   		});
+		        $("#goodsInfo-table").append(html);
+		        
+		        //数字输入框禁用滚轮方法
+		        disableWheelDeliveryAdvice();
+		        
+		      	//根据单价、发货数量自动计算金额
+		        calculateAmount();
+		    }
+			
+			
+			
+			//增加行
+		    function addLineTb() {
+		       	 var html = '';
+		       	 html += '<tr>';
+		          	html = html + '<td><input type="checkbox" style="width:100%;border:none;"/></td>';
+		          	html = html + '<td><input type="text" data="rownumber" style="width:100%;border:none;" readonly="readonly"/></td>';
+		          	html = html + '<td><input type="text" data="goods_name" style="width:100%;border:none;"/></td>';//货物名称
+		          	html = html + '<td><input type="text" data="spec" style="width:100%;border:none;"/></td>';//货物规格
+		          	html = html + '<td><input type="text" data="producing_area" style="width:100%;border:none;"/></td>';//产地
+		          	html = html + '<td><input type="text" data="quality" style="width:100%;border:none;"/></td>';//品质
+		          	html = html + '<td><input type="text" data="packing" style="width:100%;border:none;"/></td>';//包装形态
+		          	html = html + '<td hidden="true"><input type="text" data="pk_measurement" style="width:100%;border:none;"/></td>';//计量单位主键
+		          	html = html + '<td><input type="text" data="measurement_name" style="width:100%;border:none;"/></td>';//计量单位名称
+		          	html = html + '<td><input type="number" data="number" style="width:100%;border:none;"/></td>';//发货数量
+		          	html = html + '<td><input type="number" data="price" style="width:100%;border:none;"/></td>';//单价
+		          	html = html + '<td><input type="number" data="money" style="width:100%;border:none;" readonly="readonly"/></td>';//金额
+		          	html = html + '<td><input type="text" data="batch_number" style="width:100%;border:none;"/></td>';//批号
+		          	html = html + '<td><input type="text" data="storage_location" style="width:100%;border:none;"/></td>';//存储区域
+		          	html = html + '<td><input type="text" data="sourcebilltype" style="width:100%;border:none;"/></td>';//来源单据类型
+		          	html = html + '<td hidden="true"><input type="number" data="pk_delivery_advice" style="width:100%;border:none;"/></td>';//发货通知单主表主键
+		          	html = html + '<td hidden="true"><input type="number" data="pk_delivery_item" style="width:100%;border:none;"/></td>';//发货通知单子表主键
+		          	html = html + '<td hidden="true"><input type="number" data="sourcebillid" style="width:100%;border:none;"/></td>';//来源单据主表主键
+		          	html = html + '<td hidden="true"><input type="number" data="sourcebillitemid" style="width:100%;border:none;"/></td>';//来源单据子表主键
+		          	html = html + '<td hidden="true"><input type="number" data="enterpriseid" style="width:100%;border:none;"/></td>';//业务组织主键
+		          	html = html + '<td hidden="true"><input type="text" data="updateFlag" style="width:100%;border:none;"/></td>';//标志位
+		          	html += '</tr>';
+		          	
+		            $("#goodsInfoTbody").append(html);
+		            
+		            disableWheelDeliveryAdvice();
+		            
+		            //实现 明细行号的重新排序
+			        sortRowNumber("goodsInfoTbody");
+		            
+			      	//根据单价、发货数量自动计算金额
+			        calculateAmount();
+			}
+		    
+		    //删除行
+		    var delIds = "";
+			function deleteLineTb() {
+		        var deleteList = $("#goodsInfoTbody input[type=checkbox]:checked").val();
+		        if(deleteList != undefined)
+		        {
+		            layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', {
+		                btn: ['确定', '取消'] //按钮
+		            }, function () {
+		        		$("#goodsInfoTbody input[type=checkbox]:checked").each(function() {
+		        			$(this).parent('td').parent('tr').remove();
+		        			debugger
+		        			var val = $(this).parents('tr').find('td').eq(16).find('input').val();
+		        			if(val != "")
+		        			{
+		        				delIds = delIds+val + ",";
+		        			}
+		        		});
+		                var index = layer.index; //获取当前弹层的索引号
+		                layer.close(index); //关闭当前弹层
+		                sortRowNumber("goodsInfoTbody");
+		            }, function () {
+		            });
+		        }else
+		        {
+		        	layer.alert("请选择需要删除的数据！");
+		        } 
+		     } 
+		  
+			 //控制明细行号为按照从大到小排序并避免增删影响
+			 function sortRowNumber(id)
+			 {
+				var count = 1;
+			     $("#" + id).children().each(function() {
+			         $(this).find("input[data='rownumber']").each(function() {
+			              $(this).val(count++);
+			         });
+			     });
+			 }
+		  	
+		  	
+			//****************************************工具function *********************************************
+			
+			//判断对象是否为空。
+		    function isEmptyObject(obj) 
+		  	{
+		        for (var key in obj) 
+		        {
+		           return false;
+		        }
+		        return true;
+		    }
+			
+			
+			//时间格式化yyyy-mm-dd
+		    function getFormatTimehhmmssFun(time)
+		    {
+		        if (time == undefined || time == "") 
+		        {
+		            return "";
+		        } else 
+		        {
+		            return new Date(time).Format("yyyy-MM-dd");
+		        }
+		    }
+			
+		  	//美化状态列
+		    function beautifyStateColumn(state)
+		    {
+		    	if (state == undefined || state == "") 
+		        {
+		            return "";
+		        }
+		    	
+		    	var clazz = "";
+		        var changedData = "";
+		       	if("新建" == state || "审核中" == state)
+		       	{
+		       		clazz = "'label label-danger'";
+		       	}else if("已作废" == state || "审核拒绝" == state)
+		       	{
+		       		clazz = "'label label-default'";
+		       	}else
+		       	{
+		       		clazz = "'label label-primary'";
+		       	}
+		       	changedData = "<div align='center'><label style='display:inline-block;width:60px' class=" 
+		       				+ clazz + " >" + state + "</label></div>";
+		       	return changedData;
+		    }
+		  
+		  	//格式化编码列的方法
+		  	function getFormatCode(data) 
+		  	{
+				if (data == undefined || data == "") 
+				{
+					return "";
+				} else 
+				{
+					return '<a class="deliveryAdviceCode" style="cursor:pointer">' + data + '</a>';
+				}
+		  	}
+		  	
+		  	//自定义业务日期不超过当前日期的校验
+			jQuery.validator.addMethod("dateLegal", function(value, element){
+				 		//获取当前时间
+		  	 	 		var now = new Date().getTime();
+			     		//获取页面设置时间
+			     		var old = now;
+						if (value) 
+						{
+							var arr1 = value.split(" "); 
+							var sdate = arr1[0].split('-'); 
+							var date = new Date(sdate[0], sdate[1]-1, sdate[2]); 
+							old = date.getTime();
+						}
+						return now > old;
+			}, "发货通知日期不能晚于当前日期！");
+			
+			jQuery.validator.addMethod("decimalPlaces", function(value, element) {   
+		    	    var tel = /^[+-]?\d*\.?\d{1,2}$/;
+		    	    return this.optional(element) || (tel.test(value));
+		    	}, "请输入精确到小数点2位的数字");
+			
+			
+		    //主表非空校验（必录项）
+		    function validateMainData(fromID) 
+		    {
+		        var validate = $("#" + fromID).validate({
+		            rules: {
+		            	enterprise_name: {
+		                    required: true
+		                },
+		                application_amount: {
+		                    //required: true,
+		                    decimalPlaces:true,
+	                    	max:999999999999.99,
+	                    	min:-99999999999.99
+		                },
+		                amount: {
+		                    required: true,
+		                    decimalPlaces:true,
+	                    	max:999999999999.99,
+	                    	min:-99999999999.99
+		                },
+		                currency_name: {
+		                    required: true
+		                },
+		            	busi_date: {
+		            		required: true,
+		            		dateLegal: true
+		            	},
+		            },
+		            messages: { 
+		            	enterprise_name: {
+		                    required: "发货企业名称不能为空！"
+		                },
+		                application_amount: {
+		                    //required: "申请金额不能为空！",
+		                    decimalPlaces:"申请金额小数位最多只能为2位！",
+	                    	max:"申请金额整数位最多只能为12位！",
+	                    	min:"申请金额整数位最多只能为12位！"
+		                },
+		                amount: {
+		                    required: "支付货款金额不能为空！",
+		                    decimalPlaces:"支付货款金额小数位最多只能为2位！",
+	                    	max:"支付货款金额整数位最多只能为12位！",
+	                    	min:"支付货款金额整数位最多只能为12位！"
+		                },
+		                currency_name: {
+		                    required: "币种名称不能为空！"
+		                },
+		                busi_date: {
+		            		required: "发货通知日期不能为空！",
+		            		dateLegal: "发货通知日期不能晚于当前日期！"
+		            	},
+		            }
+		        });
+		        return validate.form();
+		    }
+		    
+		    //字表数据校验
+		    function validateGoodsData(goodsList)
+			{
+				//校验细单数据是否为空
+				if(goodsList.length < 1) 
+				{
+					layer.msg("细单数据不能为空");
+					return false;
+				}
+				
+				var positiveInt = /^[0-9]*[1-9][0-9]*$/;
+				var testNumber = /^[+]?\d{1,13}(\.\d{1,3})?$/;
+				var testPrice = /^[+]?\d{1,8}(\.\d{1,6})?$/;
+				var testMoney = /^[+]?\d{1,16}(\.\d{1,2})?$/;
+				
+				for(var i = 0; i < goodsList.length; i++) 
+				{
+					var obj = goodsList[i];
+					
+					//商品名称
+					if(obj.goods_name == '') 
+					{
+						layer.msg("商品名称不能为空");
+						return false;
+					} else 
+					{
+						if(obj.goods_name.length > 255) 
+						{
+							layer.msg("商品名称长度不能大于255字");
+							return false;
+						}
+					}
+					
+					//规格
+					if(obj.spec != '') 
+					{
+						if(obj.spec.length > 255) 
+						{
+							layer.msg("规格长度不能大于255字");
+							return false;
+						}
+					}
+					
+					//产地
+					if(obj.producing_area != '') 
+					{
+						if(obj.producing_area.length > 50) 
+						{
+							layer.msg("产地长度不能大于50字");
+							return false;
+						}
+					}
+
+					//品质
+					if(obj.quality != '') 
+					{
+						if(obj.quality.length > 255) 
+						{
+							layer.msg("品质长度不能大于255字");
+							return false;
+						}
+					}
+					
+					//包装形态
+					if(obj.packing != '') 
+					{
+						if(obj.packing.length > 50) 
+						{
+							layer.msg("包装形态长度不能大于50字");
+							return false;
+						}
+					}
+					
+					//计量单位形态
+					if(obj.measurement_name != '') 
+					{
+						if(obj.measurement_name.length > 20) 
+						{
+							layer.msg("计量单位长度不能大于20字");
+							return false;
+						}
+					}
+
+					//数量
+					if(obj.number == '') 
+					{
+						layer.msg("数量不能为空");
+						return false;
+					} else 
+					{
+						if(!testNumber.test(obj.number)) 
+						{
+							layer.msg("数量只能为最大13位整数,3位小数的浮点数");
+							return false;
+						}
+
+						if(obj.number > 9999999999999.999 || obj.number < -9999999999999.999) 
+						{
+							layer.msg("数量整数位最多为13位");
+							return false;
+						}
+					}
+					
+					//单价
+					if(obj.price == '') 
+					{
+						layer.msg("价格不能为空");
+						return false;
+					} else 
+					{
+						if(!testPrice.test(obj.price)) 
+						{
+							layer.msg("单价只能为最大8位整数，6位小数的浮点数");
+							return false;
+						}
+
+						if(obj.price > 99999999.999999 || obj.price < -99999999.999999) 
+						{
+							layer.msg("单价整数位最多为8位");
+							return false;
+						}
+					}
+					
+					//金额
+					if(obj.money == '') 
+					{
+						layer.msg("金额不能为空");
+						return false;
+					}
+					
+					if(obj.money != '') 
+					{
+						if(!testMoney.test(obj.money)) 
+						{
+							layer.msg("金额只能为最大16位整数，2位小数的浮点数");
+							return false;
+						}
+
+						if(obj.money > 9999999999999999.99 || obj.money < -9999999999999999.99) 
+						{
+							layer.msg("金额整数位最多为16位");
+							return false;
+						}
+					}
+					
+					//批号
+					if(obj.batch_number != '') 
+					{
+						if(obj.batch_number.length > 50) 
+						{
+							layer.msg("批号长度不能大于50字");
+							return false;
+						}
+					}
+					
+					//货位号
+					if(obj.storage_location != '') 
+					{
+						if(obj.storage_location.length > 50) 
+						{
+							layer.msg("货位号长度不能大于50字");
+							return false;
+						}
+					}
+				}
+				return true;
+			}
+		    
+		    //设置发往后台的请求参数的格式
+		    function getTbodyJsonDataById(id)
+		    {
+		        var arr = [];
+		        var data = {};
+		        var name = "";
+		        var value = "";
+		        $("#" + id).children().each(function () {
+		                            $(this).find("input[name]").each(function() {
+		                                name = $(this).attr('name');
+		                                value = $(this).val();
+		                                data[name] = value;
+		                            })
+		                            $(this).find("hidden[name]").each(function () {
+		                                name = $(this).attr('name');
+		                                value = $(this).text();
+		                                data[name] = value;
+		                            })
+		                            $(this).find("select[name]").each(function () {
+		                                name = $(this).attr('name');
+		                                value = $(this).val();
+		                                data[name] = value;
+		                            })
+		                            $(this).find("textarea[name]").each(function () {
+		                                name = $(this).attr('name');
+		                                value = $(this).val();
+		                                data[name] = value;
+		                            })
+		                        });
+		        data["deliveryItemList"] = getGoodsItems("goodsInfoTbody");
+	            if (!isEmptyObject(data))
+	            {
+	                arr.push(data);
+	            }
+		        return arr;
+		    }
+		    
+		  	//获取货物信息列表
+		    function getGoodsItems(tbodyID)
+		    {
+		  		var arr = [];
+	            var data = {};
+	            var name = "";
+	            var value = "";
+	            $("#" + tbodyID).children().each(function(){
+	                data = {};
+	            	$(this).find("input[data]").each(function(){
+	                   	name = $(this).attr('data');
+	                    value = $(this).val();
+	                    data[name] = value;
+	                })
+	                if(!isEmptyObject(data))
+	               	{
+	                   	arr.push(data);
+	               	}
+	            })
+	            console.log(arr); 
+	            return arr;
+	        }
+		  	
+		  	//查询企业信息
+		    function enterpriseAutoComplete()
+		    {
+		    	if ($("input").hasClass("contract_application_entry"))
+		    	{
+		    		debugger;
+		    		var pkCode = [];
+		    		var test = $(".contract_application_entry").bigAutocomplete({
+		    			width : 'auto',
+						id : [ 'code', 'name', 'shortname', 'statustype' ],
+						highlight : false,
+						minChars : 0,
+						mustMatch : true,
+						matchContains : true,
+						autoFill : true,
+						ajax:{
+							url : domaindata.product_smf_domain + 'deliveryAdvice/getEnterpriseList',
+							type : "GET",
+							success : function(result)
+							{
+								if (result.code == 0)
+								{
+									layer.msg(result.msg);
+								}
+								$("#pk_enterprise").val("");
+								debugger;
+								var jsonObj = result.data;
+								var datas = [];
+								for (var i = 0; i < jsonObj.length; i++) 
+								{
+									datas[i] = [];
+									datas[i].push(jsonObj[i].code);
+									datas[i].push(jsonObj[i].name);
+									datas[i].push(jsonObj[i].shortname);
+									datas[i].push(jsonObj[i].statustype);
+								}
+								pkCode = jsonObj;
+								debugger;
+								test.setData(datas, true); // 设置显示的内容，并更新
+								test.setTitle([ '企业编码', '企业名称', '企业简称', '企业地位' ]); // 设置标题
+								 $("#bigAutocompleteContent").scrollTop(0);
+							},
+							error : function(msg) 
+							{
+								layer.alert("查询企业信息异常");
+							}
+						},
+						callback : function(data)
+						{
+							debugger;
+							var selectedCode = data[0];
+							var pk_enterprise;
+							var beginTime = new Date().getTime();
+							for(var i=0;i<pkCode.length;i++)
+							{
+								var tempCode = pkCode[i].code;
+								if(selectedCode == tempCode)
+								{
+									pk_enterprise = pkCode[i].pk_enterprise;
+									$("#pk_enterprise").val(pk_enterprise);
+									break;
+								}
+							}
+							$("#enterprise_name").val(data[1]);
+						}
+		    		})
+		    	}
+		    }
+		  	
+		  	//校验自动补全
+		    function autoCompleteValidate()
+		    {
+		    	$("#enterprise_name").change(function() {
+					$("#pk_enterprise").val("");
+				});
+				$("#enterprise_name").on("blur",function() {
+									debugger;
+									var enterpriseName = $("#enterprise_name").val();
+									if (enterpriseName != null && enterpriseName != '') 
+									{
+										var pkEnterprise = $("#pk_enterprise").val();
+										if (pkEnterprise == null || pkEnterprise == '')
+										{
+											$("#enterprise_name").val("");
+										}
+									}else
+									{
+										$("#pk_enterprise").val("");
+									}
+								});
+			};
+		  	
+		    //数字输入框禁用滚轮方法
+		    function disableWheelDeliveryAdvice()
+		    {
+			    $("input[type='number']").each(function(){
+			    	var that = this;
+			    	if(that.addEventListener)
+			    	{	//兼容firefox
+			         	that.addEventListener('DOMMouseScroll',MouseWheelCredit,false);
+			        }//W3C 
+			        that.onmousewheel=MouseWheelCredit;//IE/Opera/Chrome
+			     });
+			}
+		    
+		    function MouseWheelCredit(event) 
+		    {
+		        event = event || window.event;
+		        event.preventDefault();
+		    }
+		  	
+			
+		    //明细表样式设置
+		    function styleChange(obj)
+		    {
+	    		var config={
+	    				layerHieght:obj.layerHieght|| '',   									//弹出框高度
+	    				layerContentHieght:obj.layerContentHieght|| '',   						//弹出框内容高度
+	    				scrollBox:obj.scrollBox,   												//滚动盒子  必填
+	    				scrollBoxHeight:obj.scrollBoxHeight||'247px',  							//滚动盒子高度
+	    				scrollBoxBigHeight:obj.scrollBoxBigHeight||'420px',  					//滚动盒子变大后的高度
+	    				scrollBoxHeader:obj.scrollBoxHeader || obj.scrollBox.find('tr').eq(0),  //固定头部 不传默认滚动盒子第一个 tr
+	    				needHideBox:obj.needHideBox,  											//什么收缩盒子  必填
+	    				triangleTop:obj.triangleTop||'-37px', 									//三角top值 调节上下
+	    				cloverTop:obj.cloverTop||'-22px', 										//白色遮快top值 调节上下
+	    				triangleTop2:obj.triangleTop2||'-39px', 								//三角top值 调节上下
+	    				cloverTop2:obj.cloverTop2||'-45px', 									//白色遮快top值 调节上下
+	    		};
+	    		
+	    		if(config.layerHieght){
+	    			$(".layui-layer-page").css({"height":config.layerHieght});
+	    		}
+	    		
+	    		
+	    		if(config.layerContentHieght){
+	    			$(".layui-layer-page .layui-layer-content").css({"height":config.layerContentHieght});
+	    		}
+	    		
+	    		config.scrollBox.css({"height":config.scrollBoxHeight,"overflow":"scroll"});
+	    		$("hr").css({"margin-top":"30px"})
+	    		$("hr").eq(0).after("<div id='shrinkBtn'><div id='Triangle'></div><div id='clover'></div></div>");
+				$("#shrinkBtn").css({"width":"100%","text-align":"center","position":"relative"});
+	           	$('#Triangle').css({"cursor":"pointer","width":"30px","height":"30px","position":"absolute","left":"50%",
+	           		"top":config.triangleTop,
+	           		"background":"#fff",
+	           		"border":"solid 2px #103d6f",
+	           		"transform":"translateX(-50%) rotate(45deg)",
+	           		"-ms-transform":"translateX(-50%) rotate(45deg)",
+					"-moz-transform":"translateX(-50%) rotate(45deg)",
+					"-webkit-transform":"translateX(-50%) rotate(45deg)",
+					"-o-transform":"translateX(-50%) rotate(45deg)"
+	           	});
+	           	
+	        	$('#clover').css({"width":"50px","height":"21px","position":"absolute","left":"50%",
+	           		"top":config.cloverTop,
+	           		"background":"#fff",
+	           		"transform":"translateX(-50%)",
+	           		"-ms-transform":"translateX(-50%)",
+					"-moz-transform":"translateX(-50%)",
+					"-webkit-transform":"translateX(-50%)",
+					"-o-transform":"translateX(-50%)"
+	           	});
+	           	
+				
+	           function translate(el,y)
+	           {
+	        	   el.css({"transform":"translateY("+y+")","-ms-transform":"translateY("+y+")","-moz-transform":"translateY("+y+")","-webkit-transform":"translateY("+y+")","-o-transform":"translateY("+y+")"});
+	           }
+	           
+	           config.scrollBox.scroll(function(){       
+	            	var scrollTop=config.scrollBox.scrollTop()+"px";          	
+	            	translate(config.scrollBoxHeader,scrollTop);            	             	
+	            }); 
+	           
+	           var istable = true; //上面收缩盒子传的是table
+	           if(config.needHideBox.find('table').length>0)
+	           {
+	        	   //上面收缩盒子不是table
+	        	   istable = false;
+	           }
+	           
+	           var state=1;
+	           $("#shrinkBtn").on('click',function(){
+		           if(state==1)
+		           {
+		        	   if(istable)
+		        	   {
+		        		   config.needHideBox.css({"height":"0px","overflow":"hidden","display":"block"});
+		        	   }else
+		        	   {
+		        		   config.needHideBox.css({"height":"0px","overflow":"hidden"});
+		        	   }
+		        	   
+			           $("hr").eq(0).css({"margin-top":"0px"});
+			           /*$("#addInvoiceDlg1").css({"padding-top":"0px"}); */
+			           config.scrollBox.css({"height":config.scrollBoxBigHeight,"overflow":"scroll"});
+			           $("#Triangle").css({"top":"-39px"});
+			           $("#clover").css({"top":"-45px"});
+			           state=2;
+		           }else
+		           {
+		        	   if(istable)
+		        	   {
+		        		   config.needHideBox.css({"height":"","display":'table',"overflow":"auto"});
+		        	   }else
+		        	   {
+		        		   config.needHideBox.css({"height":"0px","overflow":"hidden"});
+		        	   }         
+		           	   $("hr").eq(0).css({"margin-top":"20px"});
+		          	   /*$("#addInvoiceDlg1").css({"padding-top":"10px"}); */
+			           config.scrollBox.css({"height":config.scrollBoxHeight,"overflow":"scroll"});      			                    			                    	
+			           $("#Triangle").css({"top":"-37px"});
+			           $("#clover").css({"top":"-22px"});
+			           state=1;            	
+		           }            	
+	           });   		    		
+	    	}
+			
+		})
+	
+	</script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>企业计息</title>
+<style>
+th {
+	text-align: center;
+}
+
+td select {
+	width: 100%;
+}
+
+th select {
+	width: 100%;
+}
+
+th select {
+	text-align: center;
+}
+
+#alertProductModel {
+	height: 26px !important;
+	vertical-align: middle;
+}
+
+#pk_product_model+input {
+	vertical-align: middle;
+}
+.text-right{
+    text-align: right;
+}
+input[type='number'] {
+    text-align: right;
+}
+</style>
+</head>
+<body>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="level-calculation-table"></div>
+		</div>
+	</div>
+
+	<script id="calculationSearchTemp" type="text/html">
+<div class="form-group">
+	<label class="col-xs-3 control-label">借款企业名称</label>
+	<div class="col-xs-8">
+		<input type="text" class="form-control" name="enterprise_application_name" id="enterprise_application_name" placeholder="请输入借款企业名称" autocomplete="off">
+	</div>
+</div>
+<div class="form-group">
+    <label class="col-xs-3 control-label">状态</label>
+    <div class="col-xs-8" style="margin-top: 5px;">
+        <label>
+            <input type="radio" name="state" id="state" value="" checked> 全部
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <label>
+            <input type="radio" name="state" id="state" value="已结息"> 已结息
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <label>
+            <input type="radio" name="state" id="state" value="未结息"> 未结息
+        </label>
+    </div>
+</div>
+<div class="form-group">
+	<!--左边标题占比为 3 -->
+	<label class="col-xs-1 control-label"></label>
+	<!--右边内容占比 9-->
+	<div class="col-xs-10">
+		<!--以下就是自定义内容 提交服务器查询的时候,框架会根据input 的name属性获取值并传回服务器-->
+		<div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+			<input type="text" id="beginDate" name="beginDate" class="form-control text-center" placeholder="开始日期">
+			<span class="input-group-addon"><=计息日期<=</span>
+			<input type="text" id="endDate" name="endDate" class="form-control text-center" placeholder="结束日期">
+		</div>
+	</div>
+</div>
+</script>
+	<script id="detailCalculationTemp" type="text/html">
+	<div id="interestCalculationDetail">
+		<table cellpadding="0" cellspacing="0" class="from_table">
+			<tr>
+				<td>企业计息ID<label class="required">*</label></td>
+				<td><input type="text" class="form-control" readonly="readonly"
+					id="pk_interest_calculation" name="pk_interest_calculation"
+                    {{if pk_interest_calculation!=undefined}} title="{{pk_interest_calculation}}"{{/if}}
+					value="{{if pk_interest_calculation!=undefined}}{{pk_interest_calculation}}{{/if}}" />
+				</td>
+				<td>贷款申请企业名称<label class="required">*</label></td>
+				<td><input type="text" class="form-control" readonly="readonly"
+					id="enterprise_application_name" name="enterprise_application_name"
+                    {{if enterprise_application_name!=undefined}} title="{{enterprise_application_name}}"{{/if}}
+					value="{{if enterprise_application_name!=undefined}}{{enterprise_application_name}}{{/if}}" /></td>				
+			</tr>
+            <tr>
+                <td>计息日期<label class="required">*</label></td>
+                <td>
+                    <div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="form-control" id="interest_date" name="interest_date" readonly="readonly"
+                        {{if interest_date!=undefined}} title="{{interest_date | dateFormat 'yyyy-MM-dd'}}"{{/if}}
+                        value="{{if interest_date!=undefined}}{{interest_date | dateFormat 'yyyy-MM-dd'}}{{/if}}">
+                    </div>
+                </td>
+                <td>状态</td>
+                <td><input type="text" class="form-control" id="state" readonly="readonly"
+                    {{if state!=undefined}} title="{{state}}"{{/if}}
+                    name="state" value="{{if state!=undefined}}{{state}}{{/if}}" /></td>
+            </tr>
+			<tr>
+				<td>当天借款结余</td>
+				<td><input type="number" class="form-control" id="days_principal"
+					name="days_principal" readonly="readonly" {{if days_principal!=undefined}} title="{{days_principal}}"{{/if}}
+					value="{{if days_principal!=undefined}}{{days_principal}}{{/if}}" /></td>
+				<td>币种</td>
+				<td><input type="text" class="form-control" id="currency_name"
+					name="currency_name" readonly="readonly" {{if currency_name!=undefined}} title="{{currency_name}}"{{/if}}
+					value="{{if currency_name!=undefined}}{{currency_name}}{{/if}}" /></td>
+			</tr>
+			<tr>
+				<td>当日利息</td>
+				<td><input type="number" class="form-control" id="days_interest"
+					name="days_interest" readonly="readonly" {{if days_interest!=undefined}} title="{{days_interest}}"{{/if}}
+					value="{{if days_interest!=undefined}}{{days_interest}}{{/if}}" /></td>
+				<td>累计利息</td>
+				<td><input type="number" class="form-control" readonly="readonly"
+					id="accumulated_interest" name="accumulated_interest" {{if accumulated_interest!=undefined}} title="{{accumulated_interest}}"{{/if}}
+					value="{{if accumulated_interest!=undefined}}{{accumulated_interest}}{{/if}}" /></td>
+			</tr>
+            <tr>
+                <td>日利率</td>
+                <td><input type="number" class="form-control" id="interest_rate"
+                    name="interest_rate" readonly="readonly" {{if interest_rate!=undefined}} title="{{interest_rate}}"{{/if}}
+                    value="{{if interest_rate!=undefined}}{{interest_rate}}{{/if}}" /></td>
+            </tr>
+		</table>
+        <hr style=" height:2px;border:none;border-top:2px ridge #185598;"/>
+	    <div class="form-group" align="center">
+            <input type="button" id="printbtn" value="打印" class="btn btn-primary"/>
+        </div>
+    </div>
+ </script>
+
+</body>
+<script type="text/javascript">
+	$(function() {
+
+		var clickInterestCalculationFlag = true; //按钮可点击标志
+		//表格的属性对象，用于初始化表格的设置
+		var option = {
+			seniorSearch : { // 高级搜索配置
+				// 			formList: [{
+				// 				filed: "企业名称",
+				// 				name: "name"
+				// 			},{
+				// 				filed: "计息日期",
+				// 				name: "interest_date"
+				// 			}],
+				plusFiled : template("calculationSearchTemp", {})
+			},
+			search : true,
+			handleCol : false,
+			tools : {},
+			//列头
+			columns : [ {
+				filed : '借款企业名称',
+				name : 'enterprise_application_name'
+			}, {
+				filed : '计息日期',
+				name : 'interest_date'
+			}, {
+				filed : '日利率(万分之)',
+				name : 'interest_rate'
+			}, {
+				filed : '当日借款结余',
+				name : 'days_principal'
+			}, {
+				filed : '当日利息',
+				name : 'days_interest'
+			}, {
+				filed : '积累利息',
+				name : 'accumulated_interest'
+			}, {
+				filed : '状态',
+				name : 'state'
+			}, {
+				filed : '企业计息表Id',
+				name : 'pk_interest_calculation'
+			}, {
+				filed : '贷款申请企业Id',
+				name : 'pk_enterprise_application'
+			}, {
+				filed : '币种编号',
+				name : 'pk_currency'
+			}, {
+				filed : '币种名称',
+				name : 'currency_name'
+			}, {
+				filed : '业务组织Id',
+				name : 'enterpriseid'
+			} ],
+			onInit : function() {
+				// 日期选择
+				$('#beginDate ,.input-datepicker, .input-daterange')
+						.datepicker({
+							weekStart : 1,
+							language : "zh-CN"
+						});
+				$('#beginDate').on('focus', function() {
+					$('.datepicker').css({
+						'zIndex' : '1301'
+					});
+				});
+				$('#endDate ,.input-datepicker, .input-daterange').datepicker({
+					weekStart : 1,
+					language : "zh-CN"
+				});
+				$('#endDate').on('focus', function() {
+					$('.datepicker').css({
+						'zIndex' : '1301'
+					});
+				});
+			},
+			//特殊列渲染
+			columnDefs : [ {
+				targets : [ 3 ], //列
+				render : function(data, type, row) { // 格式化日期
+					var showDate = getyyyyMMddFun(data);
+					return showDate;
+				}
+			}, {
+				targets : [ 8 ], //列
+				render : function(data, type, row) { // 美化状态列
+					var changedData = beautifyStateColumn(data);
+					return changedData;
+				}
+			}, {
+				targets : [ 2 ],
+				render : function(data, type, row) {//修改企业名称
+					var showName = renderEnterpriseApplicationName(data);
+					return showName;
+				}
+			},{
+                targets : [ 4, 5, 6, 7 ], //列
+                render : function(data, type, row) { // 格式金额字段靠右
+                    var value = renderMoneyRight(data);
+                    return value;
+                }
+            },{ //隐藏列,序号+
+				"targets" : [ 9, 10, 11, 12, 13 ],
+				"visible" : false
+			} ],
+			url : domaindata.product_smf_domain + "interestCalculation/list", //获取数据的地址
+			ajax : function(data, callback, settings) {
+				$.ajax({
+					type : "GET",
+					url : domaindata.product_smf_domain
+							+ "interestCalculation/list",
+					data : {},
+					dataType : "json",
+					success : function(result) {
+						layer.msg("接口调用成功");
+						var finalData = result.data[0];
+						//封装返回数据
+						var returnData = {};
+						returnData.draw = data.draw;//自行返回draw参数,最好由后台返回1
+						returnData.recordsTotal = finalData.totalCount;
+						returnData.recordsFiltered = finalData.pageSize;
+						returnData.data = finalData.results;
+						//调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+						//此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+						callback(returnData);
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						layer.msg("查询失败");
+					}
+				});
+			}
+		};
+		var table = suneeeUI.seTable("level-calculation-table", option);
+
+		$("#level-calculation-table table.real-table").on(
+				"click",
+				".lading_enterprise_application_name",
+				function() {
+					if (clickInterestCalculationFlag) {
+						var index = $(".lading_enterprise_application_name")
+								.index(this);
+						var rowData = table.option.data[index];
+						console.info(rowData);
+						
+						var detailCalculationTemp = template(
+								"detailCalculationTemp", rowData);
+						
+						layer.open({
+							type : 1,
+							title : "详情",
+							area : [ '700px', '350px' ], //宽高
+							content : detailCalculationTemp,
+							success : function() {
+							    $("#printbtn").on("click", function(){
+		                            var sdf=$("#interestCalculationDetail");
+		                            var temp = $("#interestCalculationDetail").clone();
+		                            winname = window.open('', "_blank",'');
+		                            winname.document.body.innerHTML=sdf["0"].innerHTML;;
+		                            winname.print();
+		                            winname.close();
+		                        });
+							    clickInterestCalculationFlag = true;
+							},
+							error : function() {
+								clickInterestCalculationFlag = true;
+							}
+						});
+						return false;
+					}
+					return false;
+				});
+
+		//美化状态列
+		function beautifyStateColumn(state) {
+			if (state == undefined || state == "") {
+				return "";
+			}
+
+			var clazz = "";
+			if ("未结息" == state) {
+				clazz = "'label label-danger'";
+			} else {
+				clazz = "'label label-primary'";
+			}
+			var changedData = "<div align='center'><label style='display:inline-block;width:60px' class="
+                + clazz + " >"
+					+ state + "</label></div>";
+			return changedData;
+		}
+		//时间格式化yyyy-mm-dd
+		function getyyyyMMddFun(time) {
+			if (time == undefined || time == "") {
+				return "";
+			} else {
+				return new Date(time).Format("yyyy-MM-dd");
+			}
+		}
+
+		//渲染企业名称
+		function renderEnterpriseApplicationName(name) {
+			if (name == undefined || name == "") {
+				return "";
+			} else {
+				return '<a class="lading_enterprise_application_name" style="cursor:pointer">'
+						+ name + '</a>';
+			}
+		}
+		
+		function renderMoneyRight(val){
+            if (val == undefined || val == "") {
+               val = 0;
+            } 
+            return '<div class = "text-right">' + val + '</div>';
+        }
+	});
+</script>
+
+</html>

@@ -1,0 +1,214 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suneee.smf.smf.dao.LoanContractDao">
+
+	<sql id="AllColumns">
+		pk_loan_contract,code,name,pk_enterprise,enterprise_code,enterprise_name,busi_date,loan_limit,
+		pk_currency,currency_name,interest_rate,address,credit_code,contact,contact_number,
+		state,inputmanid,inputmanname,bookindate,modiferid,modifername,modefydate,cancelid,
+		cancelname,canceldate,enterpriseid,time_stamp
+	</sql>
+	
+	<sql id="insertColumns">
+		code,name,pk_enterprise,enterprise_code,enterprise_name,busi_date,loan_limit,
+		pk_currency,currency_name,interest_rate,address,credit_code,contact,contact_number,
+		state,inputmanid,inputmanname,bookindate,modiferid,modifername,modefydate,cancelid,
+		cancelname,canceldate,enterpriseid,time_stamp
+	</sql>
+
+	<!-- 新增  -->
+	<insert id="insert" parameterType="com.suneee.smf.smf.model.LoanContractVO" useGeneratedKeys="true" keyProperty="pk_loan_contract">
+		insert into smf_loan_contract (<include refid="insertColumns"></include>)
+		values(
+			#{code},#{name},#{pk_enterprise},#{enterprise_code},#{enterprise_name},#{busi_date},#{loan_limit},
+			#{pk_currency},#{currency_name},#{interest_rate},#{address},#{credit_code},#{contact},#{contact_number},
+			#{state},#{inputmanid},#{inputmanname},#{bookindate},#{modiferid},#{modifername},#{modefydate},#{cancelid},
+			#{cancelname},#{canceldate},#{enterpriseid},current_timestamp(3))
+	</insert>
+	
+	<!-- 作废  -->
+	<update id="delete" parameterType="com.suneee.smf.smf.model.LoanContractDO">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">  
+                UPDATE smf_loan_contract
+                <set>
+                  	state = #{item.state},
+					cancelid = #{item.cancelid},
+					cancelname = #{item.cancelname},
+					canceldate = #{item.canceldate},
+					time_stamp = current_timestamp(3)
+                </set>  
+                WHERE pk_loan_contract = #{item.pk_loan_contract}  
+    				AND time_stamp = #{item.time_stamp}
+    				AND enterpriseid = #{item.enterpriseid}
+    	</foreach>
+	</update>
+	
+	<!-- 修改  -->
+	<update id="modify" parameterType="com.suneee.smf.smf.model.LoanContractDO">
+		UPDATE smf_loan_contract 
+		SET code = #{code},
+			name = #{name},
+			pk_enterprise = #{pk_enterprise},
+			enterprise_code = #{enterprise_code},
+			enterprise_name = #{enterprise_name},
+			busi_date = #{busi_date},
+			loan_limit = #{loan_limit},
+			pk_currency = #{pk_currency},
+			currency_name = #{currency_name},
+			interest_rate = #{interest_rate},
+			address = #{address},
+			credit_code = #{credit_code},
+			contact = #{contact},
+			contact_number = #{contact_number},
+			state = #{state},
+			modiferid = #{modiferid},
+			modifername = #{modifername},
+			modefydate = #{modefydate},
+			enterpriseid = #{enterpriseid},
+			time_stamp = current_timestamp(3)
+    	WHERE pk_loan_contract = #{pk_loan_contract} 
+    		AND enterpriseid = #{enterpriseid}
+    		AND time_stamp = #{time_stamp}
+	</update>
+	
+	<!-- 分页查询  -->
+	<select id="selectLoanContract" parameterType="java.util.Map" resultType="com.suneee.smf.smf.model.LoanContractDO">
+		SELECT <include refid="AllColumns"></include>
+		FROM smf_loan_contract WHERE 1 = 1
+		<if test="code !=  null and code != ''">
+          AND code LIKE CONCAT('%',#{code},'%')
+      	</if>
+      	<if test="name != null and name != ''">
+          AND name LIKE CONCAT('%',#{name},'%')
+      	</if>
+      	<if test="enterprise_name != null and enterprise_name != ''">
+          AND enterprise_name LIKE CONCAT('%',#{enterprise_name},'%')
+      	</if>
+		<if test="state == null">
+          AND state !=  '已作废'
+      	</if>
+      	<if test="starttime != null">
+          AND busi_date &gt;= #{starttime}
+      	</if>
+        <if test="endtime != null">
+          AND busi_date &lt; #{endtime}
+        </if>
+        <if test="enterpriseid != null">
+			AND enterpriseid = #{enterpriseid}
+		</if>
+		<if test="searchValue != null and searchValue != ''">
+      	  	AND (code LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR name LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR enterprise_name LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR TO_CHAR(busi_date,'yyyy-mm-dd') LIKE CONCAT('%',#{searchValue},'%') 
+      	  		OR RTRIM(CAST(loan_limit AS VARCHAR),'0') LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR currency_name LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR RTRIM(CAST(interest_rate AS VARCHAR),'0') LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR address LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR credit_code LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR contact LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR contact_number LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR state LIKE CONCAT('%',#{searchValue},'%'))
+      	</if>
+		ORDER BY pk_loan_contract DESC
+		LIMIT #{pageSize} OFFSET #{startNum}
+	</select>
+	
+	<!-- 统计查询结果  -->
+	<select id="countLoanContract" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM smf_loan_contract WHERE 1 = 1
+		<if test="code != null and code != ''">
+          AND code LIKE CONCAT('%',#{code},'%')
+      	</if>
+      	<if test="name != null and name != ''">
+          AND name LIKE CONCAT('%',#{name},'%')
+      	</if>
+      	<if test="enterprise_name != null and enterprise_name != ''">
+          AND enterprise_name LIKE CONCAT('%',#{enterprise_name},'%')
+      	</if>
+		<if test="state == null">
+          AND state !=  '已作废'
+      	</if>
+      	<if test="starttime != null">
+          AND busi_date &gt;= #{starttime}
+      	</if>
+        <if test="endtime != null">
+          AND busi_date &lt; #{endtime}
+        </if>
+        <if test="enterpriseid !=  null">
+			AND enterpriseid = #{enterpriseid}
+		</if>
+		<if test="searchValue != null and searchValue != ''">
+      	  	AND (code LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR name LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR enterprise_name LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR TO_CHAR(busi_date,'yyyy-mm-dd') LIKE CONCAT('%',#{searchValue},'%') 
+      	  		OR RTRIM(CAST(loan_limit AS VARCHAR),'0') LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR currency_name LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR RTRIM(CAST(interest_rate AS VARCHAR),'0') LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR address LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR credit_code LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR contact LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR contact_number LIKE CONCAT('%',#{searchValue},'%')
+      	  		OR state LIKE CONCAT('%',#{searchValue},'%'))
+      	</if>
+	</select>
+	
+	<!-- 审核  -->
+	<update id="approve" parameterType="com.suneee.smf.smf.model.LoanContractVO">
+		UPDATE smf_loan_contract 
+		SET state = #{state},
+			time_stamp = current_timestamp(3)
+    	WHERE pk_loan_contract = #{pk_loan_contract}
+    		AND time_stamp = #{time_stamp}
+    		AND enterpriseid = #{enterpriseid}
+	</update>
+	
+	<!-- 根据企业ID作废该已审核通过贷款合同 -->
+	<update id="cancelByEnterpriseID" parameterType="java.util.Map">
+		UPDATE smf_loan_contract
+		SET state = #{state},
+			cancelid = #{cancelid},
+			cancelname = #{cancelname},
+			canceldate = #{canceldate},
+			time_stamp = current_timestamp(3)
+    	WHERE pk_enterprise = #{pk_enterprise}
+    		AND state = '已审核'
+    		AND enterpriseid = #{enterpriseid}
+	</update>
+	
+	<select id="selectLoanContractByID" parameterType="java.lang.Long" resultType="com.suneee.smf.smf.model.LoanContractDO">
+		SELECT <include refid="AllColumns" />
+			FROM smf_loan_contract
+		WHERE pk_loan_contract = #{pk_loan_contract} 
+			AND enterpriseid = #{enterpriseid}
+	</select>
+	
+	<select id="checkLoanContractTimeStamp" parameterType="com.suneee.smf.smf.model.LoanContractDO" resultType="java.lang.Integer" >
+        SELECT count(0)
+        	FROM smf_loan_contract
+        WHERE pk_loan_contract = #{pk_loan_contract} 
+        	AND time_stamp = #{time_stamp}
+        	AND enterpriseid = #{enterpriseid}
+    </select>
+    
+    <!-- 判断当前企业是否已经存在状态为新建或者审核中的记录 -->
+    <select id="canInsert" parameterType="com.suneee.smf.smf.model.LoanContractVO" resultType="java.lang.String">
+		SELECT 'X'
+			FROM smf_loan_contract
+		WHERE pk_enterprise = #{pk_enterprise}
+			AND (state = '新建' OR state = '审核中')
+			AND enterpriseid = #{enterpriseid}
+	</select>
+	
+	<!-- 校验合同号是否重复 -->
+    <select id="isCodeExists" resultType="java.lang.String">
+		SELECT 'X'
+			FROM smf_loan_contract
+		WHERE trim(code) = #{code}
+			AND enterpriseid = #{enterpriseid}
+	</select>
+
+
+</mapper>

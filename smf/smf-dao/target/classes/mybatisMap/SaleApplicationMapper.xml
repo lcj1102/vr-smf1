@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.SaleApplicationDao" >
+  <resultMap id="BaseVOResultMap" type="com.suneee.smf.smf.model.SaleApplicationVO" >
+    <id column="pk_sale_application" property="pk_sale_application"/>
+    <result column="code" property="code"/>
+    <result column="capital_application_code" property="capital_application_code"/>
+    <result column="pk_capital_application" property="pk_capital_application"/>
+    <result column="pk_enterprise_application" property="pk_enterprise_application"/>
+    <result column="enterprise_application_name" property="enterprise_application_name"/>
+    <result column="pk_enterprise_payment" property="pk_enterprise_payment"/>
+    <result column="enterprise_payment_name" property="enterprise_payment_name"/>
+    <result column="amount" property="amount"/>
+    <result column="payment_amount" property="payment_amount"/>
+    <result column="pk_currency" property="pk_currency"/>
+    <result column="currency_name" property="currency_name"/>
+    <result column="contact" property="contact"/>
+    <result column="contact_number" property="contact_number"/>
+    <result column="busi_date" property="busi_date"/>
+    <result column="state" property="state"/>
+    <result column="inputmanid" property="inputmanid"/>
+    <result column="inputmanname" property="inputmanname"/>
+    <result column="bookindate" property="bookindate"/>
+    <result column="modiferid" property="modiferid"/>
+    <result column="modifername" property="modifername"/>
+    <result column="modefydate" property="modefydate"/>
+    <result column="cancelid" property="cancelid"/>
+    <result column="cancelname" property="cancelname"/>
+    <result column="canceldate" property="canceldate"/>
+    <result column="enterpriseid" property="enterpriseid"/>
+    <result column="time_stamp" property="time_stamp"/>
+    <result column="logistics_cost" property="logistics_cost"/>
+    <result column="supervision_cost" property="supervision_cost"/>
+  </resultMap>
+  
+  <sql id="BaseDO_Column_List" >
+    pk_sale_application, code, capital_application_code, pk_capital_application, pk_enterprise_application, enterprise_application_name,
+    pk_enterprise_payment, enterprise_payment_name, amount, payment_amount, pk_currency, currency_name, contact, 
+    contact_number, busi_date, state, inputmanid, inputmanname, bookindate, modiferid, modifername, modefydate,
+    cancelid, cancelname, canceldate, enterpriseid, time_stamp,logistics_cost,supervision_cost
+  </sql>
+  
+  <sql id="BaseItemDO_Column_List" >
+    pk_saleapplication_item, pk_sale_application, rownumber, goods_name, spec, producing_area,quality,packing,
+    pk_measurement, measurement_name, number, price, money, batch_number, storage_location, sourcebilltype,
+    sourcebillid, sourcebillitemid, enterpriseid, cancelid, cancelname, canceldate
+  </sql>
+  
+  <select id="selectByPage" resultMap="BaseVOResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="BaseDO_Column_List" />
+    from smf_sale_application
+    where 1 = 1
+    <if test="code != null">
+    	and code like concat('%',#{code},'%')
+    </if>
+    <if test="capital_application_code != null">
+    	and capital_application_code like concat('%',#{capital_application_code},'%')
+    </if>
+    <if test="enterprise_application_name != null">
+    	and enterprise_application_name like concat('%',#{enterprise_application_name},'%')
+    </if>
+    <if test="minAmount != null">
+          and amount &gt;= #{startAmount}
+      </if>
+      <if test="maxAmount !=null">
+          and amount &lt;= #{endAmount}
+      </if>
+      <if test="beginDate != null">
+          and busi_date &gt;= #{beginDate}
+      </if>
+      <if test="endDate !=null">
+          and busi_date &lt; #{endDate}
+      </if>
+      <if test="searchValue != null and searchValue !=''">
+      	  and (code like concat('%',#{searchValue},'%')
+      	  	 or	capital_application_code like concat('%',#{searchValue},'%')
+          	 or enterprise_application_name like concat('%',#{searchValue},'%')
+          	 or enterprise_payment_name like concat('%',#{searchValue},'%')
+         	 or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+         	 or rtrim(CAST(amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+         	 or rtrim(CAST(payment_amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+         	 or rtrim(CAST(logistics_cost as VARCHAR),'0') like concat('%',#{searchValue},'%')
+         	 or rtrim(CAST(supervision_cost as VARCHAR),'0') like concat('%',#{searchValue},'%')
+         	 or state like concat('%',#{searchValue},'%'))
+     </if>
+     <if test="state == null">
+          and state != '已作废'
+      </if>
+      <if test="enterpriseid != null">
+          and enterpriseid = #{enterpriseid}
+      </if>
+     order by bookindate desc
+     limit #{pageSize} offset #{startNum}
+  </select>
+  
+  <select id="countByPage" resultType="java.lang.Long" parameterType="java.util.Map" >
+    select 
+    count(pk_sale_application)
+    from smf_sale_application
+    where 1 = 1
+    <if test="code != null">
+    	and code like concat('%',#{code},'%')
+    </if>
+    <if test="capital_application_code != null">
+    	and capital_application_code like concat('%',#{capital_application_code},'%')
+    </if>
+    <if test="enterprise_application_name != null">
+    	and enterprise_application_name like concat('%',#{enterprise_application_name},'%')
+    </if>
+    <if test="minAmount != null">
+          and amount &gt;= #{minAmount}
+     </if>
+     <if test="maxAmount !=null">
+         and amount &lt;= #{maxAmount}
+     </if>
+     <if test="beginDate != null">
+         and busi_date &gt;= #{beginDate}
+     </if>
+     <if test="endDate !=null">
+         and busi_date &lt; #{endDate}
+     </if>
+     <if test="searchValue != null and searchValue !=''">
+     	  and (code like concat('%',#{searchValue},'%')
+     	  	 or	capital_application_code like concat('%',#{searchValue},'%')
+         	 or enterprise_application_name like concat('%',#{searchValue},'%')
+         	  or enterprise_payment_name like concat('%',#{searchValue},'%')
+        	 or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+        	 or rtrim(CAST(amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+        	 or rtrim(CAST(payment_amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+        	  or rtrim(CAST(logistics_cost as VARCHAR),'0') like concat('%',#{searchValue},'%')
+         	 or rtrim(CAST(supervision_cost as VARCHAR),'0') like concat('%',#{searchValue},'%')
+        	 or state like concat('%',#{searchValue},'%'))
+     </if>
+     <if test="state == null">
+         and state != '已作废'
+     </if>
+     <if test="enterpriseid != null">
+         and enterpriseid = #{enterpriseid}
+     </if>
+  </select>
+  
+  
+  <insert id="insertDO" parameterType="com.suneee.smf.smf.model.SaleApplicationDO" useGeneratedKeys="true" keyProperty="pk_sale_application">
+    insert into smf_sale_application(
+    	code, capital_application_code, pk_capital_application,
+    	pk_enterprise_application, enterprise_application_name,
+    	pk_enterprise_payment, enterprise_payment_name, amount, payment_amount, pk_currency, currency_name, contact, 
+    	contact_number, busi_date, state, inputmanid, inputmanname, bookindate, modiferid, modifername, modefydate,
+    	cancelid, cancelname, canceldate, enterpriseid, time_stamp,logistics_cost,supervision_cost
+    ) values (
+    	#{code},#{capital_application_code},#{pk_capital_application},#{pk_enterprise_application},#{enterprise_application_name},
+    	#{pk_enterprise_payment},#{enterprise_payment_name},#{amount},#{payment_amount},
+    	#{pk_currency},#{currency_name},#{contact},#{contact_number},#{busi_date},#{state},#{inputmanid},
+    	#{inputmanname},#{bookindate},#{modiferid},#{modifername},#{modefydate},#{cancelid},#{cancelname},
+    	#{canceldate},#{enterpriseid},current_timestamp(3),#{logistics_cost},#{supervision_cost}
+    )
+  </insert>
+  
+  <update id="delete" parameterType="com.suneee.smf.smf.model.SaleApplicationDO">
+    UPDATE smf_sale_application 
+    set 
+    state=#{state},cancelid=#{cancelid},cancelname=#{cancelname},canceldate=#{canceldate},time_stamp=current_timestamp(3)
+    where 
+    pk_sale_application = #{pk_sale_application} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+  </update>
+    
+  <update id="approve" parameterType="com.suneee.smf.smf.model.SaleApplicationDO">
+    UPDATE smf_sale_application 
+    set 
+    state=#{state},time_stamp=current_timestamp(3) 
+    where 
+    pk_sale_application = #{pk_sale_application} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+  </update>
+  
+  <!-- 修改企业结算单物流费和监管费 -->
+  <update id="altCost" parameterType="java.util.Map">
+    UPDATE smf_enterprise_settlement 
+    set 
+    logistics_cost=(#{logistics_cost}+coalesce(logistics_cost,0)),supervision_cost=(#{supervision_cost}+coalesce(supervision_cost,0))
+    where 
+    pk_enterprise = #{pk_enterprise}
+    <if test="enterpriseid != null">
+    	and enterpriseid = #{enterpriseid}
+    </if>
+  </update>
+  
+  <select id="getDOByPrimaryKey" parameterType="com.suneee.smf.smf.model.SaleApplicationDO" resultType="com.suneee.smf.smf.model.SaleApplicationVO">
+   	select *
+   	from smf_sale_application
+	where pk_sale_application=#{pk_sale_application}
+	<if test="enterpriseid != null">
+		and enterpriseid = #{enterpriseid}
+	</if> 
+  </select>
+  
+  <update id="update" parameterType="com.suneee.smf.smf.model.SaleApplicationDO">
+   	UPDATE smf_sale_application set 
+		code = #{code},
+		capital_application_code = #{capital_application_code},
+		pk_capital_application = #{pk_capital_application},
+		pk_enterprise_application = #{pk_enterprise_application},
+		enterprise_application_name = #{enterprise_application_name},
+		pk_enterprise_payment = #{pk_enterprise_payment},
+		enterprise_payment_name = #{enterprise_payment_name},
+		amount = #{amount},
+		payment_amount = #{payment_amount},
+		pk_currency = #{pk_currency},
+		currency_name = #{currency_name},
+		contact = #{contact},
+		contact_number = #{contact_number},
+		busi_date = #{busi_date},
+		state = #{state},
+		modiferid = #{modiferid},
+		modifername = #{modifername},
+		modefydate = #{modefydate},
+		enterpriseid = #{enterpriseid},
+		time_stamp = current_timestamp(3),
+		logistics_cost = #{logistics_cost},
+		supervision_cost = #{supervision_cost}
+   	where 
+   		pk_sale_application = #{pk_sale_application} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+  </update>
+  
+  <select id="countByCode" parameterType="com.suneee.smf.smf.model.SaleApplicationDO" resultType="java.lang.Long">
+        select count(0) from smf_sale_application where code = #{code} and enterpriseid = #{enterpriseid} and state != '已作废'
+        <if test="pk_sale_application != null">
+        	and pk_sale_application != #{pk_sale_application}
+        </if>
+   </select>
+   
+   <select id="checkSaleApplicationTimeStamp" parameterType="com.suneee.smf.smf.model.SaleApplicationDO" resultType="java.lang.Long" >
+        select 
+         count(0)
+        from smf_sale_application where pk_sale_application = #{pk_sale_application} and enterpriseid = #{enterpriseid}
+        and time_stamp = #{time_stamp}
+    </select>
+    
+    <update id="altState" parameterType="com.suneee.smf.smf.model.SaleApplicationDO">
+	    UPDATE smf_sale_application 
+	    set 
+	    state=#{state},time_stamp=current_timestamp(3) 
+	    where 
+	    pk_sale_application = #{pk_sale_application} 
+	    and enterpriseid = #{enterpriseid} 
+  	</update>
+  	
+  	<!-- 根据资金使用申请主键查询发货申请表中已发货状态的数量 -->
+  	<select id="countSendNumber" parameterType="com.suneee.smf.smf.model.SaleApplicationDO" resultType="java.lang.Double" >
+        select 
+         sum(ssi.number)
+        from smf_sale_application ssa left join smf_saleapplication_item ssi
+        on ssa.pk_sale_application = ssi.pk_sale_application
+        where 
+        ssa.enterpriseid = ssi.enterpriseid
+        and ssa.pk_capital_application = #{pk_capital_application} 
+        and ssa.state = #{state}
+        and ssa.enterpriseid = #{enterpriseid}
+    </select>
+  	
+</mapper>

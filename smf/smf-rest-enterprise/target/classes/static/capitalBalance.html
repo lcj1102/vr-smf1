@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>资金状态查询</title>
+</head>
+<body>
+	<div class="row">
+	    <div class="col-xs-12">
+	        <div id="level-manage-table"></div>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="col-xs-12">
+	        <div class="block full">
+	        	<div style="padding: 5px;">
+	        		<table>
+	        			<tr>
+	        				<td>
+								<div class="date-range" id="ds-date-range">
+						            <div class="input-group input-daterange" data-date-format="yyyy/mm/dd">
+						                <input type="text" id="startDate" name="example-daterange1"
+						                       class="form-control text-center" placeholder="开始日期">
+						                <span class="input-group-addon"><i class="fa fa-angle-right"></i></span>
+						                <input type="text" id="endDate" name="example-daterange2"
+						                       class="form-control text-center" placeholder="结束日期">
+						            </div>
+						        </div>
+							</td>
+	        				<td style="padding-left: 5px;">统计颗粒度</td>
+	        				<td style="padding-left: 3px;">
+	        					<select id="type">
+				        			<option value="HOUR">小时</option>
+				        			<option value="DAY">天</option>
+				        		</select>
+	        				</td>
+	        				<td style="padding-left: 5px;">
+	        					<a class="btn btn-primary btn-sm" id="serachCapitalBalance">查询</a>
+	        				</td>
+	        			</tr>
+	        		</table>
+	        	</div>
+				<div style="height: 340px;">
+		        	<table class="table table-striped table-vcenter table-bordered table-condensed table-hover  real-table dataTable no-footer">
+		        		<thead>
+		        			<tr>
+		        				<th align="center">序号</th>
+		        				<th align="center">统计时间</th>
+		        				<th align="center">结余金额</th>
+		        				<th align="center">币种</th>
+		        			</tr>
+		        		</thead>
+		        		<tbody id="capitalBalanceTbody">
+		        		
+		        		</tbody>
+		        	</table>
+				</div>
+		        <div id="capitalBalancePageTable" style="text-align:right ;">
+				</div>
+	        </div>
+	    </div>
+	</div>
+	<div class="row" style="padding-top: 15px;">
+		<div class="col-xs-12">
+			<div class="block">
+				<div class="block-content chart-content" style="margin-top: -35px;">
+					<div id="capital_balance_line" style="height:100%"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		$(function () {
+			//表格的属性对象，用于初始化表格的设置
+			$('.input-datepicker, .input-daterange').datepicker({weekStart: 1, language: "zh-CN"});
+	        //图表
+			var currentPage = 1;
+			var totalPageCount;
+			
+	        getCapitalBalanceData($("#startDate").val(),$("#endDate").val(),$("#type").val(),15,currentPage);
+	        lineChart($("#startDate").val(),$("#endDate").val(),$("#type").val());
+	        $("#serachCapitalBalance").click(function(){
+	        	getCapitalBalanceData($("#startDate").val(),$("#endDate").val(),$("#type").val(),15,1);
+	        	lineChart($("#startDate").val(),$("#endDate").val(),$("#type").val());
+			});
+			function getCapitalBalanceData(beginDate,endDate,type,length,pageNum) {
+				$.ajax({
+					type: "GET",
+					url: domaindata.product_smf_domain + "capitalBalance/capiBalanceList",
+					data: {
+						"beginDate": beginDate,
+						"endDate":endDate,
+						"type":type,
+						"length":length,
+						"pageNum":pageNum,
+					},
+					dataType: "json",
+					async :false,
+					success: function(data) {
+						console.log("*****************************");
+						console.log(data);
+						currentPage = pageNum;
+						totalPageCount = data.data[0].totalPageCount;
+						var caData = data.data[0].results;
+						var html = '';
+						if (caData.length == 0) {
+							html += '<tr role="row" class="odd">';
+							html += '<td colspan="4" align="center" class="sorting_1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">无可用数据</font></font></td>';
+							html += '</tr>'
+						} else {
+							$.each(caData,function(index,value){
+							     html = html + '<tr>';
+							     html = html + '<td align="center">'+(index+1+(pageNum-1)*length)+'</td>';
+							     html = html + '<td align="center">'+value.busi_time_str+'</td>';
+							     html = html + '<td align="center">'+value.amount+'</td>';
+							     html = html + '<td align="center">'+value.currency_name+'</td>';
+							     html = html + '</tr>';
+							});
+						}
+						$("#capitalBalanceTbody").html(html);
+						
+						//capitalBalancePageTable
+						var pageHtml = '';
+						if(data.data[0].results.length == 0){
+							pageHtml += '<h5 style="display: inline-block;vertical-align: middle;padding-right: 30px;">无可用数据</h5>'
+						}else{
+							pageHtml += '<h5 style="display: inline-block;vertical-align: middle;padding-right: 30px;">共'+data.data[0].totalCount+'条数据，总共'+data.data[0].totalPageCount+'页</h5>'
+						}
+						pageHtml += '<ul style="vertical-align: middle;" class="pagination">';
+						if(pageNum == 1){
+							pageHtml += ' <li class="disabled"> <a id="prev" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+						}else{
+							pageHtml += ' <li> <a id="prev" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+						}
+						if(data.data[0].results.length > 0){
+							for (var p = ((pageNum <= 5) ? 1 : pageNum - 5); p < pageNum; p++) {
+								pageHtml += '<li><a href="#">'+p+'</a></li>';
+							}
+							
+							pageHtml += '<li class="active"><a href="#">' + pageNum + '</a></li>';
+							
+							pageNum = Number(pageNum);
+							totalPageCount = Number(totalPageCount);
+							
+							for (var p = pageNum + 1; p <= ((pageNum + 4 >= totalPageCount) ? totalPageCount : pageNum + 5); p++) {
+								pageHtml += '<li><a href="#">' + p + '</a></li>';
+							}
+						}
+						if(pageNum == data.data[0].totalPageCount){
+							pageHtml += '<li class="disabled"><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
+						}else{
+							pageHtml += '<li><a id="next" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
+						}
+						pageHtml += '<li style="position: relative;">';
+                        pageHtml +=	'   <input type="text" style="float:left; height: 34px;border: 1px solid #ddd!important;padding-left: 3px;width: 60px;">';
+                        pageHtml += '   <a href="javascript: void(0)" style="margin-left: -1px;" id = "pageGo">go</a>';
+                        pageHtml += '</li>';
+						pageHtml += '</ul>'
+						$("#capitalBalancePageTable").html(pageHtml);
+						
+						
+						$("#capitalBalancePageTable li a").click(function(){
+// 							var index = $(this).parent().index();
+// 							console.log(index);
+							var pageNumStr = $(this).text();
+							if(isNaN(pageNumStr) || pageNumStr == currentPage){
+// 							if(index == 0 || index == (data.data[0].totalPageCount+1) || index == 6){
+								return;
+							}
+							getCapitalBalanceData($("#startDate").val(), $("#endDate").val(), $("#type").val(), 15, pageNumStr);
+						});
+						
+						if(currentPage > 1){
+							$("#prev").click(function(){
+								getCapitalBalanceData($("#startDate").val(),$("#endDate").val(),$("#type").val(),15,parseInt(currentPage)-1);
+							});
+						}
+						if(currentPage < data.data[0].totalPageCount){
+							$("#next").click(function(){
+								getCapitalBalanceData($("#startDate").val(),$("#endDate").val(),$("#type").val(),15,parseInt(currentPage)+1);
+							});
+						}
+						
+						$('#capitalBalancePageTable #pageGo').on({
+							'click': function(){
+								 var inPageNum = $(this).prev().val();
+								 if(!inPageNum){
+									 layer.msg('请输入前往页码');
+									 $(this).prev().val('').focus();
+									 return;
+								 }
+								 if(isNaN(inPageNum)){
+									 layer.msg('请输入输入合理的页码');
+									 $(this).prev().val('').focus();
+									 return;
+							     }
+								 if(inPageNum == currentPage){
+									 return;
+								 }
+								 if(inPageNum < 1 || inPageNum > totalPageCount){
+									 layer.msg('请输入输入合理的页码');
+									 $(this).prev().val('').focus();
+                                     return;
+								 }
+								 getCapitalBalanceData($("#startDate").val(), $("#endDate").val(), $("#type").val(), 15, inPageNum);
+							}
+						});
+					}
+				});
+			}
+			
+			function lineChart(beginDate,endDate,type) {
+				$.ajax({
+					type: "GET",
+					url: domaindata.product_smf_domain + "capitalBalance/balanceList",
+					data: {
+						"beginDateStr":beginDate,
+						"endDateStr":endDate,
+						"type":type
+					},
+					dataType: "json",
+					async :false,
+					success: function(data) {
+						debugger
+						console.log(data);
+						var result = data.data[0].results;
+						var date = [];
+						var data = [];
+						for (var a=0;a<result.length;a++) {
+							date.push(result[a].busi_time_str);
+							data.push(result[a].amount);
+						}
+						var myChart = echarts.init(document.getElementById('capital_balance_line'));
+			            var option2 = {
+			            		 tooltip: {
+			            		        trigger: 'axis',
+			            		        position: function (pt) {
+			            		            return [pt[0], '10%'];
+			            		        }
+			            		    },
+			            		    /* toolbox: {
+			            		        feature: {
+			            		            dataZoom: {
+			            		                yAxisIndex: 'none'
+			            		            },
+			            		            restore: {},
+			            		            saveAsImage: {}
+			            		        }
+			            		    }, */
+			            		    xAxis: {
+			            		        type: 'category',
+			            		        boundaryGap: false,
+			            		        data: date
+			            		    },
+			            		    yAxis: {
+			            		        type: 'value',
+			            		       
+			            		    },
+			            		    dataZoom: [{
+			            		        type: 'inside',
+			            		        start: 0,
+			            		        end: 100
+			            		    }, {
+			            		        start: 0,
+			            		        end: 10,
+			            		        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+			            		        handleSize: '80%',
+			            		        handleStyle: {
+			            		            color: '#fff',
+			            		            shadowBlur: 3,
+			            		            shadowColor: 'rgba(0, 0, 0, 0.6)',
+			            		            shadowOffsetX: 2,
+			            		            shadowOffsetY: 2
+			            		        }
+			            		    }],
+			            		    series: [
+			            		        {
+			            		            name:'结余',
+			            		            type:'line',
+			            		            smooth:true,
+			            		            symbol: 'none',
+			            		            sampling: 'average',
+			            		            itemStyle: {
+			            		                normal: {
+			            		                    color: 'rgb(255, 70, 131)'
+			            		                }
+			            		            },
+			            		            data: data
+			            		        }
+			            		    ]
+						};
+			            myChart.setOption(option2);
+					}
+		       	});
+			}
+		});
+	</script>
+</body>
+</html>

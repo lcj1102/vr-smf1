@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suneee.smf.smf.dao.DeliveryAdviceDao">
+	<resultMap id="BaseResultMap" type="com.suneee.smf.smf.model.DeliveryAdviceVO">
+	 	<id column="pk_delivery_advice" jdbcType="NUMERIC" property="pk_delivery_advice"/>
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="pk_enterprise" jdbcType="NUMERIC" property="pk_enterprise" />
+		<result column="enterprise_name" jdbcType="VARCHAR" property="enterprise_name" />
+		<result column="application_amount" jdbcType="NUMERIC" property="application_amount" />
+		<result column="amount" jdbcType="NUMERIC" property="amount" />
+		<result column="pk_currency" jdbcType="NUMERIC" property="pk_currency" />
+		<result column="currency_name" jdbcType="VARCHAR" property="currency_name" />
+		<result column="contact" jdbcType="VARCHAR" property="contact" />
+		<result column="contact_number" jdbcType="VARCHAR" property="contact_number" />
+		<result column="busi_date" jdbcType="TIMESTAMP" property="busi_date" />
+		<result column="state" jdbcType="VARCHAR" property="state" />
+		<result column="inputmanid" jdbcType="NUMERIC" property="inputmanid" />
+		<result column="inputmanname" jdbcType="VARCHAR" property="inputmanname" />
+		<result column="bookindate" jdbcType="TIMESTAMP" property="bookindate" />
+		<result column="modiferid" jdbcType="NUMERIC" property="modiferid" />
+		<result column="modifername" jdbcType="VARCHAR" property="modifername" />
+		<result column="modefydate" jdbcType="TIMESTAMP" property="modefydate" />
+		<result column="cancelid" jdbcType="NUMERIC" property="cancelid" />
+		<result column="cancelname" jdbcType="VARCHAR" property="cancelname" />
+		<result column="canceldate" jdbcType="TIMESTAMP" property="canceldate" />
+		<result column="enterpriseid" jdbcType="NUMERIC" property="enterpriseid" />
+		<result column="time_stamp" jdbcType="TIMESTAMP" property="time_stamp" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		pk_delivery_advice, code, name, pk_enterprise, enterprise_name,
+		application_amount,amount, pk_currency,currency_name,contact,
+		contact_number,busi_date,state, inputmanid,inputmanname,bookindate,modiferid,
+		modifername,modefydate,cancelid,cancelname,canceldate,enterpriseid,time_stamp
+	</sql>
+	<select id="queryByPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from smf_delivery_advice where 1=1
+		<if test="enterpriseid != null">
+			and enterpriseid = #{enterpriseid}
+		</if>
+		<if test="code != null and code !=''">
+          and code like concat('%',#{code},'%')
+      	</if>
+      	<if test="name != null and name !=''">
+          and name like concat('%',#{name},'%')
+      	</if>
+      	<if test="enterprise_name != null and enterprise_name !=''">
+          and enterprise_name like concat('%',#{enterprise_name},'%')
+      	</if>
+		<if test="state == null">
+          and state != '已作废'
+      	</if>
+      	<if test="starttime != null">
+          and busi_date &gt;= #{starttime}
+      	</if>
+        <if test="endtime !=null">
+          and busi_date &lt; #{endtime}
+        </if>
+		<if test="searchValue != null and searchValue !=''">
+      	  	and (code like concat('%',#{searchValue},'%')
+      	  		or name like concat('%',#{searchValue},'%')
+      	  		or enterprise_name like concat('%',#{searchValue},'%')
+      	  		or rtrim(CAST(application_amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+      	  		or rtrim(CAST(amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+      	  		or currency_name like concat('%',#{searchValue},'%')
+      	  		or contact like concat('%',#{searchValue},'%')
+      	  		or contact_number like concat('%',#{searchValue},'%')
+      	  		or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%') 
+      	  		or state like concat('%',#{searchValue},'%'))
+      	</if>
+		order by bookindate desc
+		limit #{pageSize} offset #{startNum}
+	</select>
+
+	<select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(*) from smf_delivery_advice where 1=1
+		<if test="enterpriseid != null">
+			and enterpriseid = #{enterpriseid}
+		</if>
+		<if test="code != null and code !=''">
+          and code like concat('%',#{code},'%')
+      	</if>
+      	<if test="name != null and name !=''">
+          and name like concat('%',#{name},'%')
+      	</if>
+      	<if test="enterprise_name != null and enterprise_name !=''">
+          and enterprise_name like concat('%',#{enterprise_name},'%')
+      	</if>
+		<if test="state == null">
+          and state != '已作废'
+      	</if>
+      	<if test="starttime != null">
+          and busi_date &gt;= #{starttime}
+      	</if>
+        <if test="endtime !=null">
+          and busi_date &lt; #{endtime}
+        </if>
+		<if test="searchValue != null and searchValue !=''">
+      	  	and (code like concat('%',#{searchValue},'%')
+      	  		or name like concat('%',#{searchValue},'%')
+      	  		or enterprise_name like concat('%',#{searchValue},'%')
+      	  		or rtrim(CAST(application_amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+      	  		or rtrim(CAST(amount as VARCHAR),'0') like concat('%',#{searchValue},'%')
+      	  		or currency_name like concat('%',#{searchValue},'%')
+      	  		or contact like concat('%',#{searchValue},'%')
+      	  		or contact_number like concat('%',#{searchValue},'%')
+      	  		or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%') 
+      	  		or state like concat('%',#{searchValue},'%'))
+      	</if>
+	</select>
+	<insert id="insert" parameterType="com.suneee.smf.smf.model.DeliveryAdviceVO" useGeneratedKeys="true" keyProperty="pk_delivery_advice">
+    	INSERT INTO smf_delivery_advice (
+			code,name,pk_enterprise,enterprise_name,application_amount,amount,pk_currency,currency_name,contact,contact_number,busi_date,
+			state,inputmanid,inputmanname,bookindate,enterpriseid,time_stamp
+		) VALUES (
+			#{code},#{name},#{pk_enterprise},#{enterprise_name},#{application_amount},#{amount},#{pk_currency},
+			#{currency_name},#{contact},#{contact_number},#{busi_date},#{state},#{inputmanid},
+			#{inputmanname},#{bookindate},#{enterpriseid},current_timestamp(3)
+		)
+    </insert>
+     <select id="getRestByPrimaryKey" parameterType="com.suneee.smf.smf.model.DeliveryAdviceDO" resultType="com.suneee.smf.smf.model.DeliveryAdviceVO">
+    	select
+		<include refid="Base_Column_List" />
+		from smf_delivery_advice
+		where pk_delivery_advice = #{pk_delivery_advice} and enterpriseid = #{enterpriseid}
+    </select>
+    <update id="update" parameterType="com.suneee.smf.smf.model.DeliveryAdviceVO">
+    	UPDATE smf_delivery_advice set
+			code = #{code},
+			name = #{name},
+			pk_enterprise = #{pk_enterprise},
+			enterprise_name = #{enterprise_name},
+			application_amount=#{application_amount},
+			amount = #{amount},
+			pk_currency = #{pk_currency},
+			currency_name = #{currency_name},
+			contact = #{contact},
+			contact_number = #{contact_number},
+			busi_date = #{busi_date},
+			state = #{state},
+			modiferid = #{modiferid},
+			modifername = #{modifername},
+			modefydate = #{modefydate},
+			enterpriseid = #{enterpriseid},
+			time_stamp=current_timestamp(3)
+    	where pk_delivery_advice = #{pk_delivery_advice} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+     <update id="delete" parameterType="com.suneee.smf.smf.model.DeliveryAdviceVO">
+    	UPDATE smf_delivery_advice set state=#{state},cancelid=#{cancelid},cancelname=#{cancelname},canceldate=#{canceldate},time_stamp=current_timestamp(3)
+    	where pk_delivery_advice = #{pk_delivery_advice} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+    <update id="approve" parameterType="com.suneee.smf.smf.model.DeliveryAdviceVO">
+    	UPDATE smf_delivery_advice set state=#{state},time_stamp=current_timestamp(3) where pk_delivery_advice = #{pk_delivery_advice} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </update>
+     <select id="checkDeliveryAdviceTimeStamp" parameterType="com.suneee.smf.smf.model.DeliveryAdviceDO" resultType="java.lang.Long" >
+        select 
+        count(0)
+        from smf_delivery_advice where pk_delivery_advice = #{pk_delivery_advice} and enterpriseid = #{enterpriseid}
+        and time_stamp = #{time_stamp}
+    </select>
+    <select id="countByCode" parameterType="java.util.Map" resultType="java.lang.Long">
+        select count(*) from smf_delivery_advice where code = #{code} and enterpriseid = #{enterpriseid}
+        <if test="pk_delivery_advice != null">
+        	and pk_delivery_advice != #{pk_delivery_advice}
+        </if>
+    </select>
+</mapper>

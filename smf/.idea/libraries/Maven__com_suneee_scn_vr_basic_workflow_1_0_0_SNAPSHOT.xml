@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.suneee.scn:vr-basic-workflow:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-basic-workflow/1.0.0-SNAPSHOT/vr-basic-workflow-1.0.0-20171218.081301-17.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-basic-workflow/1.0.0-SNAPSHOT/vr-basic-workflow-1.0.0-20171218.081301-17-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-basic-workflow/1.0.0-SNAPSHOT/vr-basic-workflow-1.0.0-20171218.081301-17-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.CapitalBalanceDao">
+	<resultMap id="BaseResultMap" type="com.suneee.smf.smf.model.CapitalBalanceVO">
+		<id column="pk_capital_balance" property="pk_capital_balance" />
+		<result column="busi_time" property="busi_time" />
+		<result column="amount" property="amount" />
+		<result column="pk_currency" property="pk_currency" />
+		<result column="currency_name" property="currency_name" />
+		<result column="state" property="state" />
+		<result column="enterpriseid" property="enterpriseid" />
+		<result column="time_stamp" property="time_stamp" />
+	</resultMap>
+
+	<select id="selectByPage" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<if test="type !=null and type == 'HOUR'">
+			to_char(busi_time,'yyyy-mm-dd HH24:MI:SS') as busi_time_str,
+		</if>
+		<if test="type !=null and type == 'DAY'">
+			to_char(busi_time,'yyyy-mm-dd') as busi_time_str,
+		</if>
+		<if test="type !=null and type == 'HOUR'">
+			amount,
+		</if>
+		<if test="type !=null and type == 'DAY'">
+			trunc(AVG(amount),4) as amount,
+		</if>
+		currency_name
+		from smf_capital_balance
+		where 1 = 1
+		<if test="beginDate != null">
+			and busi_time &gt;= #{beginDate}
+		</if>
+		<if test="endDate !=null">
+			and busi_time &lt;= #{endDate}
+		</if>
+		<if test="enterpriseid != null">
+			and enterpriseid = #{enterpriseid}
+		</if>
+		<if test="type !=null and type == 'DAY'">
+			group by to_char(busi_time,'yyyy-mm-dd'),currency_name
+		</if>
+		<if test="type !=null and type == 'DAY'">
+			order by to_char(busi_time,'yyyy-mm-dd') desc
+		</if>
+		<if test="type !=null and type == 'HOUR'">
+			order by busi_time desc
+		</if>
+		limit #{pageSize} offset #{startNum}
+	</select>
+
+	<select id="countByPage" resultType="java.lang.Long"
+		parameterType="java.util.Map">
+		<if test="type !=null and type == 'DAY'">
+			select count(*) from (
+		</if>
+		select count(*) from smf_capital_balance
+		where 1 = 1
+		<if test="beginDate != null">
+			and busi_time &gt;= #{beginDate}
+		</if>
+		<if test="endDate !=null">
+			and busi_time &lt;= #{endDate}
+		</if>
+		<if test="enterpriseid != null">
+			and enterpriseid = #{enterpriseid}
+		</if>
+		<if test="type !=null and type == 'DAY'">
+			group by to_char(busi_time,'yyyy-mm-dd')
+		</if>
+		<if test="type !=null and type == 'DAY'">
+			) t
+		</if>
+	</select>
+
+	<select id="balanceList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<if test="type !=null and type == 'HOUR'">
+			to_char(busi_time,'yyyy-mm-dd HH24:MI:SS') as busi_time_str,
+		</if>
+		<if test="type !=null and type == 'DAY'">
+			to_char(busi_time,'yyyy-mm-dd') as busi_time_str,
+		</if>
+		<if test="type !=null and type == 'HOUR'">
+			amount,
+		</if>
+		<if test="type !=null and type == 'DAY'">
+			trunc(AVG(amount),4) as amount,
+		</if>
+		currency_name
+		from smf_capital_balance
+		where 1 = 1
+		<if test="beginDate != null">
+			and busi_time &gt;= #{beginDate}
+		</if>
+		<if test="endDate !=null">
+			and busi_time &lt;= #{endDate}
+		</if>
+		<if test="enterpriseid != null">
+			and enterpriseid = #{enterpriseid}
+		</if>
+		<if test="type !=null and type == 'DAY'">
+			group by to_char(busi_time,'yyyy-mm-dd'),currency_name
+		</if>
+		<if test="type !=null and type == 'DAY'">
+			order by to_char(busi_time,'yyyy-mm-dd') 
+		</if>
+		<if test="type !=null and type == 'HOUR'">
+			order by busi_time 
+		</if>
+	</select>
+
+	<insert id="insertCapitalBalance" parameterType="com.suneee.smf.smf.model.CapitalBalanceDO"
+		useGeneratedKeys="true" keyProperty="pk_capital_balance">
+		INSERT INTO smf_capital_balance (
+		busi_time,amount,pk_currency,currency_name,state,
+		enterpriseid,time_stamp
+		) VALUES (
+		#{busi_time},#{amount},#{pk_currency},#{currency_name},#{state},
+		#{enterpriseid},CURRENT_TIMESTAMP(3)
+		)
+	</insert>
+
+</mapper>

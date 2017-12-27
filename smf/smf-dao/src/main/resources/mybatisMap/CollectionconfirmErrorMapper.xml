@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.CollConfirmErrDao">
+	<resultMap id="BaseResultMap"
+		type="com.suneee.smf.smf.model.CollectionconfirmErrorVO">
+		<id column="pk_collectionconfirm_error" property="pk_collectionconfirm_error" />
+		<result column="pk_collection_confirm" property="pk_collection_confirm" />
+		<result column="code" property="code" />
+		<result column="error_msg" property="error_msg" />
+		<result column="pk_enterprise_payment" property="pk_enterprise_payment" />
+		<result column="enterprise_payment_name" property="enterprise_payment_name" />
+		<result column="contact" property="contact" />
+		<result column="contact_number" property="contact_number" />
+		<result column="payment_method" property="payment_method" />
+		<result column="payment_billno" property="payment_billno" />
+		<result column="payment_account" property="payment_account" />
+		<result column="payment_bank" property="payment_bank" />
+		<result column="collection_amount" property="collection_amount" />
+		<result column="pk_currency" property="pk_currency" />
+		<result column="currency_name" property="currency_name" />
+		<result column="busi_date" property="busi_date" />
+		<result column="sourcebilltype" property="sourcebilltype" />
+		<result column="sourcebillid" property="sourcebillid" />
+		<result column="state" property="state" />
+		<result column="inputmanid" property="inputmanid" />
+		<result column="inputmanname" property="inputmanname" />
+		<result column="bookindate" property="bookindate" />
+		<result column="modiferid" property="modiferid" />
+		<result column="modifername" property="modifername" />
+		<result column="modefydate" property="modefydate" />
+		<result column="cancelid" property="cancelid" />
+		<result column="cancelname" property="cancelname" />
+		<result column="canceldate" property="canceldate" />
+		<result column="enterpriseid" property="enterpriseid" />
+		<result column="time_stamp" property="time_stamp" />
+	</resultMap>
+
+	<sql id="BaseDO_Column_List">
+		pk_collectionconfirm_error,pk_collection_confirm,code,error_msg,pk_enterprise_payment,
+		enterprise_payment_name,contact,contact_number,payment_method,payment_billno,payment_account,
+		payment_bank,collection_amount,pk_currency,currency_name,busi_date,sourcebilltype,sourcebillid,
+		state, inputmanid, inputmanname, bookindate, modiferid, modifername,modefydate,
+		cancelid, cancelname, canceldate, enterpriseid,time_stamp
+	</sql>
+
+	<select id="selectByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="BaseDO_Column_List" />
+		from smf_collectionconfirm_error
+		where 1 = 1
+		<if test="code != null">
+			and code like concat('%',#{code},'%')
+		</if>
+		<if test="enterprise_payment_name != null">
+			and enterprise_payment_name like concat('%',#{enterprise_payment_name},'%')
+		</if>
+		<if test="beginDateTS != null">
+			and time_stamp &gt;= #{beginDateTS}
+		</if>
+		<if test="endDateTS !=null">
+			and time_stamp &lt;= #{endDateTS}
+		</if>
+		<if test="beginDateBD != null">
+			and busi_date &gt;= #{beginDateBD}
+		</if>
+		<if test="endDateBD !=null">
+			and busi_date &lt;= #{endDateBD}
+		</if>
+		<if test="searchValue != null and searchValue !=''">
+			and (code like concat('%',#{searchValue},'%')
+			or error_msg like concat('%',#{searchValue},'%')
+			or enterprise_payment_name like concat('%',#{searchValue},'%')
+			or payment_method like concat('%',#{searchValue},'%')
+			or payment_bank like concat('%',#{searchValue},'%')
+			or RTRIM(CAST(collection_amount AS VARCHAR),'0') like concat('%',#{searchValue},'%')
+			or to_char(time_stamp,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+			or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+			or state like concat('%',#{searchValue},'%'))
+		</if>
+		<if test="state_new != null and state_end == null">
+			and state = #{state_new}
+		</if>
+		<if test="state_end != null and state_new == null">
+			and state = #{state_end}
+		</if>
+		<if test="enterpriseid != null">
+			and enterpriseid = #{enterpriseid}
+		</if>
+		order by busi_date desc
+		limit #{pageSize} offset #{startNum}
+	</select>
+
+	<select id="countByPage" resultType="java.lang.Long"
+		parameterType="java.util.Map">
+		select count(pk_collectionconfirm_error) from smf_collectionconfirm_error
+		where 1 = 1
+		<if test="code != null">
+			and code like concat('%',#{code},'%')
+		</if>
+		<if test="enterprise_payment_name != null">
+			and enterprise_payment_name like concat('%',#{enterprise_payment_name},'%')
+		</if>
+		<if test="beginDateTS != null">
+			and time_stamp &gt;= #{beginDateTS}
+		</if>
+		<if test="endDateTS !=null">
+			and time_stamp &lt;= #{endDateTS}
+		</if>
+		<if test="beginDateBD != null">
+			and busi_date &gt;= #{beginDateBD}
+		</if>
+		<if test="endDateBD !=null">
+			and busi_date &lt;= #{endDateBD}
+		</if>
+		<if test="searchValue != null and searchValue !=''">
+			and (code like concat('%',#{searchValue},'%')
+			or enterprise_payment_name like concat('%',#{searchValue},'%')
+			or to_char(time_stamp,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+			or to_char(busi_date,'yyyy-mm-dd') like concat('%',#{searchValue},'%')
+			or state like concat('%',#{searchValue},'%'))
+		</if>
+		<if test="state_new != null and state_end == null">
+			and state = #{state_new}
+		</if>
+		<if test="state_end != null and state_new == null">
+			and state = #{state_end}
+		</if>
+		<if test="enterpriseid != null">
+			and enterpriseid = #{enterpriseid}
+		</if>
+	</select>
+
+  <select id="getByPrimaryKey" parameterType="com.suneee.smf.smf.model.CollectionconfirmErrorDO" resultType="com.suneee.smf.smf.model.CollectionconfirmErrorVO">
+   	select *
+   	from smf_collectionconfirm_error
+	where code=#{code} and enterpriseid = #{enterpriseid}
+  </select>
+  
+	<insert id="insert" parameterType="com.suneee.smf.smf.model.CollectionconfirmErrorDO" useGeneratedKeys="true" keyProperty="pk_collectionconfirm_error">
+		INSERT INTO smf_collectionconfirm_error (
+			pk_collection_confirm,code,error_msg,pk_enterprise_payment,enterprise_payment_name,
+			contact,contact_number,payment_method,payment_billno,payment_account,payment_bank,
+			collection_amount,pk_currency,currency_name,busi_date,sourcebilltype,sourcebillid,
+			state,inputmanid,inputmanname,bookindate,enterpriseid,time_stamp
+		) VALUES (
+			#{pk_collection_confirm},#{code},#{error_msg},#{pk_enterprise_payment},#{enterprise_payment_name},
+			#{contact},#{contact_number},#{payment_method},#{payment_billno},#{payment_account},#{payment_bank},
+			#{collection_amount},#{pk_currency},#{currency_name},#{busi_date},#{sourcebilltype},#{sourcebillid},
+			#{state},#{inputmanid},#{inputmanname},#{bookindate},#{enterpriseid},CURRENT_TIMESTAMP(3)
+		)
+	</insert>
+  <delete id="deleteErrorDOList" parameterType="com.suneee.smf.smf.model.CollectionconfirmErrorVO" >
+   	delete
+   	from smf_collectionconfirm_error
+	where pk_collection_confirm=#{pk_collection_confirm} and enterpriseid = #{enterpriseid}
+  </delete>
+  <update id="update" parameterType="com.suneee.smf.smf.model.CollectionconfirmErrorVO">
+  	update smf_collectionconfirm_error SET error_msg=#{error_msg},time_stamp=CURRENT_TIMESTAMP(3) where pk_collection_confirm=#{pk_collection_confirm} and enterpriseid = #{enterpriseid}
+  </update>
+  
+   <update id="updateErrorState" parameterType="com.suneee.smf.smf.model.CollectionconfirmErrorVO">
+  	update smf_collectionconfirm_error 
+  	 SET state=#{state},
+  	 time_stamp=CURRENT_TIMESTAMP(3)
+  	 where pk_collection_confirm=#{pk_collection_confirm} 
+  	 	   and enterpriseid = #{enterpriseid}
+   </update>
+  
+
+	<select id = "getAllCollByPk"  resultType = "com.suneee.smf.smf.model.CollectionConfirmDO">
+		select * from 
+		smf_collection_confirm
+		where pk_collection_confirm = #{pk_collection_confirm} 
+	</select>
+	
+	<!-- 查出业务组织id 和对应的发货申请的发货申请企业主键    筛选发货申请的收款确认异常记录-->
+	<select id="selDisEnterAndApp" resultType="java.lang.String">
+	 select 
+	    DISTINCT bbb.enterpriseid||'_'||aaa.pk_enterprise_application as dkdkd
+		from  smf_collectionconfirm_error bbb left JOIN 
+		smf_sale_application aaa on aaa.pk_sale_application = bbb.sourcebillid  
+		where
+		 bbb."state" = '未处理'
+		AND bbb.sourcebilltype = '发货申请' 
+	</select>
+
+	<!-- 根据对应的业务组织id 和发货申请的企业主键  查出对应的一条收款确认异常的数据 -->
+	<select id="selCollErrorByEnter" resultType="com.suneee.smf.smf.model.CollectionconfirmErrorVO" parameterType="java.util.Map">
+	SELECT
+		scc.*
+		FROM
+			smf_collectionconfirm_error scc
+		LEFT JOIN smf_sale_application ssa ON ssa.pk_sale_application = scc.sourcebillid
+		WHERE
+			ssa.enterpriseid = #{enterpriseid}
+		AND ssa.pk_enterprise_application = #{pk_enterprise_application}
+		AND sourcebilltype = '发货申请'
+		ORDER BY
+			scc.busi_date ASC
+		LIMIT 1 OFFSET 0
+	</select>
+	<!-- 筛选资金注入合同的收款确认异常记录 -->
+	<select id = "getAllPriamryKey"  resultMap = "BaseResultMap">
+		select * from 
+		smf_collectionconfirm_error
+		where state = '未处理' and sourcebilltype = '资金注入' ORDER BY pk_collectionconfirm_error 
+	</select>
+	
+</mapper>

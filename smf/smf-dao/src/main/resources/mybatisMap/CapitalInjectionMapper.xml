@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suneee.smf.smf.dao.CapitalInjectionDao" >
+  
+	<select id="selectByExample" parameterType="java.util.Map" resultType="com.suneee.smf.smf.model.CapitalInjectionVO">
+		SELECT
+        *
+        FROM smf_capital_injection
+      	<where>
+			<if test="code != null and code !=''">
+			    and code like concat('%',#{code},'%')
+			</if>
+			<if test="name != null and name !=''">
+			    and name like concat('%',#{name},'%')
+			</if>
+			<if test="enterprise_application_name != null and enterprise_application_name !=''">
+			    and enterprise_application_name like concat('%',#{enterprise_application_name},'%')
+			</if>
+			<if test="beginForBusiDate != null">
+			   and busi_date &gt;= #{beginForBusiDate}
+			</if>
+			<if test="endForBusiDate !=null">
+			    and busi_date &lt; #{endForBusiDate}
+			</if>
+			<if test="state == null">
+			    and state != '已作废'
+			</if>
+			<if test="enterpriseid != null">
+			    and enterpriseid = #{enterpriseid}
+			</if>
+			<if test="searchValue != null and searchValue !=''">
+			     AND (code like concat('%',#{searchValue},'%')
+			     OR name like concat('%',#{searchValue},'%')
+			     OR enterprise_name like concat('%',#{searchValue},'%')
+			     OR to_char(busi_date, 'yyyy-MM-dd') like concat('%',#{searchValue},'%')
+			     OR to_char(amount, '99999999999.9999') like concat('%',#{searchValue},'%')
+			     OR currency_name like concat('%',#{searchValue},'%')
+			     OR to_char(repayment_term, 'yyyy-MM-dd') like concat('%',#{searchValue},'%')
+			     OR to_char(interest_rate, '9999.9999999999') like concat('%',#{searchValue},'%')
+			     OR address like concat('%',#{searchValue},'%')
+			     OR credit_code like concat('%',#{searchValue},'%')
+			     OR contact like concat('%',#{searchValue},'%')
+			     OR contact_number like concat('%',#{searchValue},'%')
+			     OR state like concat('%',#{searchValue},'%'))
+			</if>
+		</where>
+		ORDER BY bookindate desc
+		LIMIT #{pageSize} OFFSET #{startNum}
+    </select>
+    
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT count(*) FROM smf_capital_injection
+       <where>
+			<if test="code != null and code !=''">
+			    and code like concat('%',#{code},'%')
+			</if>
+			<if test="name != null and name !=''">
+			    and name like concat('%',#{name},'%')
+			</if>
+			<if test="enterprise_application_name != null and enterprise_application_name !=''">
+			    and enterprise_application_name like concat('%',#{enterprise_application_name},'%')
+			</if>
+			<if test="beginForBusiDate != null">
+			   and busi_date &gt;= #{beginForBusiDate}
+			</if>
+			<if test="endForBusiDate !=null">
+			    and busi_date &lt; #{endForBusiDate}
+			</if>
+			<if test="state == null">
+			    and state != '已作废'
+			</if>
+			<if test="enterpriseid != null">
+			    and enterpriseid = #{enterpriseid}
+			</if>
+			<if test="searchValue != null and searchValue !=''">
+			     AND (code like concat('%',#{searchValue},'%')
+			     OR name like concat('%',#{searchValue},'%')
+			     OR enterprise_name like concat('%',#{searchValue},'%')
+			     OR to_char(busi_date, 'yyyy-MM-dd') like concat('%',#{searchValue},'%')
+			     OR to_char(amount, '99999999999.9999') like concat('%',#{searchValue},'%')
+			     OR currency_name like concat('%',#{searchValue},'%')
+			     OR to_char(repayment_term, 'yyyy-MM-dd') like concat('%',#{searchValue},'%')
+			     OR to_char(interest_rate, '9999.9999999999') like concat('%',#{searchValue},'%')
+			     OR address like concat('%',#{searchValue},'%')
+			     OR credit_code like concat('%',#{searchValue},'%')
+			     OR contact like concat('%',#{searchValue},'%')
+			     OR contact_number like concat('%',#{searchValue},'%')
+			     OR state like concat('%',#{searchValue},'%'))
+			</if>
+		</where>
+    </select>
+    
+    <insert id="insert" parameterType="com.suneee.smf.smf.model.CapitalInjectionDO" useGeneratedKeys="true" keyProperty="pk_capital_injection">
+    	INSERT INTO smf_capital_injection (
+			code,
+			name,
+			pk_enterprise,
+			enterprise_name,
+			busi_date,
+			amount,
+			pk_currency,
+			currency_name,
+			repayment_term,
+			interest_rate,
+			address,
+			credit_code,
+			contact,
+			contact_number,
+			state,
+			inputmanid,
+			inputmanname,
+			bookindate,
+			enterpriseid,
+			time_stamp
+			
+		) VALUES (
+			#{code},
+			#{name},
+			#{pk_enterprise},
+			#{enterprise_name},
+			#{busi_date},
+			#{amount},
+			#{pk_currency},
+			#{currency_name},
+			#{repayment_term},
+			#{interest_rate},
+			#{address},
+			#{credit_code},
+			#{contact},
+			#{contact_number},
+			#{state},
+			#{inputmanid},
+			#{inputmanname},
+			#{bookindate},
+			#{enterpriseid},
+			current_timestamp(3)
+		)
+    </insert>
+    
+    <delete id="delete" parameterType="com.suneee.smf.smf.model.CapitalInjectionDO">
+    	UPDATE smf_capital_injection
+    	SET state=#{state},cancelid=#{cancelid},cancelname=#{cancelname},canceldate=#{canceldate},time_stamp=current_timestamp(3)
+    	where pk_capital_injection = #{pk_capital_injection} and enterpriseid = #{enterpriseid} and time_stamp = #{time_stamp}
+    </delete>
+    
+    <update id="update" parameterType="com.suneee.smf.smf.model.CapitalInjectionDO">
+    	UPDATE smf_capital_injection 
+    	SET 
+    		code = #{code},
+			name = #{name},
+			pk_enterprise = #{pk_enterprise},
+			enterprise_name = #{enterprise_name},
+			busi_date = #{busi_date},
+			amount = #{amount},
+			pk_currency = #{pk_currency},
+			currency_name = #{currency_name},
+			repayment_term = #{repayment_term},
+			interest_rate = #{interest_rate},
+			address = #{address},
+			credit_code = #{credit_code},
+			contact = #{contact},
+			contact_number = #{contact_number},
+			state = #{state},
+			modiferid = #{modiferid},
+			modifername = #{modifername},
+			modefydate = #{modefydate},
+			time_stamp = current_timestamp(3)
+			 
+    	WHERE pk_capital_injection = #{pk_capital_injection} AND enterpriseid = #{enterpriseid} AND time_stamp = #{time_stamp}
+    </update>
+    
+    <select id="getById" parameterType="com.suneee.smf.smf.model.CapitalInjectionDO" resultType="com.suneee.smf.smf.model.CapitalInjectionVO">
+    	SELECT *
+    	FROM smf_capital_injection
+		WHERE pk_capital_injection = #{pk_capital_injection}
+		<if test="enterpriseid != null">
+		 AND enterpriseid = #{enterpriseid}
+		</if>
+    </select>
+    
+    <select id="countByCode" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT count(*)
+        FROM smf_capital_injection
+        WHERE code = #{code} AND enterpriseid = #{enterpriseid}
+        <if test="pk_capital_injection != null">
+        	AND pk_capital_injection != #{pk_capital_injection}
+        </if>
+    </select>
+    
+    <update id="updateState" parameterType="com.suneee.smf.smf.model.CapitalInjectionDO">
+    	UPDATE smf_capital_injection 
+    	SET state=#{state},time_stamp=current_timestamp(3)
+    	WHERE pk_capital_injection = #{pk_capital_injection} AND enterpriseid = #{enterpriseid} AND time_stamp = #{time_stamp}
+    </update>
+    
+     <select id="checkTimeStamp" parameterType="com.suneee.smf.smf.model.CapitalInjectionDO" resultType="java.lang.Long" >
+        SELECT count(0)
+        FROM smf_capital_injection
+        WHERE pk_capital_injection = #{pk_capital_injection} AND enterpriseid = #{enterpriseid} AND time_stamp = #{time_stamp}
+    </select>
+    
+     <select id="selectByName" parameterType="java.util.Map" resultType="com.suneee.smf.smf.model.CapitalInjectionVO" >
+        select *
+        from smf_capital_injection 
+        where 1=1
+        <if test=" code != null">
+        	and code like concat('%',#{code},'%')
+        </if>
+        <if test="enterpriseid != null">
+        	and enterpriseid = #{enterpriseid}
+        </if>
+        <if test="state != null">
+        	and state = #{state}
+        </if>
+    </select>
+    
+     <select id="selectByCode" resultType="com.suneee.smf.smf.model.CapitalInjectionVO">
+    	 select * from smf_capital_injection where code = #{code} and enterpriseid = #{enterpriseid}
+    </select>
+</mapper>

@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>发货申请</title>
+		<style>
+			th {
+				text-align: center;
+			}
+			td select {
+				width: 100%;
+			}
+			th select {
+				width: 100%;
+			}
+			th select {
+				text-align: center;
+			}
+			#alertProductModel {
+				height: 26px !important;
+				vertical-align: middle;
+			}
+			#pk_product_model+input {
+				vertical-align: middle;
+			}
+			
+			.approved{
+	text-align:left;
+    padding-left:61px;
+    margin-bottom:10px;
+}
+
+.approvedBox{
+	padding-top:10px;
+	margin-bottom:20px;
+}
+
+.approvedLayer  input{
+	margin:0 5px;
+}
+.textareaBox{
+	width:75%;
+}
+		</style>
+	</head>
+
+	<body>
+		<div class="col-xs-12">
+			<div id="delivery-requistion-table"></div>
+		</div>
+		<!-- 新增、编辑页面 -->
+		<script id="addDeliveryReqTemp" type="text/html">
+			<div id="addDeliveryReqDlg" class="from_table_con">
+				<form id="deliveryReqForm" method="post" role="form">
+					<table cellpadding="0" cellspacing="0" class="from_table">
+						<tr>
+							<td>发货申请单号<label class="required">*</label></td>
+							<td>
+								<input type="hidden" class="form-control" id="pk_sale_application" name="pk_sale_application" value="{{if pk_sale_application != undefined}}{{pk_sale_application}}{{/if}}" title="{{if pk_sale_application != undefined}}{{pk_sale_application}}{{/if}}"/>
+								<input type="text" class="form-control" id="code" name="code" readonly="readonly" value="{{if code != undefined}}{{code}}{{/if}}" title="{{if code != undefined}}{{code}}{{/if}}"/>
+							</td>
+							<td>申请企业名称<label class="required">*</label></td>
+							<td>
+								<input type="hidden" name="pk_enterprise_application" id="pk_enterprise_application" value="{{if pk_enterprise_application!=undefined}}{{pk_enterprise_application}}{{/if}}" title="{{if pk_enterprise_application!=undefined}}{{pk_enterprise_application}}{{/if}}"/>
+								<input type="text" autocomplete="off" id="enterprise_application_name" name="enterprise_application_name" value="{{if enterprise_application_name != undefined}}{{enterprise_application_name}}{{/if}}" class="form-control deliReq_application_entry" title="{{if enterprise_application_name != undefined}}{{enterprise_application_name}}{{/if}}"/>
+							</td>
+							<td>资金使用申请单号<label class="required">*</label></td>
+							<td>
+								<input type="hidden" name="pk_capital_application" id="pk_capital_application" value="{{if pk_capital_application!=undefined}}{{pk_capital_application}}{{/if}}" title="{{if pk_capital_application!=undefined}}{{pk_capital_application}}{{/if}}"/>
+								<input type="text" autocomplete="off" class="form-control capital_application_entry" id="capital_application_code" name="capital_application_code" value="{{if capital_application_code != undefined}}{{capital_application_code}}{{/if}}" title="{{if capital_application_code != undefined}}{{capital_application_code}}{{/if}}"/>
+							</td>
+						</tr>
+						<tr>
+							<td>付款公司名称<label class="required">*</label></td>
+							<td>
+								<input type="hidden" name="pk_enterprise_payment" id="pk_enterprise_payment" value="{{if pk_enterprise_payment!=undefined}}{{pk_enterprise_payment}}{{/if}}" title="{{if pk_enterprise_payment!=undefined}}{{pk_enterprise_payment}}{{/if}}"/>
+								<input type="text" autocomplete="off" id="enterprise_payment_name" name="enterprise_payment_name" value="{{if enterprise_payment_name != undefined}}{{enterprise_payment_name}}{{/if}}" class="form-control" title="{{if enterprise_payment_name != undefined}}{{enterprise_payment_name}}{{/if}}"/>
+								<!--<input type="text" autocomplete="off" id="enterprise_payment_name" name="enterprise_payment_name" value="{{if enterprise_payment_name != undefined}}{{enterprise_payment_name}}{{/if}}" class="form-control deliReq_payment_entry" title="{{if enterprise_payment_name != undefined}}{{enterprise_payment_name}}{{/if}}"/>-->
+							</td>
+							<td>发货申请金额<label class="required">*</label></td>
+							<td>
+								<input type="number" class="form-control" id="amount" name="amount" value="{{if amount != undefined}}{{amount}}{{/if}}" title="{{if amount != undefined}}{{amount}}{{/if}}" readonly="readonly"/>
+							</td>
+							<td>支付货款金额</td>
+							<td>
+								<input type="number" class="form-control sum_payment_amount" id="payment_amount" name="payment_amount" value="{{if payment_amount != undefined}}{{payment_amount}}{{/if}}" title="{{if payment_amount != undefined}}{{payment_amount}}{{/if}}"/>
+							</td>
+						</tr>
+						<tr>
+							<td>币种<label class="required">*</label></td>
+							<td>
+								<input type="hidden" class="form-control" id="pk_currency" name="pk_currency" value="{{if pk_currency != undefined}}{{pk_currency}}{{/if}}" title="{{if pk_currency != undefined}}{{pk_currency}}{{/if}}"/>
+								<input type="text" class="form-control" id="currency_name" name="currency_name" value="{{if currency_name != undefined}}{{currency_name}}{{/if}}" readonly="readonly" title="{{if currency_name != undefined}}{{currency_name}}{{/if}}"/>
+							</td>
+							<td>申请企业联系人</td>
+							<td>
+								<input type="text" class="form-control" id="contact" name="contact" value="{{if contact != undefined}}{{contact}}{{/if}}" title="{{if contact != undefined}}{{contact}}{{/if}}" readonly="readonly" />
+							</td>
+							<td>联系人电话</td>
+							<td>
+								<input type="text" class="form-control" id="contact_number" name="contact_number" value="{{if contact_number != undefined}}{{contact_number}}{{/if}}" title="{{if contact_number != undefined}}{{contact_number}}{{/if}}" readonly="readonly" />
+							</td>
+						</tr>
+						<tr>
+							<td>申请日期<label class="required">*</label></td>
+							<td>
+								<div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+									<input type="text" class="form-control" id="busi_date" name="busi_date" value="{{if busi_date != undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}" title="{{if busi_date != undefined}}{{busi_date | dateFormat 'yyyy-MM-dd'}}{{/if}}"/>
+								</div>
+							</td>
+							<td>物流费用</td>
+							<td>
+								<input type="number" class="form-control sum_logistics_cost" id="logistics_cost" name="logistics_cost" value="{{if logistics_cost != undefined}}{{logistics_cost}}{{/if}}" title="{{if logistics_cost != undefined}}{{logistics_cost}}{{/if}}"/>
+							</td>
+							<td>监管费用</td>
+							<td>
+								<input type="number" class="form-control sum_supervision_cost" id="supervision_cost" name="supervision_cost" value="{{if supervision_cost != undefined}}{{supervision_cost}}{{/if}}" title="{{if supervision_cost != undefined}}{{supervision_cost}}{{/if}}"/>
+							</td>
+						</tr>
+						<tr>
+							<td>登记人姓名</td>
+							<td>
+								<input type="text" readonly="readonly" class="form-control" value="{{if inputmanname != undefined}}{{inputmanname}}{{/if}}" title="{{if inputmanname != undefined}}{{inputmanname}}{{/if}}"/>
+							</td>
+							<td>修改人姓名</td>
+							<td>
+								<input type="text" readonly="readonly" class="form-control" value="{{if modifername != undefined}}{{modifername}}{{/if}}" title="{{if modifername != undefined}}{{modifername}}{{/if}}"/>
+							</td>
+							<td>作废人姓名</td>
+							<td>
+								<input type="text" readonly="readonly" class="form-control" value="{{if cancelname != undefined}}{{cancelname}}{{/if}}" title="{{if cancelname != undefined}}{{cancelname}}{{/if}}"/>
+							</td>
+						</tr>
+						<tr>
+							<td>登记日期</td>
+							<td>
+								<input type="text" readonly="readonly" class="form-control" value="{{if bookindate != undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}" title="{{if bookindate != undefined}}{{bookindate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/>
+							</td>
+							<td>最后修改日期</td>
+							<td>
+								<input type="text" readonly="readonly" class="form-control" value="{{if modefydate != undefined}}{{modefydate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}" title="{{if modefydate != undefined}}{{modefydate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/>
+							</td>
+							<td>作废日期</td>
+							<td>
+								<input type="text" readonly="readonly" class="form-control" value="{{if canceldate != undefined}}{{canceldate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}" title="{{if canceldate != undefined}}{{canceldate | dateFormat 'yyyy-MM-dd hh:mm:ss'}}{{/if}}"/>
+							</td>
+						</tr>
+						<tr>
+							<td>状态</td>
+							<td>
+								<input type="text" readonly="readonly" class="form-control" id="state" name="state" value="{{if state != undefined}}{{state}}{{/if}}" title="{{if state != undefined}}{{state}}{{/if}}"/>
+								<input type="hidden" class="form-control" id="time_stamp" name="time_stamp" value="{{if time_stamp != undefined}}{{time_stamp}}{{/if}}" title="{{if time_stamp != undefined}}{{time_stamp}}{{/if}}"/>
+							</td>
+							<td col="4"></td>
+						</tr>
+					</table>
+					<hr style=" height:2px;border:none;border-top:2px ridge #185598;" />
+					<div style="overflow-y: auto;" class="form-group" id="deliveryReq_item">
+						<div class="form-group" style="overflow:auto;width: 1350px;">
+							<table cellpadding="0" cellspacing="0" class="table table-bordered">
+								<thead>
+									<tr>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:50px;">选择</th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:50px;">行号</th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:150px;">货物名称<label class="required">*</label></th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">货物规格</th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">产地</th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">品质</th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">包装形态</th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">计量单位名称</th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">数量<label class="required">*</label></th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">单价<label class="required">*</label></th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">金额<label class="required">*</label></th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">批号</th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">存储区域</th>
+										<th class="sorting_disabled" style="background:#b5d1f5;width:100px;">来源单据类型</th>
+									</tr>
+								</thead>
+								<tbody id="deliveryReqTbody">
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<hr style=" height:2px;border:none;border-top:2px ridge #185598;" />
+					<div class="form-group" align="center">
+						<input type="button" id="deleteLine" value="删除行" class="btn btn-primary" style="margin-left: 6px;margin-right: 6px;"/> 
+						<input type="button" id="savebtn" value="保存" class="btn btn-primary" style="margin-left: 6px;margin-right: 6px;"/>
+						<input type="button" id="submitbtn" value="保存并提交" class="btn btn-primary" style="margin-left: 6px;margin-right: 6px;"/>
+						<input type="button" id="printbtn" value="打印" class="btn btn-primary" style="margin-left: 6px;margin-right: 6px;"/>
+					</div>
+				</form>
+			</div>
+		</script>
+
+		<!-- 状态查询条件 -->
+		<script id="reqSearchTemp" type="text/html">
+			<div class="form-group">
+				<label class="col-xs-1 control-label"></label>
+				<div class="col-xs-10">
+					<div class="input-group input-daterange" data-date-format="yyyy-mm-dd">
+						<input type="text" id="beginDate" name="beginDate" class="form-control text-center" placeholder="开始日期">
+						<span class="input-group-addon">&lt;=申请日期&lt;=</span>
+						<input type="text" id="endDate" name="endDate" class="form-control text-center" placeholder="结束日期">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-3 control-label" style="margin-top: -5px;">
+				状态：
+			</label>
+				<div class="col-xs-9">
+					<input style="width:30px;position:relative;top:2px;" type="checkbox" name="state" />包含已作废
+				</div>
+			</div>
+		</script>
+
+				<script id="deliveryReqTemp" type="text/html">
+
+<div class="approvedLayer">
+		<div class="form-group approvedBox" align="center">
+			<div class="approved">审批意见：</div>	
+			<div class="textareaBox">
+				<textarea id="deliReqOption" rows='5' style="width:100%;resize:none;"></textarea>
+			</div>
+		</div>
+		<div class="form-group" align="center">
+			<div class="col-xs-12">
+				<input type="button" id="deliReqAgreebtn" value="审核通过" class="btn btn-primary" />
+				<input type="button" id="deliReqDisagreebtn" value="退回" class="btn btn-primary" />
+				<input type="button" id="deliReqRejectbtn" value="审核驳回" class="btn btn-primary" />
+				<input type="button" id="deliReqEndbtn" value="流程终止" class="btn btn-primary" />
+			</div>
+		</div>
+	</div>
+		</script>
+
+		<script type="text/javascript">
+			$(function() {
+				var checkdeliReqFlag = true;
+				function styleChange(obj) {
+					var config = {
+						layerHieght: obj.layerHieght || '', //弹出框高度
+						layerContentHieght: obj.layerContentHieght || '', //弹出框内容高度
+						scrollBox: obj.scrollBox, //滚动盒子  必填
+						scrollBoxHeight: obj.scrollBoxHeight || '190px', //滚动盒子高度 默认170px
+						scrollBoxBigHeight: obj.scrollBoxBigHeight || '420px', //滚动盒子变大后的高度 默认420px
+						scrollBoxHeader: obj.scrollBoxHeader || obj.scrollBox.find('tr').eq(0), //固定头部 不传默认滚动盒子第一个 tr
+						needHideBox: obj.needHideBox, //什么收缩盒子  必填
+						triangleTop: obj.triangleTop || '-37px', //三角top值 调节上下
+						cloverTop: obj.cloverTop || '-22px', //白色遮快top值 调节上下
+						triangleTop2: obj.triangleTop2 || '-39px', //三角top值 调节上下
+						cloverTop2: obj.cloverTop2 || '-45px', //白色遮快top值 调节上下
+					};
+					if(config.layerHieght){
+		    			$(".layui-layer-page").css({"height":config.layerHieght});
+		    		}
+		    		
+		    		
+		    		if(config.layerContentHieght){
+		    			$(".layui-layer-page .layui-layer-content").css({"height":config.layerContentHieght});
+		    		}
+					config.scrollBox.css({
+						"height": config.scrollBoxHeight,
+						"overflow": "scroll"
+					});
+					$("hr").eq(0).after("<div id='shrinkBtn'><div id='Triangle'></div><div id='clover'></div></div>");
+					$("#shrinkBtn").css({
+						"width": "100%",
+						"text-align": "center",
+						"position": "relative"
+					});
+					$('#Triangle').css({
+						"cursor": "pointer",
+						"width": "30px",
+						"height": "30px",
+						"position": "absolute",
+						"left": "50%",
+						"top": config.triangleTop,
+						"background": "#fff",
+						"border": "solid 2px #103d6f",
+						"transform": "translateX(-50%) rotate(45deg)",
+						"-ms-transform": "translateX(-50%) rotate(45deg)",
+						"-moz-transform": "translateX(-50%) rotate(45deg)",
+						"-webkit-transform": "translateX(-50%) rotate(45deg)",
+						"-o-transform": "translateX(-50%) rotate(45deg)"
+					});
+					$('#clover').css({
+						"width": "50px",
+						"height": "21px",
+						"position": "absolute",
+						"left": "50%",
+						"top": config.cloverTop,
+						"background": "#fff",
+						"transform": "translateX(-50%)",
+						"-ms-transform": "translateX(-50%)",
+						"-moz-transform": "translateX(-50%)",
+						"-webkit-transform": "translateX(-50%)",
+						"-o-transform": "translateX(-50%)"
+					});
+					function translate(el, y) {
+						el.css({
+							"transform": "translateY(" + y + ")",
+							"-ms-transform": "translateY(" + y + ")",
+							"-moz-transform": "translateY(" + y + ")",
+							"-webkit-transform": "translateY(" + y + ")",
+							"-o-transform": "translateY(" + y + ")"
+						});
+					}
+					config.scrollBox.scroll(function() {
+						var scrollTop = config.scrollBox.scrollTop() + "px";
+						translate(config.scrollBoxHeader, scrollTop);
+					});
+					var istable = true; //上面收缩盒子传的是table
+					if(config.needHideBox.find('table').length > 0) {
+						//上面收缩盒子不是table
+						istable = false;
+					}
+					var state = 1;
+					$("#shrinkBtn").on('click', function() {
+						if(state == 1) {
+							if(istable) {
+								config.needHideBox.css({
+									"height": "0px",
+									"overflow": "hidden",
+									"display": "block"
+								});
+							} else {
+								config.needHideBox.css({
+									"height": "0px",
+									"overflow": "hidden"
+								});
+							}
+							$("hr").eq(0).css({
+								"margin-top": "0px"
+							});
+							config.scrollBox.css({
+								"height": config.scrollBoxBigHeight,
+								"overflow": "scroll"
+							});
+							$("#Triangle").css({
+								"top": "-39px"
+							});
+							$("#clover").css({
+								"top": "-45px"
+							});
+							state = 2;
+						} else {
+							if(istable) {
+								config.needHideBox.css({
+									"height": "",
+									"display": 'table',
+									"overflow": "auto"
+								});
+							} else {
+								config.needHideBox.css({
+									"height": "0px",
+									"overflow": "hidden"
+								});
+							}
+							$("hr").eq(0).css({
+								"margin-top": "20px"
+							});
+							config.scrollBox.css({
+								"height": config.scrollBoxHeight,
+								"overflow": "scroll"
+							});
+							$("#Triangle").css({
+								"top": "-37px"
+							});
+							$("#clover").css({
+								"top": "-22px"
+							});
+							state = 1;
+						}
+					});
+				}
+				var option = {
+					plusBtn: [{
+						id: "level_edit", // 按钮的id
+						text: "编辑", // 显示的文字
+						clazz: "btn btn-primary btn-sm", // 按钮的class
+					}, {
+						id: "level_delete", // 按钮的id
+						text: "删除", // 显示的文字
+						clazz: "btn btn-primary btn-sm", // 按钮的class
+					}, {
+						id: "level_submit", // 按钮的id
+						text: "提交", // 显示的文字
+						clazz: "btn btn-primary btn-sm", // 按钮的class
+					}, {
+						id: "level_audit", // 按钮的id
+						text: "审核", // 显示的文字
+						clazz: "btn btn-primary btn-sm", // 按钮的class
+					}, {
+						id: "level_process", // 按钮的id
+						text: "流程进度", // 显示的文字
+						clazz: "btn btn-primary btn-sm", // 按钮的class
+					}, {
+						id: "level_reCollection", // 按钮的id
+						text: "收款", // 显示的文字
+						clazz: "btn btn-primary btn-sm", // 按钮的class
+					}],
+					onInit: function() {
+						$("#level_edit").on("click", function() {
+							if(checkdeliReqFlag) {
+								checkdeliReqFlag = false;
+								editstable(table, null, "", "");
+							}
+						});
+						$("#level_delete").on("click", function() {
+							if(checkdeliReqFlag) {
+								checkdeliReqFlag = false;
+								deletetable(table, null, "");
+							}
+						});
+						$("#level_submit").on("click", function() {
+							if(checkdeliReqFlag) {
+								checkdeliReqFlag = false;
+								submittable(table);
+							}
+						});
+						$("#level_audit").on("click", function() {
+							if(checkdeliReqFlag) {
+								checkdeliReqFlag = false;
+								audittable(table);
+							}
+						});
+						//收款
+						$("#level_reCollection").on("click", function() {
+							if(checkdeliReqFlag) {
+								checkdeliReqFlag = false;
+								reCollection(table);
+							}
+						});
+						$("#level_process").on("click", function() {
+							if(checkdeliReqFlag) {
+								checkdeliReqFlag = false;
+								approveLog(table);
+							}
+						});
+						$('#beginDate,.input-datepicker, .input-daterange').datepicker({
+							weekStart: 1,
+							language: "zh-CN"
+						});
+						$('#endDate,.input-datepicker, .input-daterange').datepicker({
+							weekStart: 1,
+							language: "zh-CN"
+						});
+					},
+					add: {
+						title: "发货申请", //窗口标题
+						id: "addDeliveryReqDlg", //窗口的ID,这里不能自己写，要跟窗口div的id相同
+						height: "600px",
+						width: "1000px",
+						templId: "addDeliveryReqTemp", //窗口内容的ID(即script标签的ID)
+						openCallback: function() { //点击事件，比如提交，关闭窗口等
+							$('.input-datepicker, .input-daterange').datepicker({
+								weekStart: 1,
+								language: "zh-CN"
+							});
+							$("#busi_date").val(new Date().Format("yyyy-MM-dd"));
+							$("#printbtn").remove();
+							capitalAutoComplete();
+							applicationAutoComplete();
+							autoNameValidate();
+							//数字输入框禁用滚轮方法
+							disableWheelDeliveryAdvice();
+							//去除输入框中的首尾空格
+							$(".form-control").on("blur", function(event) {
+								$(this).val($(this).val().trim());
+							});
+							//隐藏保存、保存并提交两个按钮
+							$("#savebtn").show();
+							$("#submitbtn").show();
+							$("#deleteLine").on("click", deleteLineTb);
+							$("#savebtn").on("click", function() {
+								$('#savebtn').attr("disabled", true);
+								addData(table, "insert");
+							});
+							$("#submitbtn").on("click", function() {
+								$('#submitbtn').attr("disabled", true);
+								addData(table, "insertAndSubmit");
+							});
+							styleChange({
+								scrollBox: $("#deliveryReq_item"),
+								needHideBox: $("#deliveryReqForm table").eq(0),
+								layerHieght: '650px',
+								layerContentHieght: "630px",
+								scrollBoxBigHeight: "480px"
+							});
+						},
+						btn: false
+					},
+					handleCol: true,
+					search: true,
+					tools: true,
+					detail: {
+						onclick: function(index, row) {
+							if(checkdeliReqFlag) {
+								checkdeliReqFlag = false;
+								itemtable(table, row, "row");
+							}
+						}
+					},
+					edit: {
+						onclick: function(index, row) {
+							if(checkdeliReqFlag) {
+								checkdeliReqFlag = false;
+								if(row.state != "新建") {
+									itemtable(table, row, "row");
+								} else {
+									editstable(table, row, "row", "");
+								}
+							}
+						}
+					},
+					del: {
+						onclick: function(index, row) {
+							if(checkdeliReqFlag) {
+								checkdeliReqFlag = false;
+								deletetable(table, row, "row");
+							}
+						}
+					},
+					seniorSearch: { // 高级搜索配置
+						formList: [{
+							filed: "发货申请单号",
+							name: "code"
+						}, {
+							filed: "申请企业名称",
+							name: "enterprise_application_name"
+						}, {
+							filed: "资金使用申请单号",
+							name: "capital_application_code"
+						}],
+						plusFiled: template("reqSearchTemp", {})
+					},
+					// 表格的头部，有多少列，就写多少
+					columns: [{
+						filed: "发货申请单主键",
+						name: "pk_sale_application"
+					}, {
+						filed: "发货申请单号",
+						name: "code"
+					}, {
+						filed: "资金使用申请单号",
+						name: "capital_application_code"
+					}, {
+						filed: "发货申请企业主键",
+						name: "pk_enterprise_application"
+					}, {
+						filed: "发货申请企业名称",
+						name: "enterprise_application_name"
+					}, {
+						filed: "申请日期",
+						name: "busi_date"
+					}, {
+						filed: "申请发货金额",
+						name: "amount"
+					}, {
+						filed: "物流费用",
+						name: "logistics_cost"
+					}, {
+						filed: "监管费用",
+						name: "supervision_cost"
+					}, {
+						filed: "支付货款金额",
+						name: "payment_amount"
+					}, {
+						filed: "付款公司名称",
+						name: "enterprise_payment_name"
+					}, {
+						filed: "状态",
+						name: "state"
+					}, {
+						filed: "时间戳",
+						name: "time_stamp"
+					}],
+					//渲染列信息
+					columnDefs: [{
+						render: function(data, type, row) { // 格式化 列
+							// 该列的原始数据是毫秒数   转成时间格式再渲染 .Format("yyyy-MM-dd")
+							var showDate = getFormatTimehhmmssFun(data);
+							return showDate;
+						},
+						targets: [7] // 第几列
+					}, {
+						render: function(data, type, row) { // 美化状态列
+							var changedData = beautifyStateColumn(data);
+							return changedData;
+						},
+						targets: [13]
+					}, {
+						render: function(data, type, row) {
+							var showCode = getFormatCode(data);
+							return showCode;
+						},
+						targets: [3]
+					}, {
+						"targets": [2, 5, 14],
+						"visible": false
+					}],
+
+					// 表格获取信息的后台服务器地址
+					url: domaindata.product_smf_domain + "saleApplication/list",
+					ajax: function(data, callback, settings) {
+						$.ajax({
+							type: "GET",
+							url: domaindata.product_smf_domain + "saleApplication/list",
+							data: {},
+							dataType: "json",
+							success: function(result) {
+								layer.msg("接口调用成功");
+								var finalData = result.data[0];
+								//封装返回数据
+								var returnData = {};
+								returnData.draw = data.draw; //自行返回draw参数,最好由后台返回
+								returnData.recordsTotal = finalData.totalCount;
+								returnData.recordsFiltered = finalData.pageSize;
+								returnData.data = finalData.results;
+								//调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+								//此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+								callback(returnData);
+							},
+							error: function(result) {
+								layer.msg("查询失败");
+							}
+						});
+					}
+				};
+				var table = suneeeUI.seTable("delivery-requistion-table", option);
+				//---------------------------------------工具函数区--------------------------------------begin
+				//时间格式化yyyy-mm-dd hh:mm:ss
+				function getFormatTimehhmmssFun(time) {
+					if(time == undefined || time == "") {
+						return "";
+					} else {
+						return new Date(time).Format("yyyy-MM-dd");
+					}
+				}
+				//自定义金额校验
+				jQuery.validator.addMethod("moneyLegal", function(value, element) {
+					var str = value.toString();
+					var flag = true;
+					//判断是否满足(20,2)
+					if(str.indexOf("\.") != -1) {
+						var len = str.length - str.indexOf("\.") - 1;
+						if(len > 2 || str.indexOf("\.") > 18) {
+							flag = false;
+						}
+					} else if(str.length > 18) {
+						flag = false;
+					}
+					return value >= 0 && flag;
+				}, "请正确填写金额");
+				//美化状态列
+				function beautifyStateColumn(state) {
+					if(state == undefined || state == "") {
+						return "";
+					}
+					var clazz = "";
+					var changedData = "";
+					if("新建" == state || "审核中" == state) {
+						clazz = "'label label-danger'";
+					} else if("已作废" == state || "审核拒绝" == state) {
+						clazz = "'label label-default'";
+					} else {
+						clazz = "'label label-primary'";
+					}
+					changedData = "<div align='center'><label style='display:inline-block;width:60px' class=" +
+						clazz + " >" + state + "</label></div>";
+					return changedData;
+				}
+				//格式化编码列的方法
+				function getFormatCode(data) {
+					if(data == undefined || data == "") {
+						return "";
+					} else {
+						return '<a class="saleApplicationCode" style="cursor:pointer">' + data + '</a>';
+					}
+				}
+				//数据校验
+				function dataValidate(fromID) {
+					var validate = $("#" + fromID).validate({
+						rules: { //校验规则
+							pk_enterprise_application: {
+								required: true
+							},
+							enterprise_application_name: {
+								required: true,
+								minlength: 0,
+								maxlength: 50
+							},
+							enterprise_payment_name: {
+								required: true,
+								minlength: 0,
+								maxlength: 50
+							},
+							busi_date: {
+								required: true
+							},
+							amount: {
+								moneyLegal: true
+							},
+							payment_amount: {
+								moneyLegal: true
+							},
+							logistics_cost: {
+								moneyLegal: true
+							},
+							supervision_cost: {
+								moneyLegal: true
+							},
+							currency_name: {
+								required: true,
+								minlength: 0,
+								maxlength: 50
+							}
+						},
+						messages: { //校验提示信息
+							pk_enterprise_application: {
+								required: "发货申请企业主键不能为空",
+							},
+							enterprise_application_name: {
+								required: "发货申请企业名称不能为空",
+								minlength: "发货申请企业名称长度不超过50字",
+								maxlength: "发货申请企业名称长度不超过50字"
+							},
+							enterprise_payment_name: {
+								required: "付款公司名称不能为空",
+								minlength: "付款公司名称长度不超过50字",
+								maxlength: "付款公司名称长度不超过50字"
+							},
+							busi_date: {
+								required: "业务日期不能为空",
+								/* dateLegal: "业务日期应早于当前日期" */
+							},
+							amount: {
+								moneyLegal: "金额不合法"
+							},
+							payment_amount: {
+								moneyLegal: "金额不合法"
+							},
+							logistics_cost: {
+								moneyLegal: "金额不合法"
+							},
+							supervision_cost: {
+								moneyLegal: "金额不合法"
+							},
+							currency_name: {
+								required: "币种不能为空",
+								minlength: "币种长度不超过15字",
+								maxlength: "币种长度不超过15字"
+							}
+						}
+					});
+					return validate.form();
+				}
+				//子单数据校验
+				function validateItemData(goodsList) {
+					debugger;
+					//校验细单数据是否为空
+					if(goodsList.length < 1) {
+						layer.msg("细单数据不能为空");
+						return false;
+					}
+					var positiveInt = /^[0-9]*[1-9][0-9]*$/;
+					var testNumber = /^[+]?\d{1,13}(\.\d{1,3})?$/;
+					var testPrice = /^[+]?\d{1,8}(\.\d{1,6})?$/;
+					var testMoney = /^[+]?\d{1,16}(\.\d{1,2})?$/;
+					for(var i = 0; i < goodsList.length; i++) {
+						var obj = goodsList[i];
+						//商品名称
+						if(obj.goods_name == '') {
+							layer.msg("商品名称不能为空");
+							return false;
+						} else {
+							if(obj.goods_name.length > 255) {
+								layer.msg("商品名称长度不能大于255字");
+								return false;
+							}
+						}
+						//规格
+						if(obj.spec != '') {
+							if(obj.spec.length > 255) {
+								layer.msg("规格长度不能大于255字");
+								return false;
+							}
+						}
+						//产地
+						if(obj.producing_area != '') {
+							if(obj.producing_area.length > 50) {
+								layer.msg("产地长度不能大于50字");
+								return false;
+							}
+						}
+						//品质
+						if(obj.quality != '') {
+							if(obj.quality.length > 255) {
+								layer.msg("品质长度不能大于255字");
+								return false;
+							}
+						}
+						//包装形态
+						if(obj.packing != '') {
+							if(obj.packing.length > 50) {
+								layer.msg("包装形态长度不能大于50字");
+								return false;
+							}
+						}
+						//计量单位形态
+						if(obj.measurement_name != '') {
+							if(obj.measurement_name.length > 20) {
+								layer.msg("计量单位长度不能大于20字");
+								return false;
+							}
+						}
+						//数量
+						if(obj.number == '') {
+							layer.msg("数量不能为空");
+							return false;
+						} else {
+							if(!testNumber.test(obj.number)) {
+								layer.msg("数量只能为最大13位整数,3位小数的浮点数");
+								return false;
+							}
+							if(obj.number > 9999999999999.999 || obj.number < -9999999999999.999) {
+								layer.msg("数量整数位最多为13位");
+								return false;
+							}
+							if(obj.number <= 0) {
+								layer.msg("发货申请数量应大于0");
+								return false;
+							}
+						}
+						//单价
+						if(obj.price == '') {
+							layer.msg("价格不能为空");
+							return false;
+						} else {
+							if(!testPrice.test(obj.price)) {
+								layer.msg("单价只能为最大8位整数，6位小数的浮点数");
+								return false;
+							}
+							if(obj.price > 99999999.999999 || obj.price < -99999999.999999) {
+								layer.msg("单价整数位最多为8位");
+								return false;
+							}
+						}
+						//金额
+						if(obj.money == '') {
+							layer.msg("金额不能为空");
+							return false;
+						}
+						if(obj.money != '') {
+							if(!testMoney.test(obj.money)) {
+								layer.msg("金额只能为最大16位整数，2位小数的浮点数");
+								return false;
+							}
+							if(obj.money > 9999999999999999.99 || obj.money < -9999999999999999.99) {
+								layer.msg("金额整数位最多为16位");
+								return false;
+							}
+						}
+						//批号
+						if(obj.batch_number != '') {
+							if(obj.batch_number.length > 50) {
+								layer.msg("批号长度不能大于50字");
+								return false;
+							}
+						}
+						//存储区域
+						if(obj.storage_location != '') {
+							if(obj.storage_location.length > 50) {
+								layer.msg("货位号长度不能大于50字");
+								return false;
+							}
+						}
+					}
+					return true;
+				}
+				//新增数据事件
+				function addData(tableObj, type) {
+					//验证数据
+					if(!dataValidate("deliveryReqForm")) {
+						//设置表单状态为可提交
+						$('#savebtn').attr("disabled", false);
+						$('#submitbtn').attr("disabled", false);
+						return;
+					}
+					//发货申请金额应该与支付货款金额+物流费用+管理费用相等
+					if($("#payment_amount").val() == "") {
+						$("#payment_amount").val(0.00);
+					}
+					if($("#logistics_cost").val() == "") {
+						$("#logistics_cost").val(0.00);
+					}
+					if($("#supervision_cost").val() == "") {
+						$("#supervision_cost").val(0.00);
+					}
+					if($('#amount').val() != parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())) {
+						layer.msg("发货申请金额应该与支付货款金额加物流费用加管理费用相等");
+						//设置表单状态为可提交
+						$('#savebtn').attr("disabled", false);
+						$('#submitbtn').attr("disabled", false);
+						return;
+					}
+					//申请发货金额不能小于表体明细行的货物金额
+					var totalMoney = 0.0;
+					$(".deliReq_item_money_number").each(function() {
+						var value = $(this).val();
+						if(value != "" && value != null) {
+							totalMoney += Number($(this).val());
+						}
+					});
+					if($('#amount').val() < totalMoney) {
+						layer.msg("申请发货金额不能小于表体明细行的货物金额");
+						//设置表单状态为可提交
+						$('#savebtn').attr("disabled", false);
+						$('#submitbtn').attr("disabled", false);
+						return;
+					}
+					var saleApplicationList = getTbodyJsonDataById("deliveryReqForm");
+					//设置数据
+					var data = {
+						'insertDO': saleApplicationList
+					};
+					//校验子表数据
+					if(!validateItemData(saleApplicationList[0].itemList)) {
+						$('#savebtn').attr("disabled", false);
+						$('#submitbtn').attr("disabled", false);
+						return;
+					}
+					data.saveType = type;
+					$.ajax({
+						type: "POST",
+						data: JSON.stringify(data),
+						url: domaindata.product_smf_domain + "saleApplication/insertDO",
+						dataType: "json",
+						contentType: "application/json;charset=utf-8",
+						async: true,
+						success: function(data) {
+							if(data.code == '1') {
+								tableObj.reload();
+								// 关闭窗口
+								layer.closeAll();
+								layer.close(layer.index);
+
+							} else {
+								//设置表单状态为可提交
+								$('#savebtn').attr("disabled", false);
+								$('#submitbtn').attr("disabled", false);
+							}
+							layer.msg(data.msg);
+						},
+						error: function(data) {
+							layer.msg(data.msg);
+							console.log(e);
+							//设置表单状态为可提交
+							$('#savebtn').attr("disabled", false);
+							$('#submitbtn').attr("disabled", false);
+						}
+					});
+				}
+				//点击编码查询详情
+				$("#delivery-requistion-table table.real-table").on("click", ".saleApplicationCode", function() {
+					if(checkdeliReqFlag) {
+						checkdeliReqFlag = false;
+						var index = $(".saleApplicationCode").index(this);
+						var rowData = table.option.data[index];
+						itemtable(table, rowData, "row");
+					}
+					return false;
+				});
+				//查询数据
+				function itemtable(tableObj, defaultRow, handleType) {
+					if("row" == handleType) {
+						row = defaultRow;
+					} else {
+						var rows = tableObj.getSelectRow();
+						if(rows.length != 1) {
+							checkdeliReqFlag = true;
+							layer.alert("请选择1条记录！");
+						} else {
+							row = rows[0].data;
+						}
+					}
+					$.ajax({
+						type: "GET",
+						url: domaindata.product_smf_domain + "saleApplication/getDOByPrimaryKey",
+						data: {
+							"pk_sale_application": row.pk_sale_application
+						},
+						dataType: "json",
+						async: true,
+						success: function(data) {
+							/* data.data[0].bookindate = new Date(data.data[0].bookindate).Format("yyyy-MM-dd hh:mm:ss"); */
+							var editTempl = template("addDeliveryReqTemp", data.data[0]);
+							var index = layer.open({
+								type: 1,
+								id: "deliReqEditWin",
+								title: "查询详情",
+								area: ['1100px', '600px'], //宽高
+								content: editTempl,
+								success: function() {
+									checkdeliReqFlag = true;
+									editDeliReqItem(data.data[0].itemList, "edit");
+									$('.input-datepicker, .input-daterange').datepicker({
+										weekStart: 1,
+										language: "zh-CN"
+									});
+									$("#deleteLine").remove();
+									$("#savebtn").remove();
+									$("#submitbtn").remove();
+									$('#deliveryReqForm input').attr("readonly", "readonly");
+									$('#deliveryReqForm select').attr("disabled", "disabled");
+									$('#deliveryReqForm textarea').attr("readonly", "readonly");
+									$('#deliveryReqTbody input').attr("readonly", "readonly");
+									$("#printbtn").on("click", function() {
+										printSelect();
+									});
+									styleChange({
+										scrollBox: $("#deliveryReq_item"),
+										needHideBox: $("#deliveryReqForm table").eq(0),
+										layerHieght: '650px',
+										layerContentHieght: "630px",
+										scrollBoxBigHeight: "480px"
+									});
+								},
+								yes: function() {
+									layer.close(index);
+								}
+							});
+						}
+					});
+				}
+				//编辑按钮
+				//handleType:区分操作是否是在操作列中的按钮进行
+				//openType：区分操作列的详情和编辑图标按钮
+				function editstable(tableObj, defaultRow, handleType, openType) {
+					if("row" == handleType) {
+						edits(defaultRow, tableObj, openType);
+					} else {
+						row = tableObj.getSelectRow();
+						if(row.length == 1) {
+							edits(row[0].data, tableObj, openType);
+						} else {
+							checkdeliReqFlag = true;
+							layer.alert("请选择1条记录！");
+						}
+					}
+				}
+				//编辑
+				function edits(row, table, openType) {
+					$.ajax({
+						type: "GET",
+						url: domaindata.product_smf_domain + "saleApplication/getDOByPrimaryKey",
+						data: {
+							"pk_sale_application": row.pk_sale_application
+						},
+						dataType: "json",
+						async: true,
+						success: function(data) {
+							/* data.data[0].bookindate = new Date(data.data[0].bookindate).Format("yyyy-MM-dd hh:mm:ss"); */
+							var editTempl = template("addDeliveryReqTemp", data.data[0]);
+							var index = layer.open({
+								type: 1,
+								id: "deliReqEditWin",
+								title: "编辑",
+								area: ['1100px', '600px'], //宽高
+								content: editTempl,
+								success: function() {
+									debugger;
+									checkdeliReqFlag = true;
+
+									editDeliReqItem(data.data[0].itemList, "edit");
+
+									if(data.data[0].state != '新建' || "detail" == openType) {
+										$("#deleteLine").remove();
+										$("#savebtn").remove();
+										$("#submitbtn").remove();
+										$('#deliveryReqForm input').attr("readonly", "readonly");
+										$('#deliveryReqForm select').attr("disabled", "disabled");
+										$('#deliveryReqForm textarea').attr("readonly", "readonly");
+										$('#deliveryReqTbody input').attr("readonly", "readonly");
+									} else {
+										applicationAutoComplete();
+										autoNameValidate();
+										capitalAutoComplete();
+										//数字输入框禁用滚轮方法
+										disableWheelDeliveryAdvice();
+										$(".form-control").on("blur", function(event) { //去除输入框中的首尾空格
+											$(this).val($(this).val().trim());
+										});
+										$('.input-datepicker, .input-daterange').datepicker({
+											weekStart: 1,
+											language: "zh-CN"
+										});
+										$('#amount').val((parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())).toFixed(2));
+										
+										$("#payment_amount").blur(function() {
+												$('#amount').val((parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())).toFixed(2));
+										});
+										$("#logistics_cost").blur(function() {
+												$('#amount').val((parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())).toFixed(2));
+										});
+										$("#supervision_cost").blur(function() {
+												$('#amount').val((parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())).toFixed(2));
+										});
+									}
+									if(data.data[0].state == '新建') {
+										$("#printbtn").remove();
+									}
+									$("#deleteLine").on("click", deleteLineTb);
+									$("#savebtn").on("click", function() {
+										$('#savebtn').attr("disabled", true); //禁用保存按钮
+										if(!dataValidate("deliveryReqForm")) //验证数据
+										{
+											$('#savebtn').attr("disabled", false); //设置表单状态为可提交
+											return;
+										}
+										save(table, "save");
+									});
+									$("#submitbtn").on("click", function() {
+										$('#submitbtn').attr("disabled", true);
+										if(!dataValidate("deliveryReqForm")) //验证数据
+										{
+											$('#submitbtn').attr("disabled", false); //设置表单状态为可提交
+											return;
+										}
+										save(table, "saveAndSubmit");
+									});
+									$("#printbtn").on("click", function() {
+										printSelect();
+									});
+									styleChange({
+										scrollBox: $("#deliveryReq_item"),
+										needHideBox: $("#deliveryReqForm table").eq(0),
+										layerHieght: '630px',
+										layerContentHieght: "610px",
+										scrollBoxBigHeight: "432px"
+									});
+								},
+								yes: function() {
+									layer.close(index);
+								}
+							});
+						}
+					});
+				}
+				//打印方法
+				function printSelect() {
+					var sdf = $("#addDeliveryReqDlg");
+					var temp = $("#addDeliveryReqDlg").clone();
+					winname = window.open('', "_blank", '');
+					winname.document.body.innerHTML = sdf["0"].innerHTML;
+					var body = $(winname.document.body);
+					body.find("#deliveryApplication").css({
+						"width": "100%"
+					});
+					body.find("#deliveryApplication table").css({
+						"width": "100%"
+					});
+					body.find("#deliveryReq_item").parent().css({
+						"width": "100%"
+					});
+					body.find("#deliveryReq_item").css({
+						"width": "100%"
+					});
+					body.find(".sorting_disabled").css({
+						"width": ""
+					});
+					body.find('hr').css({
+						"margin": "20px 0px"
+					}); //给hr加上下margin
+					body.find('#clover').remove(); //隐藏遮快
+					body.find("#Triangle").remove(); //隐藏箭头
+					body.find('#deliveryReq_item').css({
+						"overflow": "",
+						"height": ""
+					}); //取消滚动盒子
+					body.find('#deliveryReq_item tr').eq(0).css({
+						"transform": "",
+						"-ms-transform": "",
+						"-moz-transform": "",
+						"-webkit-transform": "",
+						"-o-transform": ""
+					}); //取消固定表头
+					winname.print();
+					winname.close();
+				}
+				//确认保存方法
+				function save(tableObj, type) {
+					if(!dataValidate("deliveryReqForm")) {
+						//设置表单状态为可提交
+						$('#savebtn').attr("disabled", false);
+						$('#submitbtn').attr("disabled", false);
+						return;
+					}
+					//发货申请金额应该与支付货款金额+物流费用+管理费用相等
+					if($("#payment_amount").val() == "") {
+						$("#payment_amount").val(0.00);
+					}
+					if($("#logistics_cost").val() == "") {
+						$("#logistics_cost").val(0.00);
+					}
+					if($("#supervision_cost").val() == "") {
+						$("#supervision_cost").val(0.00);
+					}
+					if($('#amount').val() != parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())) {
+						layer.msg("发货申请金额应该与支付货款金额加物流费用加管理费用相等");
+						//设置表单状态为可提交
+						$('#savebtn').attr("disabled", false);
+						$('#submitbtn').attr("disabled", false);
+						return;
+					}
+					//申请发货金额不能小于表体明细行的货物金额
+					var totalMoney = 0.0;
+					$(".deliReq_item_money_number").each(function() {
+						var value = $(this).val();
+						if(value != "" && value != null) {
+							totalMoney += Number($(this).val());
+						}
+					});
+					if($('#amount').val() < totalMoney) {
+						layer.msg("申请发货金额不能小于表体明细行的货物金额");
+						//设置表单状态为可提交
+						$('#savebtn').attr("disabled", false);
+						$('#submitbtn').attr("disabled", false);
+						return;
+					}
+					var saleApplicationList = getTbodyJsonDataById("deliveryReqForm");
+					//设置数据
+					var data = {
+						'insertDO': saleApplicationList
+					};
+					//校验子表数据
+					if(!validateItemData(saleApplicationList[0].itemList)) {
+						$('#savebtn').attr("disabled", false);
+						$('#submitbtn').attr("disabled", false);
+						return;
+					}
+					data.saveType = type;
+					$.ajax({
+						type: "POST",
+						url: domaindata.product_smf_domain + "saleApplication/update",
+						data: JSON.stringify(data),
+						dataType: "json",
+						contentType: "application/json;charset=utf-8",
+						async: true,
+						success: function(data) {
+							if(data.code == '1') {
+								tableObj.reload();
+								layer.closeAll();
+								layer.close(layer.index);
+							} else {
+								$('#savebtn').attr("disabled", false);
+								$('#submitbtn').attr("disabled", false);
+							}
+							layer.msg(data.msg);
+						},
+						error: function(data) {
+							layer.msg(data.msg);
+							$('#savebtn').attr("disabled", false);
+							$('#submitbtn').attr("disabled", false);
+						}
+					});
+				}
+				//删除
+				function deletetable(tableObj, defaultRow, handleType) {
+					if("row" == handleType) {
+						if(defaultRow.state != '新建') {
+							checkdeliReqFlag = true;
+							layer.msg(defaultRow.state + "数据不能删除，请重新选择！");
+							return;
+						}
+						checkdeliReqFlag = true;
+						layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', {
+								btn: ['确定', '取消']
+							},
+							function() {
+								deleteSelect(defaultRow, tableObj, handleType);
+							},
+							function() {});
+					} else {
+						var rows = tableObj.getSelectRow();
+						if(rows.length > 0) {
+							for(var i = 0; i < rows.length; i++) {
+								if(rows[i].data.state != "新建") {
+									checkdeliReqFlag = true;
+									layer.msg(rows[i].data.state + "数据不能删除，请重新选择！");
+									return;
+								}
+							}
+							checkdeliReqFlag = true;
+							layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', {
+								btn: ['确定', '取消']
+							}, function() {
+								console.log(rows[0].data);
+								deleteSelect(rows, tableObj, handleType);
+							}, function() {
+
+							});
+						} else {
+							checkdeliReqFlag = true;
+							layer.alert("请选择删除数据！");
+						}
+					}
+				}
+				//批量删除
+				function deleteSelect(row, tableObj, handleType) {
+					var arr = [];
+					var metadata = {};
+					if("row" == handleType) {
+						metadata["pk_sale_application"] = row.pk_sale_application;
+						metadata["time_stamp"] = row.time_stamp;
+						arr.push(metadata);
+					} else {
+						for(var i = 0; i < row.length; i++) {
+							metadata = {};
+							metadata["pk_sale_application"] = row[i].data.pk_sale_application;
+							metadata["time_stamp"] = row[i].data.time_stamp;
+							if(row[i].data.state != "已作废" && row[i].data.state != "已归档") {
+								arr.push(metadata);
+							}
+						}
+					}
+					var data = {
+						'insertDO': arr
+					};
+					$.ajax({
+						type: "POST",
+						url: domaindata.product_smf_domain + "saleApplication/delete",
+						data: JSON.stringify(data),
+						dataType: "json",
+						contentType: "application/json;charset=utf-8",
+						async: true,
+						success: function(data) {
+							if(data.code == '1') {
+								tableObj.reload();
+								layer.msg(data.msg);
+							} else {
+								layer.msg(data.msg);
+							}
+						}
+					});
+				}
+				//首页提交进入流程按钮响应事件
+				function submittable(tableObj) {
+					var rows = tableObj.getSelectRow();
+					if(rows.length == 0) {
+						checkdeliReqFlag = true;
+						layer.alert("请选择提交数据！");
+						return;
+					}
+					if(rows.length > 1) {
+						checkdeliReqFlag = true;
+						layer.alert("每次只能提交一条记录！");
+						return;
+					}
+					if(rows.length == 1) {
+						if(rows[0].data.state != "新建") {
+							checkdeliReqFlag = true;
+							layer.alert(rows[0].data.state + "数据不能提交！");
+							return;
+						}
+						//判断当前登录人是否有改数据的审批权限
+						$.ajax({
+							type: "POST",
+							url: domaindata.product_smf_domain + "saleApplication/submitModel",
+							data: JSON.stringify(rows[0].data),
+							dataType: "json",
+							contentType: "application/json;charset=utf-8",
+							async: true,
+							success: function(data) {
+								checkdeliReqFlag = true;
+								if(data.code == '1') {
+									tableObj.reload();
+									layer.msg(data.msg);
+								} else {
+									layer.msg(data.msg);
+								}
+							},
+							error: function() {
+								checkdeliReqFlag = true;
+							}
+						});
+					} else {
+						checkdeliReqFlag = true;
+						layer.alert("请选择一条数据！");
+					}
+				}
+				//审核,state=0,删除;state=1,正常未审核;state=2,已审核
+				function audittable(tableObj) {
+					var rows = tableObj.getSelectRow();
+					if(rows.length == 1) {
+						if(rows[0].data.state != "审核中") {
+							checkdeliReqFlag = true;
+							layer.msg(rows[0].data.state + "数据不能审核");
+							return;
+						}
+						var selectedRow = rows[0].data;
+						$.ajax({
+							type: "POST",
+							url: domaindata.product_smf_domain + "saleApplication/checkApproveById",
+							data: JSON.stringify(selectedRow),
+							dataType: "json",
+							contentType: "application/json;charset=utf-8",
+							async: true,
+							success: function(ResultMsg) {
+								checkdeliReqFlag = true;
+								if(ResultMsg.code == '1') {
+									var approveTempl = template("deliveryReqTemp", {});
+									var index = layer.open({
+										type: 1,
+										title: "审核",
+										area: ['500px', '260px'], //宽高
+										content: approveTempl,
+										success: function() {
+											$('#deliReqAgreebtn').attr("disabled", false);
+											$('#deliReqDisagreebtn').attr("disabled", false);
+											$('#deliReqRejectbtn').attr("disabled", false);
+											$('#deliReqEndbtn').attr("disabled", false);
+
+											$("#deliReqAgreebtn").on("click", function() {
+												$('#deliReqAgreebtn').attr("disabled", true);
+												$('#deliReqDisagreebtn').attr("disabled", true);
+												$('#deliReqRejectbtn').attr("disabled", true);
+												$('#deliReqEndbtn').attr("disabled", true);
+												auditSelect(selectedRow, tableObj, "agree");
+											});
+
+											$("#deliReqDisagreebtn").on("click", function() {
+												$('#deliReqAgreebtn').attr("disabled", true);
+												$('#deliReqDisagreebtn').attr("disabled", true);
+												$('#deliReqRejectbtn').attr("disabled", true);
+												$('#deliReqEndbtn').attr("disabled", true);
+												auditSelect(selectedRow, tableObj, "disagree");
+											});
+											$("#deliReqRejectbtn").on("click", function() {
+												$('#deliReqAgreebtn').attr("disabled", true);
+												$('#deliReqDisagreebtn').attr("disabled", true);
+												$('#deliReqRejectbtn').attr("disabled", true);
+												$('#deliReqEndbtn').attr("disabled", true);
+												auditSelect(selectedRow, tableObj, "reject");
+											});
+											$("#deliReqEndbtn").on("click", function() {
+												$('#deliReqAgreebtn').attr("disabled", true);
+												$('#deliReqDisagreebtn').attr("disabled", true);
+												$('#deliReqRejectbtn').attr("disabled", true);
+												$('#deliReqEndbtn').attr("disabled", true);
+												auditSelect(selectedRow, tableObj, "end");
+											});
+										},
+										yes: function() {
+											layer.close(index);
+										}
+									})
+								} else {
+									layer.msg(ResultMsg.msg);
+								}
+							}
+						})
+					} else {
+						checkdeliReqFlag = true;
+						layer.alert("请选择一条审核数据！");
+					}
+				}
+				//收款
+				function reCollection(tableObj) {
+					var rows = tableObj.getSelectRow();
+					if(rows.length == 1) {
+						if(rows[0].data.state != "已审核") {
+							checkdeliReqFlag = true;
+							layer.msg(rows[0].data.state + "数据不能操作");
+							return;
+						}
+						var selectedRow = rows[0].data;
+						var arr = [];
+						var metadata = {};
+						metadata["pk_sale_application"] = selectedRow.pk_sale_application;
+						arr.push(metadata);
+						var data = {
+							'insertDO': arr
+						};
+						$.ajax({
+							type: "POST",
+							url: domaindata.product_smf_domain + "saleApplication/reCollection",
+							data: JSON.stringify(data),
+							dataType: "json",
+							contentType: "application/json;charset=utf-8",
+							async: true,
+							success: function(ResultMsg) {
+								checkdeliReqFlag = true;
+								if(ResultMsg.code == '1') {
+									tableObj.reload();
+								}
+								layer.msg(ResultMsg.msg);
+							}
+						});
+					}else {
+						checkdeliReqFlag = true;
+						layer.alert("请选择一条审核数据！");
+					}
+				}
+				//审核
+				function auditSelect(row, tableObj, type) {
+					var arr = [];
+					var metadata = {};
+					var option = $("#deliReqOption").val();
+					metadata["pk_sale_application"] = row.pk_sale_application;
+					metadata["logistics_cost"] = row.logistics_cost;
+					metadata["supervision_cost"] = row.supervision_cost;
+					metadata["pk_enterprise_application"] = row.pk_enterprise_application;
+					metadata["time_stamp"] = row.time_stamp;
+					metadata["type"] = type;
+					metadata["option"] = option;
+					arr.push(metadata);
+					var data = {
+						'insertDO': arr
+					};
+					$.ajax({
+						type: "POST",
+						url: domaindata.product_smf_domain + "saleApplication/approve",
+						data: JSON.stringify(data),
+						dataType: "json",
+						contentType: "application/json;charset=utf-8",
+						async: true,
+						success: function(ResultMsg) {
+							if(ResultMsg.code == '1') {
+								layer.closeAll();
+								tableObj.reload();
+							}
+							layer.msg(ResultMsg.msg);
+						}
+					});
+				}
+				//首页查看流程进度按钮响应事件
+				function approveLog(tableObj) {
+					var rows = tableObj.getSelectRow();
+					if(rows.length == 1) {
+						var selectedRow = rows[0].data;
+						var state = selectedRow.state;
+						if(state == '新建') {
+							checkdeliReqFlag = true;
+							layer.alert("新建状态无流程进度！！");
+						} else {
+							$.ajax({
+								type: "POST",
+								url: domaindata.product_smf_domain + "saleApplication/approveLog",
+								data: JSON.stringify(selectedRow),
+								dataType: "json",
+								contentType: "application/json;charset=utf-8",
+								async: true,
+								success: function(ResultMsg) {
+									checkdeliReqFlag = true;
+									if(ResultMsg.code == '1') {
+										var arg1 = ResultMsg.data[0].initid;
+										var arg2 = ResultMsg.data[0].processDefinitionId;
+										var arg3 = ResultMsg.data[0].showreturn;
+										var url = workflowUrl + "workflowmanager/workdetail?initid=" + arg1 +
+											"&processDefinitionId=" + arg2 + "&showreturn=" + arg3;
+										window.open(url);
+									} else {
+										layer.msg(ResultMsg.msg);
+									}
+								},
+								error: function() {
+									approveLog = true;
+									layer.msg("查询流程进度出错 ！！");
+								}
+							});
+						}
+					} else {
+						approveLog = true;
+						layer.alert("请选择一条记录！")
+					}
+				}
+				//设置data格式
+				function getTbodyJsonDataById(id) {
+					var arr = [];
+					var data = {};
+					var name = "";
+					var value = "";
+					$("#" + id)
+						.children()
+						.each(
+							function() {
+								data = {};
+								$(this).find("input[name]").each(function() {
+									name = $(this).attr('name');
+									value = $(this).val();
+									data[name] = value;
+								})
+								$(this).find("hidden[name]").each(function() {
+									name = $(this).attr('name');
+									value = $(this).text();
+									data[name] = value;
+								})
+								$(this).find("select[name]").each(function() {
+									name = $(this).attr('name');
+									value = $(this).val();
+									data[name] = value;
+								})
+								data["itemList"] = getRepayTbodyJsonDataById("deliveryReqTbody");
+								if(!isEmptyObject(data)) {
+									arr.push(data);
+								}
+							});
+					return arr;
+				}
+				//获取子单信息列表
+				function getRepayTbodyJsonDataById(tbodyID) {
+					var arr = [];
+					var data = {};
+					var name = "";
+					var value = "";
+					$("#" + tbodyID).children().each(function() {
+						data = {};
+						$(this).find("input[data]").each(function() {
+							name = $(this).attr('data');
+							value = $(this).val();
+							if("null" == value) {
+								value = "";
+							}
+							data[name] = value;
+						})
+						if(!isEmptyObject(data)) {
+							arr.push(data);
+						}
+					})
+					console.log(arr);
+					return arr;
+				}
+				//编辑细单信息回显
+				function editDeliReqItem(itemList, type) {
+					debugger;
+					var html = '';
+					$.each(itemList, function(index, obj) {
+						if(null == obj.pk_measurement) {
+							obj.pk_measurement = "";
+						}
+						var sumMoney = 0;
+						if("add" == type) {
+							if(obj.maxNumber > 0 ){
+								sumMoney = parseFloat(obj.maxNumber) * parseFloat(obj.price).toFixed(2);
+								html += '<tr>';
+								html = html + '<td><input type="checkbox" style="width:100%;border:none;"/></td>';
+								html = html + '<td><input type="number" value="' + obj.rownumber + '" data="rownumber" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.goods_name + '" data="goods_name" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.spec + '" data="spec" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.producing_area + '" data="producing_area" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.quality + '" data="quality" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.packing + '" data="packing" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="hidden" value="' + obj.pk_measurement + '" data="pk_measurement" style="width:100%;border:none;"/><input type="textarea" value="' + obj.measurement_name + '" data="measurement_name" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input data="number" type="number" id="number_' + obj.pk_capitalapplication_item + '" value="' + obj.maxNumber + '" style="width:100px;border: 0;" class="deliReq_item_number_number" data-itemid="' + obj.pk_capitalapplication_item + '"/>' +
+									'<input type="hidden" value="' + obj.pk_capital_application + '" data="sourcebillid"/><input type="hidden" value="' + obj.pk_capitalapplication_item + '" data="sourcebillitemid" readonly="readonly"/></td>';
+								html = html + '<td><input type="number" value="' + obj.price + '" id="price_' + obj.pk_capitalapplication_item + '" data="price" style="width:100%;border:none;" class="deliReq_item_price_number" data-itemid="' + obj.pk_capitalapplication_item + '" readonly="readonly"/></td>';
+								html = html + '<td><input type="number" value="' + sumMoney + '" id="money_' + obj.pk_capitalapplication_item + '" data="money" style="width:100%;border:none;" class="deliReq_item_money_number" data-itemid="' + obj.pk_capitalapplication_item + '" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.batch_number + '" data="batch_number" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="" data="storage_location" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="资金使用申请" data="sourcebilltype" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html += '</tr>';
+							}else{
+								layer.alert("发货数量为0！")
+							}
+						} else {
+							if(obj.number > 0 ){
+								sumMoney = parseFloat(obj.number) * parseFloat(obj.price).toFixed(2);
+								html += '<tr>';
+								html = html + '<td><input type="checkbox" style="width:100%;border:none;"/></td>';
+								html = html + '<td><input type="number" value="' + obj.rownumber + '" data="rownumber" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.goods_name + '" data="goods_name" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.spec + '" data="spec" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.producing_area + '" data="producing_area" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.quality + '" data="quality" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.packing + '" data="packing" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="hidden" value="' + obj.pk_measurement + '" data="pk_measurement" style="width:100%;border:none;"/><input type="textarea" value="' + obj.measurement_name + '" data="measurement_name" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input data="number" type="number" id="number_' + obj.sourcebillitemid + '" value="' + obj.number + '" style="width:100px;border: 0;" class="deliReq_item_number_number" data-itemid="' + obj.sourcebillitemid + '"/>' +
+									'<input type="hidden" value="' + obj.sourcebillid + '" data="sourcebillid"/><input type="hidden" value="' + obj.sourcebillitemid + '" data="sourcebillitemid" readonly="readonly"/></td>';
+								html = html + '<td><input type="number" value="' + obj.price + '" id="price_' + obj.sourcebillitemid + '" data="price" style="width:100%;border:none;" class="deliReq_item_price_number" data-itemid="' + obj.sourcebillitemid + '" readonly="readonly"/></td>';
+								html = html + '<td><input type="number" value="' + sumMoney + '" id="money_' + obj.sourcebillitemid + '" data="money" style="width:100%;border:none;" class="deliReq_item_money_number" data-itemid="' + obj.sourcebillitemid + '" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="' + obj.batch_number + '" data="batch_number" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="" data="storage_location" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html = html + '<td><input type="textarea" value="资金使用申请" data="sourcebilltype" style="width:100%;border:none;" readonly="readonly"/></td>';
+								html += '</tr>';
+							}else{
+								layer.alert("发货数量为0！")
+							}
+						}
+						/* html += '<tr>';
+						html = html + '<td><input type="checkbox" style="width:100%;border:none;"/></td>';
+						html = html + '<td><input type="number" value="' + obj.rownumber + '" data="rownumber" style="width:100%;border:none;" readonly="readonly"/></td>';
+						html = html + '<td><input type="textarea" value="' + obj.goods_name + '" data="goods_name" style="width:100%;border:none;" readonly="readonly"/></td>';
+						html = html + '<td><input type="textarea" value="' + obj.spec + '" data="spec" style="width:100%;border:none;" readonly="readonly"/></td>';
+						html = html + '<td><input type="textarea" value="' + obj.producing_area + '" data="producing_area" style="width:100%;border:none;" readonly="readonly"/></td>';
+						html = html + '<td><input type="textarea" value="' + obj.quality + '" data="quality" style="width:100%;border:none;" readonly="readonly"/></td>';
+						html = html + '<td><input type="textarea" value="' + obj.packing + '" data="packing" style="width:100%;border:none;" readonly="readonly"/></td>';
+						html = html + '<td><input type="hidden" value="' + obj.pk_measurement + '" data="pk_measurement" style="width:100%;border:none;"/><input type="textarea" value="' + obj.measurement_name + '" data="measurement_name" style="width:100%;border:none;" readonly="readonly"/></td>';
+						if("add" == type) {
+							html = html + '<td><input data="number" type="number" id="number_' + obj.pk_capitalapplication_item + '" value="' + obj.maxNumber + '" style="width:100px;border: 0;" class="deliReq_item_number_number" data-itemid="' + obj.pk_capitalapplication_item + '"/>' +
+								'<input type="hidden" value="' + obj.pk_capital_application + '" data="sourcebillid"/><input type="hidden" value="' + obj.pk_capitalapplication_item + '" data="sourcebillitemid" readonly="readonly"/></td>';
+							html = html + '<td><input type="number" value="' + obj.price + '" id="price_' + obj.pk_capitalapplication_item + '" data="price" style="width:100%;border:none;" class="deliReq_item_price_number" data-itemid="' + obj.pk_capitalapplication_item + '" readonly="readonly"/></td>';
+							html = html + '<td><input type="number" value="' + sumMoney + '" id="money_' + obj.pk_capitalapplication_item + '" data="money" style="width:100%;border:none;" class="deliReq_item_money_number" data-itemid="' + obj.pk_capitalapplication_item + '" readonly="readonly"/></td>';
+						} else {
+							html = html + '<td><input data="number" type="number" id="number_' + obj.sourcebillitemid + '" value="' + obj.number + '" style="width:100px;border: 0;" class="deliReq_item_number_number" data-itemid="' + obj.sourcebillitemid + '"/>' +
+								'<input type="hidden" value="' + obj.sourcebillid + '" data="sourcebillid"/><input type="hidden" value="' + obj.sourcebillitemid + '" data="sourcebillitemid" readonly="readonly"/></td>';
+							html = html + '<td><input type="number" value="' + obj.price + '" id="price_' + obj.sourcebillitemid + '" data="price" style="width:100%;border:none;" class="deliReq_item_price_number" data-itemid="' + obj.sourcebillitemid + '" readonly="readonly"/></td>';
+							html = html + '<td><input type="number" value="' + sumMoney + '" id="money_' + obj.sourcebillitemid + '" data="money" style="width:100%;border:none;" class="deliReq_item_money_number" data-itemid="' + obj.sourcebillitemid + '" readonly="readonly"/></td>';
+						}
+						html = html + '<td><input type="textarea" value="' + obj.batch_number + '" data="batch_number" style="width:100%;border:none;" readonly="readonly"/></td>';
+						html = html + '<td><input type="textarea" value="" data="storage_location" style="width:100%;border:none;" readonly="readonly"/></td>';
+						html = html + '<td><input type="textarea" value="资金使用申请" data="sourcebilltype" style="width:100%;border:none;" readonly="readonly"/></td>';
+						html += '</tr>'; */
+					});
+					$("#deliveryReqTbody").append(html);
+					//数量
+					$(".deliReq_item_number_number").blur(function(e) {
+						debugger;
+						changeMoney($(e.target).attr("data-itemid"));
+						
+						var totalMoney = 0.0;
+						$(".deliReq_item_money_number").each(function() {
+							var value = $(this).val();
+								if(value != "" && value != null) {
+									totalMoney += Number($(this).val());
+								}
+						});
+						$('#payment_amount').val(totalMoney);
+						$('#amount').val((parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())).toFixed(2));
+					});
+					$(".deliReq_item_price_number").blur(function(e) {
+						changeMoney($(e.target).attr("data-itemid"));
+					});
+					$(".deliReq_item_money_number").blur(function(e) {
+						changePrice($(e.target).attr("data-itemid"));
+					});
+				}
+				function changeMoney(itemId) {
+					$("#money_" + itemId).val(($("#number_" + itemId).val() * $("#price_" + itemId).val()).toFixed(2));
+				}
+				function changePrice(itemId) {
+					$("#price_" + itemId).val(parseFloat($("#money_" + itemId).val() / $("#number_" + itemId).val()).toFixed(6));
+				}
+				//删除细单
+				function deleteLineTb() {
+					var deliReq_checked = $("#deliveryReqTbody input[type=checkbox]:checked").val();
+					console.log("deliReq_checked==" + deliReq_checked);
+					if(deliReq_checked != undefined) {
+						layer.confirm('你确定删除所选记录吗？删除操作不能恢复!', {
+							btn: ['确定', '取消'] //按钮
+						}, function() {
+							$("#deliveryReqTbody input[type=checkbox]:checked").each(function() {
+								$(this).parent('td').parent('tr').remove();
+							});
+							sortRowNumberDeliReq("deliveryReqTbody");
+							var index = layer.index; //获取当前弹层的索引号
+							layer.close(index); //关闭当前弹层
+						}, function() {});
+					} else {
+						layer.alert("请选择需要删除的数据！");
+					}
+				}
+				//获得已经选中的checkBox,返回对象数组
+				function getCheckBoxs(name) {
+					var count = 0;
+					var checkedArray = new Array();
+					var checkBoxs = document.getElementsByName(name);
+					for(var i = 0; i < checkBoxs.length; i++) {
+						var e = checkBoxs[i];
+						if(e.checked) {
+							checkedArray[count++] = checkBoxs[i];
+						}
+					}
+					return checkedArray;
+				}
+				//控制明细行号为按照从大到小排序并避免增删影响
+				function sortRowNumberDeliReq(id) {
+					var count = 1;
+					$("#" + id).children().each(function() {
+						$(this).find("input[data='rownumber']").each(function() {
+							$(this).val(count);
+						});
+						$(this).find("input[data='number']").each(function() {
+							$(this).attr("id", 'number_' + count);
+							$(this).attr("data-itemid", count);
+						});
+						$(this).find("input[data='price']").each(function() {
+							$(this).attr("id", 'price_' + count);
+							$(this).attr("data-itemid", count);
+						});
+						$(this).find("input[data='money']").each(function() {
+							$(this).attr("id", 'money_' + count);
+							$(this).attr("data-itemid", count);
+						});
+						count++;
+					});
+				}
+				//若手动修改后失去焦点则置空文本框
+				function autoNameValidate() {
+					//资金使用申请单号
+					$("#capital_application_code").change(function() {
+						$("#pk_capital_application").val("");
+					});
+					//发货申请企业名称
+					$("#enterprise_application_name").change(function() {
+						$("#pk_enterprise_application").val("");
+					});
+					//资金使用申请单号
+					$("#capital_application_code").on("blur", function() {
+						if($("#capital_application_code").val() != null && $("#capital_application_code").val() != '') {
+							//资金使用申请主键
+							if($("#pk_capital_application").val() == null || $("#pk_capital_application").val() == '') {
+								debugger;
+								//主单数据清空
+								$("#capital_application_code").val("");
+								$('#pk_currency').val("");
+								$('#currency_name').val("");
+								$('#amount').val();
+								$('#payment_amount').val();
+								$('#logistics_cost').val();
+								$('#supervision_cost').val();
+								//细单数据清空
+								$("#deliveryReqTbody tr").remove();
+							}
+						} else {
+							$("#pk_capital_application").val("");
+							//主单数据清空
+							$('#pk_currency').val("");
+							$('#currency_name').val("");
+							$('#contact').val("");
+							$('#contact_number').val("");
+							//细单数据清空
+							$("#deliveryReqTbody tr").remove();
+						}
+					});
+					//发货申请企业名称
+					$("#enterprise_application_name").on("blur", function() {
+						if($("#enterprise_application_name").val() != null && $("#enterprise_application_name").val() != '') {
+							if($("#pk_enterprise_application").val() == null || $("#pk_enterprise_application").val() == '') {
+								//主单数据清空
+								$("#enterprise_application_name").val("");
+								$("#pk_enterprise_application").val("");
+								$("#pk_capital_application").val("");
+								$("#capital_application_code").val("");
+								$('#pk_currency').val("");
+								$('#currency_name').val("");
+								$('#contact').val("");
+								$('#contact_number').val("");
+								$('#amount').val();
+								$('#payment_amount').val();
+								$('#logistics_cost').val();
+								$('#supervision_cost').val();
+								//细单数据清空
+								$("#deliveryReq_item").each(function() {
+									$(this).parent('td').parent('tr').remove();
+								});
+							}
+						} else {
+							$("#pk_enterprise_application").val("");
+							$("#pk_capital_application").val("");
+							$("#capital_application_code").val("");
+							$('#pk_currency').val("");
+							$('#currency_name').val("");
+							$('#contact').val("");
+							$('#contact_number').val("");
+							$('#amount').val();
+							$('#payment_amount').val();
+							$('#logistics_cost').val();
+							$('#supervision_cost').val();
+							
+						}
+						capitalAutoComplete();
+					});
+
+				}
+				//数字输入框禁用滚轮方法
+				function disableWheelDeliveryAdvice() {
+					$("input[type='number']").each(function() {
+						var that = this;
+						if(that.addEventListener) { //兼容firefox
+							that.addEventListener('DOMMouseScroll', MouseWheelCredit, false);
+						} //W3C 
+						that.onmousewheel = MouseWheelCredit; //IE/Opera/Chrome
+					});
+				}
+				function MouseWheelCredit(event) {
+					event = event || window.event;
+					event.preventDefault();
+				}
+				//根据输入关键字查询资金使用申请单并带出相关信息
+				function capitalAutoComplete() {
+					if($("input").hasClass("capital_application_entry")) {
+						var enterpriseId = '';
+						if($('#pk_enterprise_application').val() != null && $('#pk_enterprise_application').val() != '') {
+							enterpriseId = $('#pk_enterprise_application').val();
+						}
+						var test = $(".capital_application_entry")
+							.bigAutocomplete({
+								width: 'auto',
+								id: ['code', 'name', 'enterprise_name'],
+								highlight: false,
+								minChars: 0,
+								mustMatch: true,
+								matchContains: true,
+								autoFill: true,
+								ajax: {
+									url: domaindata.product_smf_domain + 'capitalApplication/getCapitalApplicationList?enterpriseId=' + enterpriseId,
+									type: "GET",
+									success: function(result) {
+										if(result.code == 0) {
+											layer.msg(result.msg);
+										}
+										$("#pk_capital_application").val("");
+										var Str = result.data;
+										var datas = [];
+										for(var i = 0; i < Str.length; i++) {
+											datas[i] = [];
+											datas[i].push(Str[i].code);
+											datas[i].push(Str[i].name);
+											datas[i].push(Str[i].enterprise_name);
+										}
+										test.setData(datas, true); // 设置显示的内容，并更新
+										test.setTitle(['资金使用申请编码', '资金使用申请名称', '申请企业名称']); // 设置标题
+									},
+									error: function(msg) {
+										layer.alert("查询资金使用申请异常");
+									}
+								},
+								callback: function(data) {
+									$("#capital_application_code").val(data[0]);
+									$.ajax({
+										type: "GET",
+										url: domaindata.product_smf_domain + "capitalApplication/selectCapitalApplicationByCode",
+										data: {
+											"code": data[0]
+										},
+										async: false,
+										dataType: "json",
+										error: function() {},
+										success: function(result) {
+											debugger
+											$('#pk_capital_application').val(result.data[0].pk_capital_application);
+											$('#capital_application_code').val(result.data[0].code);
+											$('#pk_enterprise_application').val(result.data[0].pk_enterprise);
+											$('#enterprise_application_name').val(result.data[0].enterprise_name);
+											$('#pk_currency').val(result.data[0].pk_currency);
+											$('#currency_name').val(result.data[0].currency_name);
+											$('#contact').val(result.data[0].contact);
+											$('#contact_number').val(result.data[0].contact_number);
+											editDeliReqItem(result.data[0].itemList, "add");
+											var totalMoney = 0.0;
+											$(".deliReq_item_money_number").each(function() {
+												var value = $(this).val();
+													if(value != "" && value != null) {
+														totalMoney += Number($(this).val());
+													}
+											});
+											//$('#amount').val(totalMoney);
+											$('#payment_amount').val(totalMoney);
+											if($("#payment_amount").val() == "") {
+												$("#payment_amount").val(0.00);
+											}
+											if($("#logistics_cost").val() == "") {
+												$("#logistics_cost").val(0.00);
+											}
+											if($("#supervision_cost").val() == "") {
+												$("#supervision_cost").val(0.00);
+											}
+											$('#amount').val((parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())).toFixed(2));
+										
+											$("#payment_amount").blur(function() {
+													$('#amount').val((parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())).toFixed(2));
+											});
+											$("#logistics_cost").blur(function() {
+													$('#amount').val((parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())).toFixed(2));
+											});
+											$("#supervision_cost").blur(function() {
+													$('#amount').val((parseFloat($('#payment_amount').val()) + parseFloat($('#logistics_cost').val()) + parseFloat($('#supervision_cost').val())).toFixed(2));
+											});
+										}
+									});
+								}
+							});
+					}
+				}
+				//根据输入关键字查询申请企业并带出企业信息
+				function applicationAutoComplete() {
+					if($("input").hasClass("deliReq_application_entry")) {
+						var test = $(".deliReq_application_entry")
+							.bigAutocomplete({
+								width: 'auto',
+								id: ['code', 'shortname', 'statustype', 'name'],
+								highlight: false,
+								minChars: 0,
+								mustMatch: true,
+								matchContains: true,
+								autoFill: true,
+								ajax: {
+									url: domaindata.product_smf_domain + 'saleApplication/getEnterpriseByName',
+									type: "GET",
+									success: function(result) {
+										if(result.code == 0) {
+											layer.msg(result.msg);
+										}
+										var Str = result.data;
+										var datas = [];
+										for(var i = 0; i < Str.length; i++) {
+											datas[i] = [];
+											datas[i].push(Str[i].code);
+											datas[i].push(Str[i].shortname);
+											datas[i].push(Str[i].statustype);
+											datas[i].push(Str[i].name);
+										}
+										test.setData(datas, true); // 设置显示的内容，并更新
+										test.setTitle(['企业编码', '企业简称', '企业地位', '企业名称']); // 设置标题
+									},
+									error: function(msg) {
+										layer.alert("查询企业信息异常");
+									}
+								},
+								callback: function(data) {
+									capitalAutoComplete();
+									$("#enterprise_application_name").val(data[3]);
+									$("#capital_application_code").val("");
+									$.ajax({
+										type: "GET",
+										url: domaindata.product_smf_domain + "saleApplication/getEnterpriseByCode",
+										data: {
+											"code": data[0]
+										},
+										async: false,
+										dataType: "json",
+										error: function() {},
+										success: function(result) {
+											$('#pk_enterprise_application').val(result.data[0].pk_enterprise);
+											$('#contact').val(result.data[0].contact);
+											$('#contact_number').val(result.data[0].contact_number);
+											capitalAutoComplete();
+										}
+									});
+								}
+							});
+					}
+				}
+				//判断对象是否为空。
+				function isEmptyObject(obj) {
+					for(var key in obj) {
+						return false;
+					}
+					return true;
+				}
+			})
+		</script>
+	</body>
+</html>

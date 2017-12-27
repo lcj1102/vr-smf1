@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.suneee.scn:vr-common:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-common/1.0.0-SNAPSHOT/vr-common-1.0.0-20171018.101118-9.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-common/1.0.0-SNAPSHOT/vr-common-1.0.0-20171018.101118-9-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/suneee/scn/vr-common/1.0.0-SNAPSHOT/vr-common-1.0.0-20171018.101118-9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
