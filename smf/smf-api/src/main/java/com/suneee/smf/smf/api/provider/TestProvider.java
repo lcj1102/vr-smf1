@@ -15,6 +15,6 @@ import com.suneee.smf.smf.model.TestBean;
 
 public interface TestProvider {
 
-	public TestBean getByPK(TestBean bean11);
+	public TestBean getByPK(TestBean bean13);
 
 }
