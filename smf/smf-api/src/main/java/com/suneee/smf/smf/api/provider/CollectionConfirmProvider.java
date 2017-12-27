@@ -8,7 +8,7 @@ public interface CollectionConfirmProvider {
 
 
 
-	 public ResultMsg add(CollectionConfirmDO insertDO1,String pushType2);
+	 public ResultMsg add(CollectionConfirmDO insertDO1,String pushType3);
 
 
 	 
